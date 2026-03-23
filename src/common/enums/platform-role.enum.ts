@@ -1,0 +1,5 @@
+export enum PlatformRole {
+  ROOT = 'ROOT',
+  PLATFORM_ADMIN = 'PLATFORM_ADMIN',
+  SUPPORT_ADMIN = 'SUPPORT_ADMIN',
+}
