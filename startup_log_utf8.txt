@@ -1,226 +1,6373 @@
-﻿
-> inventory-backend@0.0.1 start:dev
-> nest start --watch
+﻿<files>
+<file name="src/app.controller.spec.ts">
+<![CDATA[
+import { Test, TestingModule } from '@nestjs/testing';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
 
-[2J[3J[H[[90m7:39:56 PM[0m] Starting compilation in watch mode...
+describe('AppController', () => {
+  let appController: AppController;
 
-[[90m7:40:06 PM[0m] Found 0 errors. Watching for file changes.
+  beforeEach(async () => {
+    const app: TestingModule = await Test.createTestingModule({
+      controllers: [AppController],
+      providers: [AppService],
+    }).compile();
 
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[NestFactory] [39m[32mStarting Nest application...[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mDatabaseModule dependencies initialized[39m[38;5;3m +43ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTypeOrmModule dependencies initialized[39m[38;5;3m +0ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mPassportModule dependencies initialized[39m[38;5;3m +0ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mQueueModule dependencies initialized[39m[38;5;3m +0ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigHostModule dependencies initialized[39m[38;5;3m +2ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mHttpModule dependencies initialized[39m[38;5;3m +0ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mAppModule dependencies initialized[39m[38;5;3m +9ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mBusinessModule dependencies initialized[39m[38;5;3m +0ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mInventoryModule dependencies initialized[39m[38;5;3m +0ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +1ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mConfigModule dependencies initialized[39m[38;5;3m +0ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mTerminusModule dependencies initialized[39m[38;5;3m +0ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mRedisModule dependencies initialized[39m[38;5;3m +69ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mHealthModule dependencies initialized[39m[38;5;3m +0ms[39m
-[32m[Nest] 16552  - [39m03/10/2026, 7:40:10 PM [32m    LOG[39m [38;5;3m[InstanceLoader] [39m[32mJwtModule dependencies initialized[39m[38;5;3m +0ms[39m
-[90m[4mquery:[24m[39m [94mSELECT[0m [95mversion[0m[37m([0m[37m)[0m
-[90m[4mquery:[24m[39m [94mSELECT[0m [37m*[0m [94mFROM[0m [95mcurrent_schema[0m[37m([0m[37m)[0m
-node.exe : [31m[Nest] 
-16552  - 
-[39m03/10/2026, 7:40:10 
-PM [31m  ERROR[39m 
-[38;5;3m[TypeOrmModule] 
-[39m[31mUnable to 
-connect to the database. 
-Retrying (1)...[39m
-At C:\Program 
-Files\nodejs\npm.ps1:29 
-char:3
-+   & $NODE_EXE 
-$NPM_CLI_JS $args
-+   ~~~~~~~~~~~~~~~~~~~~~
-~~~~~~~~
-    + CategoryInfo       
-   :     NotSpecified: 
-([31m[Nest]     
-165...ing 
-(1)...[39m:Str    ing) 
-[], RemoteException
-    + 
-FullyQualifiedErrorId :  
-   NativeCommandError
- 
-DataTypeNotSupportedError
-: Data type "Object" in 
-"User.refreshToken" is 
-not supported by 
-"postgres" database.
-    at <anonymous> (D:\Fl
-utter\backend\inventory-b
-ackend\node_modules\typeo
-rm\metadata-builder\src\m
-etadata-builder\EntityMet
-adataValidator.ts:133:31)
-    at Array.forEach 
-(<anonymous>)
-    at EntityMetadataVali
-dator.validate (D:\Flutte
-r\backend\inventory-backe
-nd\node_modules\typeorm\m
-etadata-builder\src\metad
-ata-builder\EntityMetadat
-aValidator.ts:128:18)
-    at <anonymous> (D:\Fl
-utter\backend\inventory-b
-ackend\node_modules\typeo
-rm\metadata-builder\src\m
-etadata-builder\EntityMet
-adataValidator.ts:43:18)
-    at Array.forEach 
-(<anonymous>)
-    at EntityMetadataVali
-dator.validateMany (D:\Fl
-utter\backend\inventory-b
-ackend\node_modules\typeo
-rm\metadata-builder\src\m
-etadata-builder\EntityMet
-adataValidator.ts:42:25)
-    at DataSource.buildMe
-tadatas (D:\Flutter\backe
-nd\inventory-backend\node
-_modules\typeorm\data-sou
-rce\src\data-source\DataS
-ource.ts:753:33)
-    at process.processTic
-ksAndRejections (node:int
-ernal/process/task_queues
-:95:5)
-    at async 
-DataSource.initialize (D:
-\Flutter\backend\inventor
-y-backend\node_modules\ty
-peorm\data-source\src\dat
-a-source\DataSource.ts:26
-4:13)
-[90m[4mquery:[24m[39m [94mSELECT[0m [95mversion[0m[37m([0m[37m)[0m
-[90m[4mquery:[24m[39m [94mSELECT[0m [37m*[0m [94mFROM[0m [95mcurrent_schema[0m[37m([0m[37m)[0m
-[31m[Nest] 16552  - 
-[39m03/10/2026, 7:40:13 
-PM [31m  ERROR[39m 
-[38;5;3m[TypeOrmModule] 
-[39m[31mUnable to 
-connect to the database. 
-Retrying (2)...[39m
-DataTypeNotSupportedError
-: Data type "Object" in 
-"User.refreshToken" is 
-not supported by 
-"postgres" database.
-    at <anonymous> (D:\Fl
-utter\backend\inventory-b
-ackend\node_modules\typeo
-rm\metadata-builder\src\m
-etadata-builder\EntityMet
-adataValidator.ts:133:31)
-    at Array.forEach 
-(<anonymous>)
-    at EntityMetadataVali
-dator.validate (D:\Flutte
-r\backend\inventory-backe
-nd\node_modules\typeorm\m
-etadata-builder\src\metad
-ata-builder\EntityMetadat
-aValidator.ts:128:18)
-    at <anonymous> (D:\Fl
-utter\backend\inventory-b
-ackend\node_modules\typeo
-rm\metadata-builder\src\m
-etadata-builder\EntityMet
-adataValidator.ts:43:18)
-    at Array.forEach 
-(<anonymous>)
-    at EntityMetadataVali
-dator.validateMany (D:\Fl
-utter\backend\inventory-b
-ackend\node_modules\typeo
-rm\metadata-builder\src\m
-etadata-builder\EntityMet
-adataValidator.ts:42:25)
-    at DataSource.buildMe
-tadatas (D:\Flutter\backe
-nd\inventory-backend\node
-_modules\typeorm\data-sou
-rce\src\data-source\DataS
-ource.ts:753:33)
-    at process.processTic
-ksAndRejections (node:int
-ernal/process/task_queues
-:95:5)
-    at async 
-DataSource.initialize (D:
-\Flutter\backend\inventor
-y-backend\node_modules\ty
-peorm\data-source\src\dat
-a-source\DataSource.ts:26
-4:13)
-[90m[4mquery:[24m[39m [94mSELECT[0m [95mversion[0m[37m([0m[37m)[0m
-[90m[4mquery:[24m[39m [94mSELECT[0m [37m*[0m [94mFROM[0m [95mcurrent_schema[0m[37m([0m[37m)[0m
-[31m[Nest] 16552  - 
-[39m03/10/2026, 7:40:16 
-PM [31m  ERROR[39m 
-[38;5;3m[TypeOrmModule] 
-[39m[31mUnable to 
-connect to the database. 
-Retrying (3)...[39m
-DataTypeNotSupportedError
-: Data type "Object" in 
-"User.refreshToken" is 
-not supported by 
-"postgres" database.
-    at <anonymous> (D:\Fl
-utter\backend\inventory-b
-ackend\node_modules\typeo
-rm\metadata-builder\src\m
-etadata-builder\EntityMet
-adataValidator.ts:133:31)
-    at Array.forEach 
-(<anonymous>)
-    at EntityMetadataVali
-dator.validate (D:\Flutte
-r\backend\inventory-backe
-nd\node_modules\typeorm\m
-etadata-builder\src\metad
-ata-builder\EntityMetadat
-aValidator.ts:128:18)
-    at <anonymous> (D:\Fl
-utter\backend\inventory-b
-ackend\node_modules\typeo
-rm\metadata-builder\src\m
-etadata-builder\EntityMet
-adataValidator.ts:43:18)
-    at Array.forEach 
-(<anonymous>)
-    at EntityMetadataVali
-dator.validateMany (D:\Fl
-utter\backend\inventory-b
-ackend\node_modules\typeo
-rm\metadata-builder\src\m
-etadata-builder\EntityMet
-adataValidator.ts:42:25)
-    at DataSource.buildMe
-tadatas (D:\Flutter\backe
-nd\inventory-backend\node
-_modules\typeorm\data-sou
-rce\src\data-source\DataS
-ource.ts:753:33)
-    at process.processTic
-ksAndRejections (node:int
-ernal/process/task_queues
-:95:5)
-    at async 
-DataSource.initialize (D:
-\Flutter\backend\inventor
-y-backend\node_modules\ty
-peorm\data-source\src\dat
-a-source\DataSource.ts:26
-4:13)
+    appController = app.get<AppController>(AppController);
+  });
 
+  describe('root', () => {
+    it('should return "Hello World!"', () => {
+      expect(appController.getHello()).toBe('Hello World!');
+    });
+  });
+});
+
+]]>
+</file>
+<file name="src/app.controller.ts">
+<![CDATA[
+import { Controller, Get } from '@nestjs/common';
+import { AppService } from './app.service.js';
+
+@Controller()
+export class AppController {
+  constructor(private readonly appService: AppService) {}
+
+  @Get()
+  getHello(): string {
+    return this.appService.getHello();
+  }
+}
+
+]]>
+</file>
+<file name="src/app.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { ConfigModule } from '@nestjs/config';
+import { DatabaseModule } from './database/database.module.js';
+import { AuthModule } from './modules/auth/auth.module.js';
+import { PlatformModule } from './modules/platform/platform.module.js';
+import { BusinessModule } from './modules/business/business.module.js';
+import { UsersModule } from './modules/users/users.module.js';
+import { InventoryModule } from './modules/inventory/inventory.module.js';
+import { HealthModule } from './health/health.module.js';
+import { RedisModule } from './redis/redis.module.js';
+import { QueueModule } from './queues/queue.module.js';
+import { RolesModule } from './modules/roles/roles.module.js';
+import { SupportModule } from './modules/support/support.module.js';
+
+import configuration from './config/configuration.js';
+import appConfig from './config/app.config.js';
+import databaseConfig from './config/database.config.js';
+import jwtConfig from './config/jwt.config.js';
+import redisConfig from './config/redis.config.js';
+import { AppController } from './app.controller.js';
+import { AppService } from './app.service.js';
+
+@Module({
+  imports: [
+    ConfigModule.forRoot({
+      isGlobal: true,
+      load: [configuration, appConfig, databaseConfig, jwtConfig, redisConfig],
+    }),
+    DatabaseModule,
+    AuthModule,
+    PlatformModule,
+    BusinessModule,
+    UsersModule,
+    InventoryModule,
+    HealthModule,
+    RedisModule,
+    QueueModule,
+    RolesModule,
+    SupportModule,
+  ],
+
+  controllers: [AppController],
+  providers: [AppService],
+})
+export class AppModule {}
+
+]]>
+</file>
+<file name="src/app.service.ts">
+<![CDATA[
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AppService {
+  getHello(): string {
+    return 'Hello World!';
+  }
+}
+
+]]>
+</file>
+<file name="src/common/decorators/current-user.decorator.ts">
+<![CDATA[
+import { createParamDecorator, ExecutionContext } from '@nestjs/common';
+import type { AuthenticatedRequest } from '../interfaces/authenticated-request.interface.js';
+import { RequestUser } from '../interfaces/authenticated-request.interface.js';
+
+export const CurrentUser = createParamDecorator(
+  (data: unknown, ctx: ExecutionContext): RequestUser | undefined => {
+    const request = ctx.switchToHttp().getRequest<AuthenticatedRequest>();
+    return request.user;
+  },
+);
+
+]]>
+</file>
+<file name="src/common/decorators/permissions.decorator.ts">
+<![CDATA[
+import { SetMetadata } from '@nestjs/common';
+
+export const PERMISSIONS_KEY = 'permissions';
+export const Permissions = (...permissions: string[]) =>
+  SetMetadata(PERMISSIONS_KEY, permissions);
+
+]]>
+</file>
+<file name="src/common/decorators/platform-roles.decorator.ts">
+<![CDATA[
+import { SetMetadata } from '@nestjs/common';
+import { PlatformRole } from '../enums/platform-role.enum.js';
+import { PLATFORM_ROLES_KEY } from '../guards/platform-role.guard.js';
+
+export const PlatformRoles = (...roles: PlatformRole[]) =>
+  SetMetadata(PLATFORM_ROLES_KEY, roles);
+
+]]>
+</file>
+<file name="src/common/decorators/public.decorator.ts">
+<![CDATA[
+import { SetMetadata } from '@nestjs/common';
+
+export const IS_PUBLIC_KEY = 'isPublic';
+export const Public = () => SetMetadata(IS_PUBLIC_KEY, true);
+
+]]>
+</file>
+<file name="src/common/decorators/roles.decorator.ts">
+<![CDATA[
+import { SetMetadata } from '@nestjs/common';
+
+export const ROLES_KEY = 'roles';
+export const Roles = (...roles: string[]) => SetMetadata(ROLES_KEY, roles);
+
+]]>
+</file>
+<file name="src/common/enums/audit-action.enum.ts">
+<![CDATA[
+export enum AuditAction {
+  // Platform Admin & Root Actions
+  BOOTSTRAP_ROOT = 'BOOTSTRAP_ROOT',
+  CREATE_PLATFORM_ADMIN = 'CREATE_PLATFORM_ADMIN',
+  UPDATE_PLATFORM_ADMIN = 'UPDATE_PLATFORM_ADMIN',
+  SUSPEND_PLATFORM_ADMIN = 'SUSPEND_PLATFORM_ADMIN',
+  ACTIVATE_PLATFORM_ADMIN = 'ACTIVATE_PLATFORM_ADMIN',
+  DELETE_PLATFORM_ADMIN = 'DELETE_PLATFORM_ADMIN',
+  RESET_PLATFORM_ADMIN_PASSWORD = 'RESET_PLATFORM_ADMIN_PASSWORD',
+
+  // Tenant Management
+  CREATE_TENANT = 'CREATE_TENANT',
+  UPDATE_TENANT = 'UPDATE_TENANT',
+  UPDATE_TENANT_STATUS = 'UPDATE_TENANT_STATUS',
+  DELETE_TENANT = 'DELETE_TENANT',
+  ASSIGN_PLAN = 'ASSIGN_PLAN',
+
+  // Tenant User Management (by Platform Staff)
+  RESET_TENANT_USER_PASSWORD = 'RESET_TENANT_USER_PASSWORD',
+
+  // Subscription Plan Management
+  CREATE_PLAN = 'CREATE_PLAN',
+  UPDATE_PLAN = 'UPDATE_PLAN',
+  DELETE_PLAN = 'DELETE_PLAN',
+
+  // Auth Actions (Optional, but useful)
+  LOGIN = 'LOGIN',
+  LOGOUT = 'LOGOUT',
+
+  // Support Actions
+  CREATE_TICKET = 'CREATE_TICKET',
+  UPDATE_TICKET_STATUS = 'UPDATE_TICKET_STATUS',
+  REPLY_TICKET = 'REPLY_TICKET',
+  ASSIGN_TICKET = 'ASSIGN_TICKET',
+}
+
+]]>
+</file>
+<file name="src/common/enums/business.enum.ts">
+<![CDATA[
+export enum BusinessStatus {
+  TRIAL = 'TRIAL',
+  ACTIVE = 'ACTIVE',
+  SUSPENDED = 'SUSPENDED',
+  CANCELLED = 'CANCELLED',
+}
+
+export enum SubscriptionPlan {
+  FREE = 'FREE',
+  BASIC = 'BASIC',
+  PROFESSIONAL = 'PROFESSIONAL',
+  ENTERPRISE = 'ENTERPRISE',
+}
+
+]]>
+</file>
+<file name="src/common/enums/platform-role.enum.ts">
+<![CDATA[
+export enum PlatformRole {
+  ROOT = 'ROOT',
+  PLATFORM_ADMIN = 'PLATFORM_ADMIN',
+  SUPPORT_ADMIN = 'SUPPORT_ADMIN',
+}
+
+]]>
+</file>
+<file name="src/common/enums/ticket-category.enum.ts">
+<![CDATA[
+export enum TicketCategory {
+  TECHNICAL = 'TECHNICAL',
+  BILLING = 'BILLING',
+  INVOICE = 'INVOICE',
+  ACCESS = 'ACCESS',
+  GENERAL = 'GENERAL',
+}
+
+]]>
+</file>
+<file name="src/common/enums/ticket-priority.enum.ts">
+<![CDATA[
+export enum TicketPriority {
+  LOW = 'LOW',
+  MEDIUM = 'MEDIUM',
+  HIGH = 'HIGH',
+  URGENT = 'URGENT',
+}
+
+]]>
+</file>
+<file name="src/common/enums/ticket-status.enum.ts">
+<![CDATA[
+export enum TicketStatus {
+  OPEN = 'OPEN',
+  IN_PROGRESS = 'IN_PROGRESS',
+  WAITING_CUSTOMER = 'WAITING_CUSTOMER',
+  RESOLVED = 'RESOLVED',
+  CLOSED = 'CLOSED',
+}
+
+]]>
+</file>
+<file name="src/common/filters/http-exception.filter.ts">
+<![CDATA[
+import {
+  ExceptionFilter,
+  Catch,
+  ArgumentsHost,
+  HttpException,
+} from '@nestjs/common';
+import { Request, Response } from 'express';
+
+@Catch(HttpException)
+export class HttpExceptionFilter implements ExceptionFilter {
+  catch(exception: HttpException, host: ArgumentsHost) {
+    const ctx = host.switchToHttp();
+    const response = ctx.getResponse<Response>();
+    const request = ctx.getRequest<Request>();
+    const status = exception.getStatus();
+
+    response.status(status).json({
+      statusCode: status,
+      timestamp: new Date().toISOString(),
+      path: request.url,
+      message: exception.message,
+    });
+  }
+}
+
+]]>
+</file>
+<file name="src/common/guards/jwt-auth.guard.ts">
+<![CDATA[
+import { Injectable, ExecutionContext } from '@nestjs/common';
+import { AuthGuard } from '@nestjs/passport';
+
+@Injectable()
+export class JwtAuthGuard extends AuthGuard('jwt') {
+  canActivate(context: ExecutionContext) {
+    return super.canActivate(context);
+  }
+}
+
+]]>
+</file>
+<file name="src/common/guards/permissions.guard.ts">
+<![CDATA[
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Role } from '../../database/entities/role.entity.js';
+import { PERMISSIONS_KEY } from '../decorators/permissions.decorator.js';
+import type { AuthenticatedRequest } from '../interfaces/authenticated-request.interface.js';
+
+@Injectable()
+export class PermissionsGuard implements CanActivate {
+  constructor(
+    private reflector: Reflector,
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>,
+  ) {}
+
+  async canActivate(context: ExecutionContext): Promise<boolean> {
+    const requiredPermissions = this.reflector.getAllAndOverride<string[]>(
+      PERMISSIONS_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+
+    if (!requiredPermissions) {
+      return true;
+    }
+
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const user = request.user;
+
+    if (!user) {
+      return false;
+    }
+
+    // Platform staff (ROOT/PLATFORM_ADMIN/SUPPORT_ADMIN) bypass business-level permissions
+    if (user.platformRole) {
+      return true;
+    }
+
+    if (!user.roleId) {
+      return false;
+    }
+
+    const role = await this.roleRepository.findOne({
+      where: { id: user.roleId },
+      relations: ['permissions'],
+    });
+
+    if (!role || !role.permissions) {
+      return false;
+    }
+
+    const userPermissions = role.permissions.map((p) => p.key);
+    return requiredPermissions.every((permission) =>
+      userPermissions.includes(permission),
+    );
+  }
+}
+
+]]>
+</file>
+<file name="src/common/guards/platform-admin.guard.ts">
+<![CDATA[
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
+import type { AuthenticatedRequest } from '../interfaces/authenticated-request.interface.js';
+
+/** @deprecated Use PlatformRoleGuard with @PlatformRoles() decorator instead */
+@Injectable()
+export class PlatformAdminGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const user = request.user;
+
+    if (!user || !user.platformRole) {
+      throw new ForbiddenException(
+        'Access restricted to Platform Administrators only',
+      );
+    }
+
+    return true;
+  }
+}
+
+]]>
+</file>
+<file name="src/common/guards/platform-role.guard.ts">
+<![CDATA[
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { PlatformRole } from '../enums/platform-role.enum.js';
+import type { AuthenticatedRequest } from '../interfaces/authenticated-request.interface.js';
+
+export const PLATFORM_ROLES_KEY = 'platformRoles';
+
+/**
+ * Guard that checks platformRole on the authenticated user.
+ * Decorate routes with @PlatformRoles(PlatformRole.ROOT, ...)
+ *
+ * Role hierarchy enforced:
+ *   ROOT > PLATFORM_ADMIN > SUPPORT_ADMIN
+ */
+@Injectable()
+export class PlatformRoleGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<PlatformRole[]>(
+      PLATFORM_ROLES_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+
+    // If no role restriction set, just ensure user is a platform user
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const user = request.user;
+
+    if (!user || !user.platformRole) {
+      throw new ForbiddenException('Access restricted to Platform users only');
+    }
+
+    if (!requiredRoles || requiredRoles.length === 0) {
+      return true; // Any platform role is OK
+    }
+
+    if (!requiredRoles.includes(user.platformRole)) {
+      throw new ForbiddenException(
+        `Access requires one of: ${requiredRoles.join(', ')}. Your role: ${user.platformRole}`,
+      );
+    }
+
+    return true;
+  }
+}
+
+]]>
+</file>
+<file name="src/common/guards/roles.guard.ts">
+<![CDATA[
+import { Injectable, CanActivate, ExecutionContext } from '@nestjs/common';
+import { Reflector } from '@nestjs/core';
+import { ROLES_KEY } from '../decorators/roles.decorator.js';
+import type {
+  AuthenticatedRequest,
+  RequestUser,
+} from '../interfaces/authenticated-request.interface.js';
+
+@Injectable()
+export class RolesGuard implements CanActivate {
+  constructor(private reflector: Reflector) {}
+
+  canActivate(context: ExecutionContext): boolean {
+    const requiredRoles = this.reflector.getAllAndOverride<string[]>(
+      ROLES_KEY,
+      [context.getHandler(), context.getClass()],
+    );
+    if (!requiredRoles) {
+      return true;
+    }
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const user = request.user;
+    return !!user.role && requiredRoles.includes(user.role);
+  }
+}
+
+]]>
+</file>
+<file name="src/common/guards/tenant.guard.ts">
+<![CDATA[
+import {
+  Injectable,
+  CanActivate,
+  ExecutionContext,
+  ForbiddenException,
+} from '@nestjs/common';
+import type { AuthenticatedRequest } from '../interfaces/authenticated-request.interface.js';
+
+@Injectable()
+export class TenantGuard implements CanActivate {
+  canActivate(context: ExecutionContext): boolean {
+    const request = context.switchToHttp().getRequest<AuthenticatedRequest>();
+    const user = request.user;
+
+    // Platform staff should not access tenant-specific logic directly
+    if (user.platformRole) {
+      throw new ForbiddenException(
+        'Platform Admins cannot perform tenant-specific operations',
+      );
+    }
+
+    if (!user.businessId) {
+      throw new ForbiddenException('User is not associated with any business');
+    }
+
+    return true;
+  }
+}
+
+]]>
+</file>
+<file name="src/common/interceptors/logging.interceptor.ts">
+<![CDATA[
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { tap } from 'rxjs/operators';
+
+@Injectable()
+export class LoggingInterceptor implements NestInterceptor {
+  intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
+    const now = Date.now();
+    return next
+      .handle()
+      .pipe(tap(() => console.log(`After... ${Date.now() - now}ms`)));
+  }
+}
+
+]]>
+</file>
+<file name="src/common/interceptors/transform.interceptor.ts">
+<![CDATA[
+import {
+  Injectable,
+  NestInterceptor,
+  ExecutionContext,
+  CallHandler,
+} from '@nestjs/common';
+import { Observable } from 'rxjs';
+import { map } from 'rxjs/operators';
+
+export interface Response<T> {
+  data: T;
+}
+
+@Injectable()
+export class TransformInterceptor<T> implements NestInterceptor<
+  T,
+  Response<T>
+> {
+  intercept(
+    context: ExecutionContext,
+    next: CallHandler<T>,
+  ): Observable<Response<T>> {
+    return next.handle().pipe(map((data: T) => ({ data })));
+  }
+}
+
+]]>
+</file>
+<file name="src/common/interfaces/authenticated-request.interface.ts">
+<![CDATA[
+import { Request } from 'express';
+import { PlatformRole } from '../enums/platform-role.enum.js';
+
+export interface RequestUser {
+  userId: string;
+  email: string;
+  businessId?: string;
+  roleId?: string;
+  role?: string;
+  platformRole?: PlatformRole;
+}
+
+export interface AuthenticatedRequest extends Request {
+  user: RequestUser;
+}
+
+]]>
+</file>
+<file name="src/common/middleware/tenant.middleware.ts">
+<![CDATA[
+import { Injectable, NestMiddleware } from '@nestjs/common';
+import { Request, Response, NextFunction } from 'express';
+
+@Injectable()
+export class TenantMiddleware implements NestMiddleware {
+  use(
+    req: Request & { tenantId?: string | string[] },
+    res: Response,
+    next: NextFunction,
+  ) {
+    const tenantId = req.headers['x-tenant-id'];
+    if (tenantId) {
+      req.tenantId = tenantId;
+    }
+    next();
+  }
+}
+
+]]>
+</file>
+<file name="src/common/utils/hash.util.ts">
+<![CDATA[
+import * as bcrypt from 'bcrypt';
+
+export class HashUtil {
+  static async hash(data: string): Promise<string> {
+    return bcrypt.hash(data, 10);
+  }
+
+  static async compare(data: string, encrypted: string): Promise<boolean> {
+    return bcrypt.compare(data, encrypted);
+  }
+}
+
+]]>
+</file>
+<file name="src/common/utils/pagination.util.ts">
+<![CDATA[
+export class PaginationUtil {
+  static getPaginationParams(query: Record<string, any>) {
+    const page = parseInt(String(query.page), 10) || 1;
+    const limit = parseInt(String(query.limit), 10) || 10;
+    const skip = (page - 1) * limit;
+    return { page, limit, skip };
+  }
+}
+
+]]>
+</file>
+<file name="src/config/app.config.ts">
+<![CDATA[
+import { registerAs } from '@nestjs/config';
+
+export default registerAs('app', () => ({
+  nodeEnv: process.env.NODE_ENV || 'development',
+  name: process.env.APP_NAME || 'Inventory SaaS',
+  port: parseInt(process.env.APP_PORT || '3000', 10),
+  apiPrefix: process.env.API_PREFIX || 'api',
+}));
+
+]]>
+</file>
+<file name="src/config/configuration.ts">
+<![CDATA[
+export default () => ({
+  env: process.env.NODE_ENV,
+  port: parseInt(process.env.PORT || '3000', 10),
+});
+
+]]>
+</file>
+<file name="src/config/database.config.ts">
+<![CDATA[
+import { registerAs } from '@nestjs/config';
+
+export default registerAs('database', () => ({
+  host: process.env.DATABASE_HOST,
+  port: parseInt(process.env.DATABASE_PORT || '5432', 10),
+  username: process.env.DATABASE_USERNAME,
+  password: process.env.DATABASE_PASSWORD,
+  name: process.env.DATABASE_NAME,
+  synchronize: process.env.DATABASE_SYNCHRONIZE === 'true',
+}));
+
+]]>
+</file>
+<file name="src/config/jwt.config.ts">
+<![CDATA[
+import { registerAs } from '@nestjs/config';
+
+export default registerAs('jwt', () => ({
+  secret: process.env.JWT_SECRET || 'defaultSecret',
+  expiresIn: process.env.JWT_EXPIRE_IN || '1d',
+}));
+
+]]>
+</file>
+<file name="src/config/redis.config.ts">
+<![CDATA[
+import { registerAs } from '@nestjs/config';
+
+export default registerAs('redis', () => ({
+  host: process.env.REDIS_HOST || 'localhost',
+  port: parseInt(process.env.REDIS_PORT || '6379', 10),
+}));
+
+]]>
+</file>
+<file name="src/database/database.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { SeedModule } from './seeds/seed.module.js';
+import { Business } from './entities/business.entity.js';
+import { User } from './entities/user.entity.js';
+import { Role } from './entities/role.entity.js';
+import { Permission } from './entities/permission.entity.js';
+import { Product } from './entities/product.entity.js';
+import { StockMovement } from './entities/stock-movement.entity.js';
+import { Branch } from './entities/branch.entity.js';
+import { Invoice } from './entities/invoice.entity.js';
+import { Subscription } from './entities/subscription.entity.js';
+import { AuditLog } from './entities/audit-log.entity.js';
+import { SupportTicket } from './entities/support-ticket.entity.js';
+import { SupportMessage } from './entities/support-message.entity.js';
+import { SupportAttachment } from './entities/support-attachment.entity.js';
+
+@Module({
+  imports: [
+    TypeOrmModule.forRootAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        type: 'postgres',
+        host: configService.get<string>('database.host'),
+        port: configService.get<number>('database.port'),
+        username: configService.get<string>('database.username'),
+        password: configService.get<string>('database.password'),
+        database: configService.get<string>('database.name'),
+        entities: [
+          Business,
+          User,
+          Role,
+          Permission,
+          Product,
+          StockMovement,
+          Branch,
+          Invoice,
+          Subscription,
+          AuditLog,
+          SupportTicket,
+          SupportMessage,
+          SupportAttachment,
+        ],
+
+        autoLoadEntities: true,
+        synchronize: configService.get<boolean>('database.synchronize'),
+        logging: true,
+      }),
+      inject: [ConfigService],
+    }),
+    SeedModule,
+  ],
+})
+export class DatabaseModule {}
+
+]]>
+</file>
+<file name="src/database/entities/audit-log.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  Index,
+} from 'typeorm';
+import { PlatformRole } from '../../common/enums/platform-role.enum.js';
+import { AuditAction } from '../../common/enums/audit-action.enum.js';
+
+@Entity('audit_logs')
+export class AuditLog {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Index()
+  @Column({ nullable: true })
+  userId: string;
+
+  @Index()
+  @Column({ nullable: true })
+  userEmail: string;
+
+  @Column({ type: 'enum', enum: PlatformRole, nullable: true })
+  userRole: PlatformRole;
+
+  @Index()
+  @Column({ type: 'enum', enum: AuditAction })
+  action: AuditAction;
+
+  @Column({ nullable: true })
+  entityType: string;
+
+  @Index()
+  @Column({ nullable: true })
+  entityId: string;
+
+  @Column({ nullable: true })
+  entityName: string;
+
+  @Column({ type: 'jsonb', nullable: true })
+  oldValue: any;
+
+  @Column({ type: 'jsonb', nullable: true })
+  newValue: any;
+
+  @Column({ nullable: true })
+  ipAddress: string;
+
+  @Column({ nullable: true })
+  userAgent: string;
+
+  @Index()
+  @Column({ nullable: true })
+  businessId: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/entities/branch.entity.ts">
+<![CDATA[
+import { Entity, PrimaryGeneratedColumn, Column, ManyToOne } from 'typeorm';
+import { Business } from './business.entity.js';
+
+@Entity('branches')
+export class Branch {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Column({ nullable: true })
+  location: string;
+
+  @ManyToOne(() => Business)
+  business: Business;
+
+  @Column()
+  businessId: string;
+}
+
+]]>
+</file>
+<file name="src/database/entities/business.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  Index,
+} from 'typeorm';
+import { BusinessStatus } from '../../common/enums/business.enum.js';
+
+export enum DomainType {
+  PHARMACY = 'pharmacy',
+  SUPERMARKET = 'supermarket',
+  RETAIL = 'retail',
+  WAREHOUSE = 'warehouse',
+  RESTAURANT = 'restaurant',
+}
+
+@Entity('businesses')
+export class Business {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Index({ unique: true })
+  @Column({ unique: true })
+  companyCode: string;
+
+  @Column({ type: 'enum', enum: DomainType })
+  domainType: DomainType;
+
+  // ─── Status & Subscription ─────────────────────────────
+  @Column({
+    type: 'enum',
+    enum: BusinessStatus,
+    default: BusinessStatus.TRIAL,
+  })
+  status: BusinessStatus;
+
+  @Column({
+    nullable: true,
+  })
+  subscriptionPlan: string;
+
+  @Column({ nullable: true, type: 'timestamp' })
+  subscriptionExpiresAt: Date;
+
+  @Column({ default: 1 })
+  maxUsers: number;
+
+  @Column({ default: 100 })
+  maxProducts: number;
+
+  @Column({ default: 1 })
+  maxBranches: number;
+
+  // ─── Contact & Location ────────────────────────────────
+  @Column({ nullable: true })
+  phone: string;
+
+  @Column({ nullable: true })
+  email: string;
+
+  @Column({ nullable: true })
+  address: string;
+
+  @Column({ nullable: true, default: 'Asia/Kolkata' })
+  timezone: string;
+
+  @Column({ nullable: true, default: 'INR' })
+  currency: string;
+
+  // ─── Audit ────────────────────────────────────────────
+  @Column({ nullable: true })
+  statusReason: string;
+
+  @Column({ nullable: true })
+  statusChangedBy: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/entities/invoice.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+} from 'typeorm';
+import { Business } from './business.entity.js';
+
+@Entity('invoices')
+export class Invoice {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  invoiceNumber: string;
+
+  @Column('decimal', { precision: 12, scale: 2 })
+  totalAmount: number;
+
+  @ManyToOne(() => Business)
+  business: Business;
+
+  @Column()
+  businessId: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/entities/permission.entity.ts">
+<![CDATA[
+import { Entity, PrimaryGeneratedColumn, Column, Index } from 'typeorm';
+
+@Entity('permissions')
+export class Permission {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Index({ unique: true })
+  @Column({ unique: true })
+  key: string;
+
+  @Column()
+  description: string;
+}
+
+]]>
+</file>
+<file name="src/database/entities/product.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  Index,
+  JoinColumn,
+} from 'typeorm';
+import { Business } from './business.entity.js';
+
+@Entity('products')
+export class Product {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Column({ type: 'decimal', precision: 10, scale: 2 })
+  price: number;
+
+  @Column({ default: 0 })
+  stockQty: number;
+
+  @Index()
+  @Column()
+  businessId: string;
+
+  @ManyToOne(() => Business)
+  @JoinColumn({ name: 'businessId' })
+  business: Business;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/entities/role.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  ManyToMany,
+  JoinTable,
+  Index,
+  CreateDateColumn,
+} from 'typeorm';
+import { Permission } from './permission.entity.js';
+
+@Entity('roles')
+export class Role {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Column({ nullable: true })
+  description: string;
+
+  @Index()
+  @Column({ nullable: true })
+  businessId: string;
+
+  @ManyToMany(() => Permission)
+  @JoinTable({
+    name: 'role_permissions',
+    joinColumn: { name: 'roleId', referencedColumnName: 'id' },
+    inverseJoinColumn: { name: 'permissionId', referencedColumnName: 'id' },
+  })
+  permissions: Permission[];
+
+  @CreateDateColumn()
+  createdAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/entities/stock-movement.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  Index,
+  JoinColumn,
+} from 'typeorm';
+import { Product } from './product.entity.js';
+import { Business } from './business.entity.js';
+
+export enum MovementType {
+  IN = 'IN',
+  OUT = 'OUT',
+}
+
+@Entity('stock_movements')
+export class StockMovement {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Index()
+  @Column()
+  productId: string;
+
+  @ManyToOne(() => Product)
+  @JoinColumn({ name: 'productId' })
+  product: Product;
+
+  @Column()
+  quantity: number;
+
+  @Column({
+    type: 'enum',
+    enum: MovementType,
+  })
+  type: MovementType;
+
+  @Index()
+  @Column()
+  businessId: string;
+
+  @ManyToOne(() => Business)
+  @JoinColumn({ name: 'businessId' })
+  business: Business;
+
+  @CreateDateColumn()
+  createdAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/entities/subscription-plan.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+} from 'typeorm';
+
+@Entity('subscription_plans')
+export class SubscriptionPlan {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column({ unique: true })
+  name: string;
+
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
+  price: number;
+
+  @Column({ default: 'INR' })
+  currency: string;
+
+  @Column()
+  billingCycle: string; // MONTHLY, YEARLY
+
+  @Column({ type: 'int', default: 30 })
+  durationDays: number;
+
+  @Column({ type: 'json', nullable: true })
+  features: Record<string, any>;
+
+  @Column({ type: 'int', default: 0 })
+  maxUsers: number;
+
+  @Column({ type: 'int', default: 0 })
+  maxProducts: number;
+
+  @Column({ type: 'int', default: 1 })
+  maxBranches: number;
+
+  @Column({ type: 'int', default: 100 })
+  maxInvoices: number;
+
+  @Column({ default: 'ACTIVE' })
+  status: 'ACTIVE' | 'INACTIVE';
+
+  @Column({ type: 'int', default: 1 })
+  version: number;
+
+  @Column({ nullable: true })
+  updatedBy: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/entities/subscription.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+} from 'typeorm';
+import { Business } from './business.entity.js';
+
+@Entity('subscriptions')
+export class Subscription {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @ManyToOne(() => Business)
+  business: Business;
+
+  @Column()
+  businessId: string;
+
+  @Column()
+  plan: string;
+
+  @Column()
+  status: string;
+
+  @Column()
+  startDate: Date;
+
+  @Column()
+  endDate: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/entities/support-attachment.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  Index,
+} from 'typeorm';
+import { SupportTicket } from './support-ticket.entity.js';
+import { User } from './user.entity.js';
+
+@Entity('support_attachments')
+export class SupportAttachment {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Index()
+  @Column()
+  ticketId: string;
+
+  @ManyToOne(() => SupportTicket)
+  @JoinColumn({ name: 'ticketId' })
+  ticket: SupportTicket;
+
+  @Column()
+  fileUrl: string;
+
+  @Index()
+  @Column()
+  uploadedBy: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'uploadedBy' })
+  uploader: User;
+
+  @CreateDateColumn()
+  createdAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/entities/support-message.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  Index,
+} from 'typeorm';
+import { SupportTicket } from './support-ticket.entity.js';
+import { User } from './user.entity.js';
+
+export enum SenderType {
+  TENANT = 'TENANT',
+  PLATFORM = 'PLATFORM',
+}
+
+@Entity('support_messages')
+export class SupportMessage {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Index()
+  @Column()
+  ticketId: string;
+
+  @ManyToOne(() => SupportTicket)
+  @JoinColumn({ name: 'ticketId' })
+  ticket: SupportTicket;
+
+  @Index()
+  @Column()
+  senderId: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'senderId' })
+  sender: User;
+
+  @Column({
+    type: 'enum',
+    enum: SenderType,
+  })
+  senderType: SenderType;
+
+  @Column({ type: 'text' })
+  message: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/entities/support-ticket.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  ManyToOne,
+  JoinColumn,
+  Index,
+} from 'typeorm';
+import { Business } from './business.entity.js';
+import { User } from './user.entity.js';
+import { TicketStatus } from '../../common/enums/ticket-status.enum.js';
+import { TicketPriority } from '../../common/enums/ticket-priority.enum.js';
+import { TicketCategory } from '../../common/enums/ticket-category.enum.js';
+
+@Entity('support_tickets')
+export class SupportTicket {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Index()
+  @Column()
+  tenantId: string;
+
+  @ManyToOne(() => Business)
+  @JoinColumn({ name: 'tenantId' })
+  tenant: Business;
+
+  @Index()
+  @Column()
+  createdBy: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'createdBy' })
+  creator: User;
+
+  @Column()
+  title: string;
+
+  @Column({ type: 'text' })
+  description: string;
+
+  @Column({
+    type: 'enum',
+    enum: TicketPriority,
+    default: TicketPriority.MEDIUM,
+  })
+  priority: TicketPriority;
+
+  @Column({
+    type: 'enum',
+    enum: TicketStatus,
+    default: TicketStatus.OPEN,
+  })
+  status: TicketStatus;
+
+  @Column({
+    type: 'enum',
+    enum: TicketCategory,
+    default: TicketCategory.GENERAL,
+  })
+  category: TicketCategory;
+
+  @Index()
+  @Column({ nullable: true })
+  assignedTo: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'assignedTo' })
+  assignee: User;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/entities/user.entity.ts">
+<![CDATA[
+import {
+  Entity,
+  PrimaryGeneratedColumn,
+  Column,
+  CreateDateColumn,
+  UpdateDateColumn,
+  DeleteDateColumn,
+  ManyToOne,
+  Index,
+  JoinColumn,
+} from 'typeorm';
+import { Business } from './business.entity.js';
+import { Role } from './role.entity.js';
+import { PlatformRole } from '../../common/enums/platform-role.enum.js';
+
+@Entity('users')
+export class User {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @Column()
+  name: string;
+
+  @Index({ unique: true })
+  @Column({ unique: true })
+  email: string;
+
+  @Column({ select: false })
+  password: string;
+
+  /**
+   * Platform-level role. NULL for business users.
+   * ROOT > PLATFORM_ADMIN > SUPPORT_ADMIN
+   */
+  @Column({ type: 'enum', enum: PlatformRole, nullable: true })
+  platformRole: PlatformRole;
+
+  @Column({ default: true })
+  isActive: boolean;
+
+  @Index()
+  @Column({ nullable: true })
+  businessId: string;
+
+  @ManyToOne(() => Business)
+  @JoinColumn({ name: 'businessId' })
+  business: Business;
+
+  @Index()
+  @Column({ nullable: true })
+  roleId: string;
+
+  @ManyToOne(() => Role)
+  @JoinColumn({ name: 'roleId' })
+  role: Role;
+
+  // ─── Security Tokens ───────────────────────────────────
+  @Column({ type: 'varchar', nullable: true, select: false })
+  refreshToken: string | null;
+
+  @Column({ type: 'varchar', nullable: true, select: false })
+  resetToken: string | null;
+
+  @Column({ type: 'timestamp', nullable: true })
+  resetTokenExpiry: Date | null;
+
+  // ─── Audit ─────────────────────────────────────────────
+  /** Tracks who created this platform user (userId of creator) */
+  @Column({ nullable: true })
+  createdBy: string;
+
+  /** Updated on every successful login */
+  @Column({ nullable: true, type: 'timestamp' })
+  lastLogin: Date;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+}
+
+]]>
+</file>
+<file name="src/database/seeds/seed.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule } from '@nestjs/config';
+import { User } from '../entities/user.entity.js';
+import { Role } from '../entities/role.entity.js';
+import { Permission } from '../entities/permission.entity.js';
+import { SeedService } from './seed.service.js';
+import { Business } from '../entities/business.entity.js';
+import { Subscription } from '../entities/subscription.entity.js';
+import { SubscriptionPlan as SubscriptionPlanEntity } from '../entities/subscription-plan.entity.js';
+
+@Module({
+  imports: [
+    ConfigModule,
+    TypeOrmModule.forFeature([
+      User,
+      Role,
+      Permission,
+      Business,
+      Subscription,
+      SubscriptionPlanEntity,
+    ]),
+  ],
+  providers: [SeedService],
+  exports: [SeedService],
+})
+export class SeedModule {}
+
+]]>
+</file>
+<file name="src/database/seeds/seed.service.ts">
+<![CDATA[
+import { Injectable, OnApplicationBootstrap, Logger } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, IsNull } from 'typeorm';
+import { ConfigService } from '@nestjs/config';
+import { User } from '../entities/user.entity.js';
+import { Role } from '../entities/role.entity.js';
+import { Permission } from '../entities/permission.entity.js';
+import { Business, DomainType } from '../entities/business.entity.js';
+import { Subscription } from '../entities/subscription.entity.js';
+import { SubscriptionPlan as SubscriptionPlanEntity } from '../entities/subscription-plan.entity.js';
+import { HashUtil } from '../../common/utils/hash.util.js';
+import { PlatformRole } from '../../common/enums/platform-role.enum.js';
+import {
+  BusinessStatus,
+  SubscriptionPlan,
+} from '../../common/enums/business.enum.js';
+
+@Injectable()
+export class SeedService implements OnApplicationBootstrap {
+  private readonly logger = new Logger(SeedService.name);
+
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>,
+    @InjectRepository(Permission)
+    private readonly permissionRepository: Repository<Permission>,
+    @InjectRepository(Business)
+    private readonly businessRepository: Repository<Business>,
+    @InjectRepository(Subscription)
+    private readonly subscriptionRepository: Repository<Subscription>,
+    @InjectRepository(SubscriptionPlanEntity)
+    private readonly subscriptionPlanRepository: Repository<SubscriptionPlanEntity>,
+    private readonly configService: ConfigService,
+  ) {}
+
+  async onApplicationBootstrap() {
+    await this.seedPermissions();
+    await this.seedRoles();
+    await this.seedSubscriptionPlans();
+    await this.seedRootAdmin(); // ROOT from env
+    await this.seedTestTenant();
+  }
+
+  /**
+   * ROOT Admin — Created once from environment variables.
+   * This is the platform owner. Never created via API.
+   */
+  private async seedRootAdmin() {
+    const email =
+      this.configService.get<string>('ROOT_EMAIL') || 'root@gmail.com';
+    const password =
+      this.configService.get<string>('ROOT_PASSWORD') || '123456789';
+
+    const exists = await this.userRepository.findOne({ where: { email } });
+
+    if (!exists) {
+      const hashedPassword = await HashUtil.hash(password);
+      const root = new User();
+      Object.assign(root, {
+        name: 'Platform Root',
+        email,
+        password: hashedPassword,
+        platformRole: PlatformRole.ROOT,
+        isActive: true,
+      });
+      await this.userRepository.save(root);
+      this.logger.log(`✅ ROOT admin seeded: ${email}`);
+    }
+  }
+
+  private async seedTestTenant() {
+    const companyCode = 'ABC-PHARMA';
+    let business = await this.businessRepository.findOne({
+      where: { companyCode },
+    });
+
+    if (!business) {
+      business = this.businessRepository.create({
+        name: 'ABC Pharmacy',
+        companyCode,
+        domainType: 'pharmacy' as any as DomainType,
+        status: BusinessStatus.ACTIVE,
+        subscriptionPlan: SubscriptionPlan.PROFESSIONAL,
+      });
+      business = await this.businessRepository.save(business);
+    }
+
+    const adminRoleTemplate = await this.roleRepository.findOne({
+      where: { name: 'admin', businessId: IsNull() },
+      relations: ['permissions'],
+    });
+
+    let tenantAdminRole = await this.roleRepository.findOne({
+      where: { name: 'Tenant Admin', businessId: business.id },
+    });
+
+    if (!tenantAdminRole && adminRoleTemplate) {
+      tenantAdminRole = this.roleRepository.create({
+        name: 'Tenant Admin',
+        businessId: business.id,
+        permissions: adminRoleTemplate.permissions,
+      });
+      tenantAdminRole = await this.roleRepository.save(tenantAdminRole);
+    }
+
+    const email = 'admin@abcpharma.com';
+    const exists = await this.userRepository.findOne({ where: { email } });
+
+    if (!exists) {
+      const hashedPassword = await HashUtil.hash('admin123');
+      const tenantAdmin = new User();
+      Object.assign(tenantAdmin, {
+        name: 'ABC Admin',
+        email,
+        password: hashedPassword,
+        businessId: business.id,
+        roleId: tenantAdminRole?.id,
+      });
+      await this.userRepository.save(tenantAdmin);
+    }
+
+    // Ensure test tenant has a subscription
+    const subExists = await this.subscriptionRepository.findOne({
+      where: { businessId: business.id },
+    });
+
+    if (!subExists) {
+      const trialEnd = new Date();
+      trialEnd.setDate(trialEnd.getDate() + 7);
+
+      const subscription = this.subscriptionRepository.create({
+        businessId: business.id,
+        plan: SubscriptionPlan.PROFESSIONAL,
+        startDate: new Date(),
+        endDate: trialEnd,
+        status: 'ACTIVE',
+      });
+      await this.subscriptionRepository.save(subscription);
+      this.logger.log(`✅ Subscription seeded for ABC Pharma`);
+    }
+  }
+
+  private async seedPermissions() {
+    const permissions = [
+      { key: 'create_business', description: 'Can create businesses' },
+      { key: 'view_business', description: 'Can view business details' },
+      { key: 'create_user', description: 'Can create and manage users' },
+      { key: 'view_user', description: 'Can view user details' },
+      { key: 'update_user', description: 'Can update user details' },
+      { key: 'delete_user', description: 'Can deactivate users' },
+      { key: 'create_product', description: 'Can create products' },
+      { key: 'view_product', description: 'Can view products' },
+      { key: 'update_product', description: 'Can update products' },
+      { key: 'delete_product', description: 'Can delete products' },
+      { key: 'stock_in', description: 'Can record stock in movements' },
+      { key: 'stock_out', description: 'Can record stock out movements' },
+      { key: 'view_reports', description: 'Can view business reports' },
+      { key: 'create_invoice', description: 'Can create invoices' },
+      {
+        key: 'manage_platform',
+        description: 'Full platform administrative control',
+      },
+    ];
+
+    for (const p of permissions) {
+      const exists = await this.permissionRepository.findOne({
+        where: { key: p.key },
+      });
+      if (!exists) {
+        await this.permissionRepository.save(
+          this.permissionRepository.create(p),
+        );
+      }
+    }
+  }
+
+  private async seedRoles() {
+    const allPermissions = await this.permissionRepository.find();
+    const getPerms = (keys: string[]) =>
+      allPermissions.filter((p) => keys.includes(p.key));
+
+    const roleTemplates = [
+      {
+        name: 'admin',
+        permissions: allPermissions.filter((p) => p.key !== 'manage_platform'),
+      },
+      {
+        name: 'manager',
+        permissions: getPerms([
+          'view_business',
+          'create_user',
+          'view_user',
+          'update_user',
+          'create_product',
+          'view_product',
+          'update_product',
+          'stock_in',
+          'stock_out',
+          'view_reports',
+          'create_invoice',
+        ]),
+      },
+      {
+        name: 'sales',
+        permissions: getPerms(['view_product', 'stock_out', 'create_invoice']),
+      },
+      {
+        name: 'finance',
+        permissions: getPerms(['view_reports', 'create_invoice']),
+      },
+    ];
+
+    for (const template of roleTemplates) {
+      let role = await this.roleRepository.findOne({
+        where: { name: template.name, businessId: IsNull() },
+        relations: ['permissions'],
+      });
+
+      if (!role) {
+        role = this.roleRepository.create({
+          name: template.name,
+          businessId: null as unknown as string,
+          permissions: template.permissions,
+        });
+        await this.roleRepository.save(role);
+      } else {
+        role.permissions = template.permissions;
+        await this.roleRepository.save(role);
+      }
+    }
+  }
+
+  private async seedSubscriptionPlans() {
+    const plans = [
+      {
+        name: SubscriptionPlan.FREE,
+        price: 0,
+        maxUsers: 1,
+        maxProducts: 100,
+        maxBranches: 1,
+        maxInvoices: 100,
+        billingCycle: 'MONTHLY',
+        features: { reports: 'basic' },
+      },
+      {
+        name: SubscriptionPlan.BASIC,
+        price: 999,
+        maxUsers: 3,
+        maxProducts: 2000,
+        maxBranches: 1,
+        maxInvoices: 1000,
+        billingCycle: 'MONTHLY',
+        features: { reports: 'standard', gst: true },
+      },
+      {
+        name: SubscriptionPlan.PROFESSIONAL,
+        price: 2499,
+        maxUsers: 10,
+        maxProducts: 10000,
+        maxBranches: 5,
+        maxInvoices: -1, // Unlimited
+        billingCycle: 'MONTHLY',
+        features: { reports: 'advanced', barcode: true, batchTracking: true },
+      },
+      {
+        name: SubscriptionPlan.ENTERPRISE,
+        price: 0, // Custom pricing
+        maxUsers: -1,
+        maxProducts: -1,
+        maxBranches: -1,
+        maxInvoices: -1,
+        billingCycle: 'MONTHLY',
+        features: { reports: 'enterprise', api: true, customIntegrations: true },
+      },
+    ];
+
+    for (const planData of plans) {
+      const exists = await this.subscriptionPlanRepository.findOne({
+        where: { name: planData.name },
+      });
+
+      if (!exists) {
+        const plan = this.subscriptionPlanRepository.create(planData);
+        await this.subscriptionPlanRepository.save(plan);
+        this.logger.log(`✅ Subscription Plan seeded: ${planData.name}`);
+      }
+    }
+  }
+}
+
+]]>
+</file>
+<file name="src/health/health.controller.ts">
+<![CDATA[
+import { Controller, Get } from '@nestjs/common';
+import {
+  HealthCheckService,
+  HttpHealthIndicator,
+  HealthCheck,
+  TypeOrmHealthIndicator,
+} from '@nestjs/terminus';
+
+@Controller('health')
+export class HealthController {
+  constructor(
+    private health: HealthCheckService,
+    private http: HttpHealthIndicator,
+    private db: TypeOrmHealthIndicator,
+  ) {}
+
+  @Get()
+  @HealthCheck()
+  check() {
+    return this.health.check([
+      () => this.http.pingCheck('google', 'https://google.com'),
+      () => this.db.pingCheck('database'),
+    ]);
+  }
+}
+
+]]>
+</file>
+<file name="src/health/health.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { TerminusModule } from '@nestjs/terminus';
+import { HttpModule } from '@nestjs/axios';
+import { HealthController } from './health.controller.js';
+
+@Module({
+  imports: [TerminusModule, HttpModule],
+  controllers: [HealthController],
+})
+export class HealthModule {}
+
+]]>
+</file>
+<file name="src/main.ts">
+<![CDATA[
+import { NestFactory } from '@nestjs/core';
+import { ValidationPipe } from '@nestjs/common';
+import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import { AppModule } from './app.module.js';
+
+async function bootstrap() {
+  const app = await NestFactory.create(AppModule);
+  
+  // Apply Global Prefix from .env (usually /api)
+  app.setGlobalPrefix('api');
+
+  app.useGlobalPipes(new ValidationPipe({ 
+    whitelist: true, 
+    transform: true,
+    forbidNonWhitelisted: true,
+  }));
+
+  const config = new DocumentBuilder()
+    .setTitle('Inventory Management API')
+    .setDescription('API documentation for the Inventory Management System')
+    .setVersion('1.0')
+    .addBearerAuth()
+    .build();
+
+  const document = SwaggerModule.createDocument(app, config);
+  SwaggerModule.setup('api-docs', app, document);
+
+  const port = process.env.APP_PORT || 3001;
+  await app.listen(port);
+  console.log(`🚀 Application is running on: http://localhost:${port}/api`);
+}
+void bootstrap();
+
+]]>
+</file>
+<file name="src/modules/analytics/analytics.controller.ts">
+<![CDATA[
+import { Controller } from '@nestjs/common';
+import { AnalyticsService } from './analytics.service.js';
+
+@Controller('analytics')
+export class AnalyticsController {
+  constructor(private readonly analyticsService: AnalyticsService) {}
+}
+
+]]>
+</file>
+<file name="src/modules/analytics/analytics.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { AnalyticsService } from './analytics.service.js';
+import { AnalyticsController } from './analytics.controller.js';
+
+@Module({
+  controllers: [AnalyticsController],
+  providers: [AnalyticsService],
+})
+export class AnalyticsModule {}
+
+]]>
+</file>
+<file name="src/modules/analytics/analytics.service.ts">
+<![CDATA[
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class AnalyticsService {}
+
+]]>
+</file>
+<file name="src/modules/auth/auth.controller.ts">
+<![CDATA[
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Body,
+  UseGuards,
+  HttpCode,
+  HttpStatus,
+  Request,
+  Req,
+} from '@nestjs/common';
+import {
+  ApiTags,
+  ApiOperation,
+  ApiResponse,
+  ApiBearerAuth,
+} from '@nestjs/swagger';
+import type {
+  AuthenticatedRequest,
+  RequestUser,
+} from '../../common/interfaces/authenticated-request.interface.js';
+import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
+import { AuthService } from './auth.service.js';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
+import {
+  LoginDto,
+  RegisterDto,
+  RefreshTokenDto,
+  ChangePasswordDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from './dto/index.js';
+
+@ApiTags('Auth')
+@Controller('auth')
+export class AuthController {
+  constructor(private readonly authService: AuthService) {}
+
+  // ─── 0. Register (Public Self-Service) ───────────────────
+  @Post('register')
+  @ApiOperation({ summary: 'Register a new business and admin account' })
+  @ApiResponse({ status: 201, description: 'Registration successful' })
+  @ApiResponse({ status: 409, description: 'Conflict (email or business name exists)' })
+  async register(@Body() dto: RegisterDto) {
+    return this.authService.register(dto);
+  }
+
+  // ─── 1. Login (Super Admin + Tenant) ────────────────────
+  @Post('login')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'User login' })
+  @ApiResponse({ status: 200, description: 'Login successful' })
+  @ApiResponse({ status: 401, description: 'Unauthorized' })
+  async login(@Body() dto: LoginDto, @Req() req: AuthenticatedRequest) {
+    return this.authService.login(dto, {
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  // ─── 2. Refresh Access Token ─────────────────────────────
+  @Post('refresh')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Refresh access token' })
+  @ApiResponse({ status: 200, description: 'Token refreshed successfully' })
+  async refresh(@Body() dto: RefreshTokenDto) {
+    return this.authService.refreshToken(dto);
+  }
+
+  // ─── 3. Logout ───────────────────────────────────────────
+  @Post('logout')
+  @UseGuards(JwtAuthGuard)
+  @HttpCode(HttpStatus.OK)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'User logout' })
+  @ApiResponse({ status: 200, description: 'Logout successful' })
+  async logout(@CurrentUser() user: RequestUser) {
+    return this.authService.logout(user.userId);
+  }
+
+  // ─── 4. Change Password ──────────────────────────────────
+  @Patch('change-password')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Change password' })
+  @ApiResponse({ status: 200, description: 'Password changed successfully' })
+  async changePassword(
+    @Body() dto: ChangePasswordDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.authService.changePassword(req.user.userId, dto);
+  }
+
+  // ─── 5. Forgot Password ──────────────────────────────────
+  @Post('forgot-password')
+  @ApiOperation({ summary: 'Forgot password' })
+  @ApiResponse({ status: 200, description: 'Password reset email sent' })
+  async forgotPassword(@Body() dto: ForgotPasswordDto) {
+    return this.authService.forgotPassword(dto);
+  }
+
+  // ─── 6. Reset Password ───────────────────────────────────
+  @Post('reset-password')
+  @ApiOperation({ summary: 'Reset password' })
+  @ApiResponse({ status: 200, description: 'Password reset successful' })
+  async resetPassword(@Body() dto: ResetPasswordDto) {
+    return this.authService.resetPassword(dto);
+  }
+
+  // ─── 7. Get Current User Profile ─────────────────────────
+  @Get('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get current user profile' })
+  @ApiResponse({ status: 200, description: 'Profile retrieved successfully' })
+  async getProfile(@Request() req: AuthenticatedRequest) {
+    return this.authService.getProfile(req.user.userId);
+  }
+
+  // ─── 8. Validate Token ───────────────────────────────────
+  @Get('validate')
+  @ApiOperation({ summary: 'Validate current token' })
+  @ApiResponse({ status: 200, description: 'Token is valid' })
+  validateToken() {
+    return { valid: true };
+  }
+
+  // ─── 9. Get Current User Permissions ────────────────────
+  @Get('permissions')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Get current user permissions' })
+  @ApiResponse({
+    status: 200,
+    description: 'Permissions retrieved successfully',
+  })
+  async getMyPermissions(@Request() req: AuthenticatedRequest) {
+    return this.authService.getMyPermissions(req.user.userId);
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/auth/auth.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { JwtModule } from '@nestjs/jwt';
+import { PassportModule } from '@nestjs/passport';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { ConfigModule, ConfigService } from '@nestjs/config';
+import { AuthService } from './auth.service.js';
+import { AuthController } from './auth.controller.js';
+import { PlatformModule } from '../platform/platform.module.js';
+
+import { User } from '../../database/entities/user.entity.js';
+import { Business } from '../../database/entities/business.entity.js';
+import { Role } from '../../database/entities/role.entity.js';
+import { Permission } from '../../database/entities/permission.entity.js';
+import { Subscription } from '../../database/entities/subscription.entity.js';
+import { JwtStrategy } from './strategies/jwt.strategy.js';
+
+@Module({
+  imports: [
+    PassportModule,
+    JwtModule.registerAsync({
+      imports: [ConfigModule],
+      useFactory: (configService: ConfigService) => ({
+        secret: configService.get<string>('JWT_SECRET'),
+
+        signOptions: {
+          // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment
+          expiresIn: (configService.get<string>('JWT_EXPIRE_IN') ||
+            '1d') as any,
+        },
+      }),
+      inject: [ConfigService],
+    }),
+    TypeOrmModule.forFeature([User, Business, Role, Permission, Subscription]),
+    PlatformModule,
+  ],
+
+  providers: [AuthService, JwtStrategy],
+  controllers: [AuthController],
+  exports: [AuthService],
+})
+export class AuthModule {}
+
+]]>
+</file>
+<file name="src/modules/auth/auth.service.ts">
+<![CDATA[
+import {
+  Injectable,
+  UnauthorizedException,
+  NotFoundException,
+  BadRequestException,
+  ConflictException,
+} from '@nestjs/common';
+import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, Not, IsNull, FindOperator, DataSource } from 'typeorm';
+import { randomBytes } from 'crypto';
+import { User } from '../../database/entities/user.entity.js';
+import { Business } from '../../database/entities/business.entity.js';
+import { Role } from '../../database/entities/role.entity.js';
+import { Subscription } from '../../database/entities/subscription.entity.js';
+import { AuditLog } from '../../database/entities/audit-log.entity.js';
+import { HashUtil } from '../../common/utils/hash.util.js';
+import { PlatformRole } from '../../common/enums/platform-role.enum.js';
+import { BusinessStatus } from '../../common/enums/business.enum.js';
+import { AuditLogService } from '../platform/services/audit-log.service.js';
+import { AuditAction } from '../../common/enums/audit-action.enum.js';
+
+import {
+  LoginDto,
+  RegisterDto,
+  RefreshTokenDto,
+  ChangePasswordDto,
+  ForgotPasswordDto,
+  ResetPasswordDto,
+} from './dto/index.js';
+
+@Injectable()
+export class AuthService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Business)
+    private readonly businessRepository: Repository<Business>,
+    @InjectRepository(Subscription)
+    private readonly subscriptionRepository: Repository<Subscription>,
+    private readonly auditLogService: AuditLogService,
+    private readonly jwtService: JwtService,
+    private readonly dataSource: DataSource,
+  ) {}
+
+  // ─────────────────────── helpers ───────────────────────
+
+  private buildPayload(user: User) {
+    return {
+      sub: user.id,
+      userId: user.id,
+      email: user.email,
+      type: user.platformRole ? 'PLATFORM' : 'TENANT',
+      businessId: user.businessId,
+      platformRole: user.platformRole || null,
+      roleId: user.roleId,
+      role: user.role?.name || null,
+    };
+  }
+
+  private generateAccessToken(user: User) {
+    return this.jwtService.sign(this.buildPayload(user), { expiresIn: 3600 });
+  }
+
+  /** Refresh tokens are long-lived JWTs (7 days) with type:'refresh' */
+  private generateRefreshToken(user: User) {
+    return this.jwtService.sign(
+      { ...this.buildPayload(user), type: 'refresh' },
+      { expiresIn: '7d' },
+    );
+  }
+
+  // ─────────────────────── 1. REGISTER ───────────────────
+
+  async register(dto: RegisterDto) {
+    // 1. Pre-checks
+    const existingBusiness = await this.businessRepository.findOne({
+      where: { name: dto.businessName },
+    });
+    if (existingBusiness) {
+      throw new ConflictException('A business with this name already exists');
+    }
+
+    const existingUser = await this.userRepository.findOne({
+      where: { email: dto.adminEmail },
+    });
+    if (existingUser) {
+      throw new ConflictException('Admin email already exists in the system');
+    }
+
+    // 2. Transactional Creation
+    try {
+      return await this.dataSource.transaction(async (manager) => {
+        // A. Generate company code
+        const slug = dto.businessName
+          .replace(/[^a-zA-Z0-9]/g, '')
+          .toUpperCase()
+          .slice(0, 8);
+        const suffix = Math.random().toString(36).substring(2, 5).toUpperCase();
+        const companyCode = `${slug}${suffix}`;
+
+        // B. Create Business
+        const business = manager.create(Business, {
+          name: dto.businessName,
+          companyCode,
+          domainType: dto.domainType,
+          status: BusinessStatus.TRIAL,
+          subscriptionPlan: 'STARTER',
+          phone: dto.phone,
+          email: dto.email,
+          address: dto.address,
+        });
+        const savedBusiness = await manager.save(business);
+
+        // C. Create OWNER Role
+        const ownerRole = manager.create(Role, {
+          name: 'OWNER',
+          businessId: savedBusiness.id,
+        });
+        const savedRole = await manager.save(ownerRole);
+
+        // D. Create Admin User
+        const hashedPassword = await HashUtil.hash(dto.adminPassword);
+        const adminUser = manager.create(User, {
+          name: dto.adminName,
+          email: dto.adminEmail,
+          password: hashedPassword,
+          businessId: savedBusiness.id,
+          roleId: savedRole.id,
+          isActive: true,
+        });
+        const savedUser = await manager.save(adminUser);
+
+        // E. Create Initial Trial Subscription (7 days)
+        const trialEnd = new Date();
+        trialEnd.setDate(trialEnd.getDate() + 7);
+
+        const subscription = manager.create(Subscription, {
+          businessId: savedBusiness.id,
+          plan: 'STARTER',
+          startDate: new Date(),
+          endDate: trialEnd,
+          status: 'TRIAL',
+        });
+        await manager.save(subscription);
+
+        // Audit Log (Using current manager to ensure it's in the transaction)
+        const auditLog = manager.create(AuditLog, {
+          action: AuditAction.CREATE_TENANT,
+          entityType: 'business',
+          entityId: savedBusiness.id,
+          entityName: savedBusiness.name,
+          businessId: savedBusiness.id,
+          userEmail: savedUser.email,
+          newValue: {
+            name: savedBusiness.name,
+            code: savedBusiness.companyCode,
+            registrationType: 'SELF_SERVICE',
+          },
+        });
+        await manager.save(auditLog);
+
+        return {
+          message: 'Registration successful',
+          companyCode: savedBusiness.companyCode,
+          businessId: savedBusiness.id,
+          adminUserId: savedUser.id,
+        };
+      });
+    } catch (error) {
+      console.error('❌ Registration Failed:', error);
+      throw error; // Rethrow to let NestJS handle it (e.g., 500 error)
+    }
+  }
+
+  // ─────────────────────── 2. LOGIN ──────────────────────
+
+  async login(
+    dto: LoginDto,
+    metadata?: { ipAddress?: string; userAgent?: string },
+  ) {
+    const { ipAddress, userAgent } = metadata || {};
+
+    let user: User | null;
+
+    if (dto.companyCode) {
+      // Tenant Login
+      const business = await this.businessRepository.findOne({
+        where: { companyCode: dto.companyCode },
+      });
+
+      if (
+        !business ||
+        (business.status as string) === 'SUSPENDED' ||
+        (business.status as string) === 'CANCELLED'
+      ) {
+        throw new UnauthorizedException(
+          'Invalid business or business is inactive',
+        );
+      }
+      user = await this.userRepository.findOne({
+        where: { email: dto.email, businessId: business.id },
+        relations: ['role', 'role.permissions'],
+        select: [
+          'id',
+          'email',
+          'name',
+          'password',
+          'platformRole',
+          'businessId',
+          'roleId',
+          'isActive',
+        ],
+      });
+    } else {
+      // Platform Login (ROOT / PLATFORM_ADMIN / SUPPORT_ADMIN)
+      user = await this.userRepository.findOne({
+        where: {
+          email: dto.email,
+          platformRole: Not(IsNull()) as unknown as PlatformRole,
+        },
+        relations: ['role', 'role.permissions'],
+        select: [
+          'id',
+          'email',
+          'name',
+          'password',
+          'platformRole',
+          'businessId',
+          'roleId',
+          'isActive',
+        ],
+      });
+    }
+
+    if (!user || !user.isActive) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const isPasswordValid = await HashUtil.compare(dto.password, user.password);
+    if (!isPasswordValid) {
+      throw new UnauthorizedException('Invalid credentials');
+    }
+
+    const loginPayload = {
+      sub: user.id,
+      email: user.email,
+      platformRole: user.platformRole,
+      businessId: user.businessId,
+    };
+    const accessToken = await this.jwtService.signAsync(loginPayload);
+    const refreshToken = await this.jwtService.signAsync(loginPayload, {
+      expiresIn: '7d',
+    });
+
+    await this.userRepository.update(user.id, {
+      refreshToken: refreshToken,
+      lastLogin: new Date(),
+    });
+
+    // Audit Log for Platform Users
+    if (user.platformRole) {
+      await this.auditLogService.logAction({
+        userId: user.id,
+        userEmail: user.email,
+        userRole: user.platformRole,
+        action: AuditAction.LOGIN,
+        entityType: 'user',
+        entityId: user.id,
+        ipAddress,
+        userAgent,
+      });
+    }
+
+    let business: Business | null = null;
+    let subscription: Subscription | null = null;
+
+    if (user.businessId) {
+      business = await this.businessRepository.findOne({
+        where: { id: user.businessId },
+      });
+
+      if (business) {
+        subscription = await this.subscriptionRepository.findOne({
+          where: { businessId: business.id },
+          order: { endDate: 'DESC' },
+        });
+      }
+    }
+
+    const response: any = {
+      accessToken,
+      refreshToken,
+      expiresIn: 3600,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        type: user.platformRole ? 'PLATFORM' : 'TENANT',
+        ...(user.platformRole && { platformRole: user.platformRole }),
+        ...(user.role?.name && { role: user.role.name }),
+      },
+    };
+
+    if (business) {
+      response.business = {
+        id: business.id,
+        name: business.name,
+        companyCode: business.companyCode,
+      };
+    }
+
+    if (subscription) {
+      const now = new Date();
+      const end = new Date(subscription.endDate);
+      const diff = end.getTime() - now.getTime();
+      const daysLeft = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+
+      response.subscription = {
+        plan: subscription.plan,
+        daysLeft,
+      };
+    }
+
+    return response;
+  }
+
+  // ─────────────────────── 3. REFRESH TOKEN ──────────────
+
+  async refreshToken(dto: RefreshTokenDto) {
+    let payload: { userId: string; type: string };
+    try {
+      payload = this.jwtService.verify(dto.refreshToken);
+    } catch {
+      throw new UnauthorizedException('Invalid or expired refresh token');
+    }
+
+    if (payload.type !== 'refresh') {
+      throw new UnauthorizedException('Invalid token type');
+    }
+
+    const user = await this.userRepository.findOne({
+      where: { id: payload.userId, isActive: true },
+    });
+
+    if (!user) {
+      throw new UnauthorizedException('Session expired. Please login again.');
+    }
+
+    const newAccessToken = this.generateAccessToken(user);
+    return { accessToken: newAccessToken, expiresIn: 3600 };
+  }
+
+  // ─────────────────────── 4. LOGOUT ─────────────────────
+
+  async logout(userId: string) {
+    await this.userRepository.update(userId, {
+      refreshToken: null,
+    });
+    return { message: 'Logged out successfully' };
+  }
+
+  // ─────────────────────── 5. CHANGE PASSWORD ────────────
+
+  async changePassword(userId: string, dto: ChangePasswordDto) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      select: ['id', 'password'],
+    });
+    if (!user) throw new NotFoundException('User not found');
+
+    const isValid = await HashUtil.compare(dto.currentPassword, user.password);
+    if (!isValid)
+      throw new BadRequestException('Current password is incorrect');
+
+    const hashed = await HashUtil.hash(dto.newPassword);
+    await this.userRepository.update(userId, {
+      password: hashed,
+      refreshToken: null,
+    });
+
+    return { message: 'Password updated successfully' };
+  }
+
+  // ─────────────────────── 6. FORGOT PASSWORD ────────────
+
+  async forgotPassword(dto: ForgotPasswordDto) {
+    let user: User | null;
+
+    if (dto.companyCode) {
+      const business = await this.businessRepository.findOne({
+        where: { companyCode: dto.companyCode },
+      });
+      if (!business) throw new NotFoundException('Business not found');
+
+      user = await this.userRepository.findOne({
+        where: { email: dto.email, businessId: business.id },
+      });
+    } else {
+      user = await this.userRepository.findOne({
+        where: {
+          email: dto.email,
+          platformRole: Not(IsNull()) as unknown as FindOperator<PlatformRole>,
+        },
+      });
+    }
+
+    // Always return success (security: don't reveal if email exists)
+    if (!user) return { message: 'Password reset link sent to email' };
+
+    const resetToken = randomBytes(32).toString('hex');
+    const expiry = new Date(Date.now() + 15 * 60 * 1000); // 15 minutes
+
+    await this.userRepository.update(user.id, {
+      resetToken,
+      resetTokenExpiry: expiry,
+    });
+
+    // In a real app: send email with resetToken
+    // For dev/testing, return the token directly
+    return {
+      message: 'Password reset link sent to email',
+      resetToken, // Remove this in production
+    };
+  }
+
+  // ─────────────────────── 7. RESET PASSWORD ─────────────
+
+  async resetPassword(dto: ResetPasswordDto) {
+    const user = await this.userRepository.findOne({
+      where: { resetToken: dto.resetToken },
+      select: ['id', 'resetToken', 'resetTokenExpiry'],
+    });
+
+    if (!user || !user.resetTokenExpiry) {
+      throw new BadRequestException('Invalid or expired reset token');
+    }
+
+    if (new Date() > user.resetTokenExpiry) {
+      throw new BadRequestException('Reset token has expired');
+    }
+
+    const hashed = await HashUtil.hash(dto.newPassword);
+    await this.userRepository.update(user.id, {
+      password: hashed,
+      resetToken: null,
+      resetTokenExpiry: null,
+      refreshToken: null, // Invalidate all sessions
+    });
+
+    return { message: 'Password reset successful' };
+  }
+
+  // ─────────────────────── 8. GET PROFILE ────────────────
+  async getProfile(userId: string) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['role', 'role.permissions'],
+    });
+    if (!user) throw new NotFoundException('User not found');
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      type: user.platformRole ? 'PLATFORM' : 'TENANT',
+      ...(user.platformRole && { platformRole: user.platformRole }),
+      ...(user.businessId && { businessId: user.businessId }),
+      ...(user.role?.name && { role: user.role.name }),
+      permissions: user.role?.permissions?.map((p) => p.key) || [],
+    };
+  }
+
+  // ─────────────────────── 9. VALIDATE TOKEN ─────────────
+
+  validateToken() {
+    // If we reach here, JwtAuthGuard has already validated the token
+    return { valid: true };
+  }
+
+  // ─────────────────────── 10. GET MY PERMISSIONS ────────
+
+  async getMyPermissions(userId: string) {
+    const user = await this.userRepository.findOne({
+      where: { id: userId },
+      relations: ['role', 'role.permissions'],
+    });
+    if (!user) throw new NotFoundException('User not found');
+
+    return {
+      role: user.role?.name || null,
+      permissions: user.role?.permissions?.map((p) => p.key) || [],
+    };
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/auth/dto/auth.dto.ts">
+<![CDATA[
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
+import { ApiProperty } from '@nestjs/swagger';
+
+export class LoginDto {
+  @ApiProperty({ example: 'user@example.com', description: 'User email address' })
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({ example: 'password123', description: 'User password' })
+  @IsString()
+  @IsNotEmpty()
+  password: string;
+
+  @ApiProperty({ example: 'COMP001', description: 'Company code', required: false })
+  @IsOptional()
+  @IsString()
+  companyCode?: string;
+}
+
+export class RefreshTokenDto {
+  @ApiProperty({ example: 'refresh_token_here', description: 'Refresh token string' })
+  @IsString()
+  @IsNotEmpty()
+  refreshToken: string;
+}
+
+export class LogoutDto {
+  @ApiProperty({ example: 'refresh_token_here', description: 'Refresh token to logout' })
+  @IsString()
+  @IsNotEmpty()
+  refreshToken: string;
+}
+
+export class ChangePasswordDto {
+  @ApiProperty({ example: 'old_password_123', description: 'Current password' })
+  @IsString()
+  @IsNotEmpty()
+  currentPassword: string;
+
+  @ApiProperty({ example: 'new_password_456', description: 'New password', minLength: 6 })
+  @IsString()
+  @MinLength(6)
+  newPassword: string;
+}
+
+export class ForgotPasswordDto {
+  @ApiProperty({ example: 'user@example.com', description: 'User email for password reset' })
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({ example: 'COMP001', description: 'Company code', required: false })
+  @IsOptional()
+  @IsString()
+  companyCode?: string;
+}
+
+export class ResetPasswordDto {
+  @ApiProperty({ example: 'reset_token_here', description: 'Reset token received in email' })
+  @IsString()
+  @IsNotEmpty()
+  resetToken: string;
+
+  @ApiProperty({ example: 'new_password_123', description: 'New password to set', minLength: 6 })
+  @IsString()
+  @MinLength(6)
+  newPassword: string;
+}
+
+]]>
+</file>
+<file name="src/modules/auth/dto/index.ts">
+<![CDATA[
+export * from './auth.dto.js';
+export * from './register.dto.js';
+
+]]>
+</file>
+<file name="src/modules/auth/dto/register.dto.ts">
+<![CDATA[
+import { ApiProperty } from '@nestjs/swagger';
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
+import { DomainType } from '../../../database/entities/business.entity.js';
+
+export class RegisterDto {
+  // ─── Business Details ───────────────────────────────────────
+  @ApiProperty({ example: 'ABC Pharmacy', description: 'The name of your business' })
+  @IsString()
+  @IsNotEmpty()
+  businessName: string;
+
+  @ApiProperty({ 
+    example: 'pharmacy', 
+    enum: DomainType,
+    description: 'Type of business domain' 
+  })
+  @IsEnum(DomainType)
+  domainType: DomainType;
+
+  @ApiProperty({ example: '+919876543210', description: 'Business phone number', required: false })
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @ApiProperty({ example: 'office@abcpharma.com', description: 'Official business email' })
+  @IsEmail()
+  email: string;
+
+  @ApiProperty({ example: '123 Main St, Kolkata', description: 'Business address', required: false })
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  // ─── Admin Account Details ──────────────────────────────────
+  @ApiProperty({ example: 'John Doe', description: 'Full name of the business owner/admin' })
+  @IsString()
+  @IsNotEmpty()
+  adminName: string;
+
+  @ApiProperty({ example: 'admin@abcpharma.com', description: 'Login email for the admin' })
+  @IsEmail()
+  adminEmail: string;
+
+  @ApiProperty({ example: 'Password@123', description: 'Login password (min 6 chars)' })
+  @IsString()
+  @MinLength(6)
+  adminPassword: string;
+}
+
+]]>
+</file>
+<file name="src/modules/auth/strategies/jwt.strategy.ts">
+<![CDATA[
+import { ExtractJwt, Strategy } from 'passport-jwt';
+import { PassportStrategy } from '@nestjs/passport';
+import { Injectable } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { RequestUser } from '../../../common/interfaces/authenticated-request.interface.js';
+import { PlatformRole } from '../../../common/enums/platform-role.enum.js';
+
+@Injectable()
+export class JwtStrategy extends PassportStrategy(Strategy) {
+  constructor(private configService: ConfigService) {
+    super({
+      jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
+      ignoreExpiration: false,
+      secretOrKey: configService.get<string>('JWT_SECRET')!,
+    });
+  }
+
+  validate(payload: {
+    sub: string;
+    email: string;
+    businessId?: string;
+    platformRole?: PlatformRole;
+    roleId?: string;
+    role?: string;
+  }): RequestUser {
+    return {
+      userId: payload.sub,
+      email: payload.email,
+      businessId: payload.businessId,
+      platformRole: payload.platformRole || undefined,
+      roleId: payload.roleId,
+      role: payload.role,
+    };
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/business/business.controller.ts">
+<![CDATA[
+import { Controller } from '@nestjs/common';
+import { BusinessService } from './business.service.js';
+
+@Controller('business')
+export class BusinessController {
+  constructor(private readonly businessService: BusinessService) {}
+}
+
+]]>
+</file>
+<file name="src/modules/business/business.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { BusinessService } from './business.service.js';
+import { BusinessController } from './business.controller.js';
+
+@Module({
+  controllers: [BusinessController],
+  providers: [BusinessService],
+})
+export class BusinessModule {}
+
+]]>
+</file>
+<file name="src/modules/business/business.service.ts">
+<![CDATA[
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class BusinessService {}
+
+]]>
+</file>
+<file name="src/modules/domains/pharmacy/pharmacy.controller.ts">
+<![CDATA[
+import { Controller } from '@nestjs/common';
+import { PharmacyService } from './pharmacy.service.js';
+
+@Controller('domains/pharmacy')
+export class PharmacyController {
+  constructor(private readonly pharmacyService: PharmacyService) {}
+}
+
+]]>
+</file>
+<file name="src/modules/domains/pharmacy/pharmacy.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { PharmacyService } from './pharmacy.service.js';
+import { PharmacyController } from './pharmacy.controller.js';
+
+@Module({
+  controllers: [PharmacyController],
+  providers: [PharmacyService],
+})
+export class PharmacyModule {}
+
+]]>
+</file>
+<file name="src/modules/domains/pharmacy/pharmacy.service.ts">
+<![CDATA[
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class PharmacyService {}
+
+]]>
+</file>
+<file name="src/modules/domains/retail/retail.controller.ts">
+<![CDATA[
+import { Controller } from '@nestjs/common';
+import { RetailService } from './retail.service.js';
+
+@Controller('domains/retail')
+export class RetailController {
+  constructor(private readonly retailService: RetailService) {}
+}
+
+]]>
+</file>
+<file name="src/modules/domains/retail/retail.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { RetailService } from './retail.service.js';
+import { RetailController } from './retail.controller.js';
+
+@Module({
+  controllers: [RetailController],
+  providers: [RetailService],
+})
+export class RetailModule {}
+
+]]>
+</file>
+<file name="src/modules/domains/retail/retail.service.ts">
+<![CDATA[
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class RetailService {}
+
+]]>
+</file>
+<file name="src/modules/domains/warehouse/warehouse.controller.ts">
+<![CDATA[
+import { Controller } from '@nestjs/common';
+import { WarehouseService } from './warehouse.service.js';
+
+@Controller('domains/warehouse')
+export class WarehouseController {
+  constructor(private readonly warehouseService: WarehouseService) {}
+}
+
+]]>
+</file>
+<file name="src/modules/domains/warehouse/warehouse.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { WarehouseService } from './warehouse.service.js';
+import { WarehouseController } from './warehouse.controller.js';
+
+@Module({
+  controllers: [WarehouseController],
+  providers: [WarehouseService],
+})
+export class WarehouseModule {}
+
+]]>
+</file>
+<file name="src/modules/domains/warehouse/warehouse.service.ts">
+<![CDATA[
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class WarehouseService {}
+
+]]>
+</file>
+<file name="src/modules/inventory/inventory.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { ProductsController } from './products/products.controller.js';
+import { ProductsService } from './products/products.service.js';
+
+@Module({
+  controllers: [ProductsController],
+  providers: [ProductsService],
+})
+export class InventoryModule {}
+
+]]>
+</file>
+<file name="src/modules/inventory/products/products.controller.ts">
+<![CDATA[
+import { Controller } from '@nestjs/common';
+import { ProductsService } from './products.service.js';
+
+@Controller('inventory/products')
+export class ProductsController {
+  constructor(private readonly productsService: ProductsService) {}
+}
+
+]]>
+</file>
+<file name="src/modules/inventory/products/products.service.ts">
+<![CDATA[
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class ProductsService {}
+
+]]>
+</file>
+<file name="src/modules/notifications/notifications.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { NotificationsService } from './notifications.service.js';
+
+@Module({
+  providers: [NotificationsService],
+  exports: [NotificationsService],
+})
+export class NotificationsModule {}
+
+]]>
+</file>
+<file name="src/modules/notifications/notifications.service.ts">
+<![CDATA[
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class NotificationsService {}
+
+]]>
+</file>
+<file name="src/modules/platform/controllers/audit-log.controller.ts">
+<![CDATA[
+import { Controller, Get, Query, UseGuards } from '@nestjs/common';
+import { AuditLogService } from '../services/audit-log.service.js';
+import { AuditLogQueryDto } from '../dto/audit-log.dto.js';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard.js';
+import { PlatformRoleGuard } from '../../../common/guards/platform-role.guard.js';
+import { PlatformRoles } from '../../../common/decorators/platform-roles.decorator.js';
+import { PlatformRole } from '../../../common/enums/platform-role.enum.js';
+
+@Controller('platform/audit-logs')
+@UseGuards(JwtAuthGuard, PlatformRoleGuard)
+@PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+export class AuditLogController {
+  constructor(private readonly auditLogService: AuditLogService) {}
+
+  @Get()
+  async findAll(@Query() query: AuditLogQueryDto) {
+    return this.auditLogService.findAll(query);
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/platform/controllers/subscription-plan.controller.ts">
+<![CDATA[
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  Query,
+  Req,
+} from '@nestjs/common';
+import type { AuthenticatedRequest } from '../../../common/interfaces/authenticated-request.interface.js';
+import { SubscriptionPlanService } from '../services/subscription-plan.service.js';
+import {
+  CreateSubscriptionPlanDto,
+  UpdateSubscriptionPlanDto,
+} from '../dto/subscription-plan.dto.js';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard.js';
+import { PlatformRoleGuard } from '../../../common/guards/platform-role.guard.js';
+import { PlatformRoles } from '../../../common/decorators/platform-roles.decorator.js';
+import { PlatformRole } from '../../../common/enums/platform-role.enum.js';
+
+@Controller('platform/subscription-plans')
+@UseGuards(JwtAuthGuard, PlatformRoleGuard)
+export class SubscriptionPlanController {
+  constructor(private readonly planService: SubscriptionPlanService) {}
+
+  @Post()
+  @PlatformRoles(PlatformRole.ROOT)
+  async create(
+    @Body() dto: CreateSubscriptionPlanDto,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    return this.planService.createPlan(dto, {
+      userId: req.user.userId,
+      userEmail: req.user.email,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  @Get()
+  @PlatformRoles(
+    PlatformRole.ROOT,
+    PlatformRole.PLATFORM_ADMIN,
+    PlatformRole.SUPPORT_ADMIN,
+  )
+  async findAll(@Query('status') status?: 'ACTIVE' | 'INACTIVE') {
+    return this.planService.findAll(status);
+  }
+
+  @Get(':id')
+  @PlatformRoles(
+    PlatformRole.ROOT,
+    PlatformRole.PLATFORM_ADMIN,
+    PlatformRole.SUPPORT_ADMIN,
+  )
+  async findOne(@Param('id') id: string) {
+    return this.planService.findOne(id);
+  }
+
+  @Patch(':id')
+  @PlatformRoles(PlatformRole.ROOT)
+  async updatePlan(
+    @Param('id') id: string,
+    @Body() dto: UpdateSubscriptionPlanDto,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    return this.planService.updatePlan(id, dto, {
+      userId: req.user.userId,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  @Patch(':id/activate')
+  @PlatformRoles(PlatformRole.ROOT)
+  async activatePlan(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    return this.planService.setStatus(id, 'ACTIVE', {
+      userId: req.user.userId,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  @Patch(':id/deactivate')
+  @PlatformRoles(PlatformRole.ROOT)
+  async deactivatePlan(
+    @Param('id') id: string,
+    @Req() req: AuthenticatedRequest,
+  ) {
+    return this.planService.setStatus(id, 'INACTIVE', {
+      userId: req.user.userId,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  @Delete(':id')
+  @PlatformRoles(PlatformRole.ROOT)
+  async deletePlan(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
+    return this.planService.deletePlan(id, {
+      userId: req.user.userId,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  @Get(':id/usage')
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async getUsageSummary(@Param('id') id: string) {
+    return this.planService.getUsageSummary(id);
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/platform/controllers/tenant-management.controller.ts">
+<![CDATA[
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Delete,
+  Body,
+  Param,
+  UseGuards,
+  Query,
+  Request,
+  DefaultValuePipe,
+  ParseIntPipe,
+} from '@nestjs/common';
+import type { AuthenticatedRequest } from '../../../common/interfaces/authenticated-request.interface.js';
+import { TenantManagementService } from '../services/tenant-management.service.js';
+import {
+  CreateTenantDto,
+  UpdateTenantDto,
+  CreatePlatformAdminDto,
+  UpdatePlatformAdminDto,
+  ResetPlatformAdminPasswordDto,
+  BootstrapRootDto,
+  ResetTenantUserPasswordDto,
+  AssignPlanDto,
+} from '../dto/index.js';
+import { BusinessStatus } from '../../../common/enums/business.enum.js';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard.js';
+import { PlatformRoleGuard } from '../../../common/guards/platform-role.guard.js';
+import { PlatformRoles } from '../../../common/decorators/platform-roles.decorator.js';
+import { PlatformRole } from '../../../common/enums/platform-role.enum.js';
+
+@Controller('platform')
+export class TenantManagementController {
+  constructor(private readonly tenantService: TenantManagementService) {}
+
+  // ════════════════════════════════════════════════════════════════
+  // ROOT BOOTSTRAP — Public, one-time only
+  // ════════════════════════════════════════════════════════════════
+
+  @Post('root/bootstrap')
+  async bootstrapRoot(@Body() dto: BootstrapRootDto) {
+    return this.tenantService.bootstrapRoot(dto);
+  }
+
+  // ════════════════════════════════════════════════════════════════
+  // PLATFORM ADMIN MANAGEMENT — ROOT ONLY
+  // ════════════════════════════════════════════════════════════════
+
+  @Post('admins')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async createAdmin(
+    @Body() dto: CreatePlatformAdminDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.createAdmin(dto, {
+      userId: req.user.userId,
+      platformRole: req.user.platformRole!,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  @Get('admins')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async findAllAdmins(
+    @Request() req: AuthenticatedRequest,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+  ) {
+    return this.tenantService.findAllAdmins(req.user.platformRole!, {
+      page,
+      limit,
+    });
+  }
+
+  @Get('admins/:id')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async findOneAdmin(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.findOneAdmin(id, req.user.platformRole!);
+  }
+
+  @Patch('admins/:id')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT)
+  async updateAdmin(
+    @Param('id') id: string,
+    @Body() dto: UpdatePlatformAdminDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.updateAdmin(id, dto, {
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  @Post('admins/:id/suspend')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT)
+  async suspendAdmin(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.suspendAdmin(id, {
+      userId: req.user.userId,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  @Post('admins/:id/activate')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT)
+  async activateAdmin(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.activateAdmin(id, {
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  @Post('admins/:id/reset-password')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT)
+  async resetAdminPassword(
+    @Param('id') id: string,
+    @Body() dto: ResetPlatformAdminPasswordDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.resetAdminPassword(id, dto, {
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  @Delete('admins/:id')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT)
+  async deleteAdmin(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.deleteAdmin(id, {
+      userId: req.user.userId,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════
+  // SUPPORT CAPABILITIES — Tenant User Password Reset
+  // ════════════════════════════════════════════════════════════════
+
+  /**
+   * POST /platform/tenants/users/:id/reset-password
+   * Allows ROOT, PLATFORM_ADMIN, and SUPPORT_ADMIN to reset tenant passwords.
+   */
+  @Post('tenants/users/:id/reset-password')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(
+    PlatformRole.ROOT,
+    PlatformRole.PLATFORM_ADMIN,
+    PlatformRole.SUPPORT_ADMIN,
+  )
+  async resetTenantUserPassword(
+    @Param('id') id: string,
+    @Body() dto: ResetTenantUserPasswordDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.resetTenantUserPassword(id, {
+      password: dto.password,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  // ════════════════════════════════════════════════════════════════
+  // TENANT MANAGEMENT — ROOT + PLATFORM_ADMIN
+  // ════════════════════════════════════════════════════════════════
+
+  @Post('tenants')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async createTenant(
+    @Body() dto: CreateTenantDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.createTenant(dto, {
+      userId: req.user.userId,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  /**
+   * GET /platform/tenants
+   * Query: search, status, plan, sortBy, order, page, limit
+   */
+  @Get('tenants')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(
+    PlatformRole.ROOT,
+    PlatformRole.PLATFORM_ADMIN,
+    PlatformRole.SUPPORT_ADMIN,
+  )
+  async findAllTenants(
+    @Query('search') search?: string,
+    @Query('status') status?: BusinessStatus,
+    @Query('plan') plan?: string,
+    @Query('sortBy') sortBy?: string,
+    @Query('order') order?: 'ASC' | 'DESC',
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page?: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
+  ) {
+    return this.tenantService.findAllTenants({
+      page,
+      limit,
+      search,
+      status,
+      plan,
+      sortBy,
+      order,
+    });
+  }
+
+  @Get('tenants/:id')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(
+    PlatformRole.ROOT,
+    PlatformRole.PLATFORM_ADMIN,
+    PlatformRole.SUPPORT_ADMIN,
+  )
+  async findOneTenant(@Param('id') id: string) {
+    return this.tenantService.findOneTenant(id);
+  }
+
+  @Patch('tenants/:id')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async updateTenant(@Param('id') id: string, @Body() dto: UpdateTenantDto) {
+    return this.tenantService.updateTenant(id, dto);
+  }
+
+  @Delete('tenants/:id')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT)
+  async deleteTenant(@Param('id') id: string) {
+    return this.tenantService.deleteTenant(id);
+  }
+
+  @Post('tenants/:id/suspend')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async suspendTenant(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.updateTenantStatus(
+      id,
+      {
+        status: BusinessStatus.SUSPENDED,
+        reason: 'Suspended by platform admin',
+      },
+      {
+        userId: req.user.userId,
+        ipAddress: req.ip,
+        userAgent: req.get('user-agent'),
+      },
+    );
+  }
+
+  @Post('tenants/:id/activate')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async activateTenant(
+    @Param('id') id: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.updateTenantStatus(
+      id,
+      { status: BusinessStatus.ACTIVE, reason: 'Activated by platform admin' },
+      {
+        userId: req.user.userId,
+        ipAddress: req.ip,
+        userAgent: req.get('user-agent'),
+      },
+    );
+  }
+
+  @Post('tenants/:id/assign-plan')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async assignPlan(
+    @Param('id') id: string,
+    @Body() dto: AssignPlanDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.tenantService.assignPlan(id, dto, {
+      userId: req.user.userId,
+      ipAddress: req.ip,
+      userAgent: req.get('user-agent'),
+    });
+  }
+
+  @Get('tenants/:id/subscription')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async getSubscription(@Param('id') id: string) {
+    return this.tenantService.getSubscription(id);
+  }
+
+  @Get('tenants/:id/payments')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async getPayments(@Param('id') id: string) {
+    return this.tenantService.getPayments(id);
+  }
+
+  @Get('tenants/:id/users')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(
+    PlatformRole.ROOT,
+    PlatformRole.PLATFORM_ADMIN,
+    PlatformRole.SUPPORT_ADMIN,
+  )
+  async getTenantUsers(
+    @Param('id') id: string,
+    @Query('search') search?: string,
+    @Query('page', new DefaultValuePipe(1), ParseIntPipe) page?: number,
+    @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
+  ) {
+    return this.tenantService.getTenantUsers(id, { page, limit, search });
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/platform/dto/assign-plan.dto.ts">
+<![CDATA[
+import { IsNotEmpty, IsString } from 'class-validator';
+
+export class AssignPlanDto {
+  @IsString()
+  @IsNotEmpty()
+  planId: string;
+}
+
+]]>
+</file>
+<file name="src/modules/platform/dto/audit-log.dto.ts">
+<![CDATA[
+import { IsOptional, IsString, IsEnum, IsNumber, Min } from 'class-validator';
+import { Type } from 'class-transformer';
+import { AuditAction } from '../../../common/enums/audit-action.enum.js';
+import { PlatformRole } from '../../../common/enums/platform-role.enum.js';
+
+export class AuditLogQueryDto {
+  @IsOptional()
+  @IsString()
+  userId?: string;
+
+  @IsOptional()
+  @IsString()
+  userEmail?: string;
+
+  @IsOptional()
+  @IsEnum(PlatformRole)
+  role?: PlatformRole;
+
+  @IsOptional()
+  @IsEnum(AuditAction)
+  action?: AuditAction;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  page?: number = 1;
+
+  @IsOptional()
+  @Type(() => Number)
+  @IsNumber()
+  @Min(1)
+  limit?: number = 10;
+}
+
+export interface CreateAuditLogDto {
+  userId?: string;
+  userEmail?: string;
+  userRole?: PlatformRole;
+  action: AuditAction;
+  entityType?: string;
+  entityId?: string;
+  entityName?: string;
+  oldValue?: any;
+  newValue?: any;
+  ipAddress?: string;
+  userAgent?: string;
+  businessId?: string;
+}
+
+]]>
+</file>
+<file name="src/modules/platform/dto/create-platform-admin.dto.ts">
+<![CDATA[
+import {
+  IsEmail,
+  IsNotEmpty,
+  IsString,
+  MinLength,
+  IsEnum,
+  IsOptional,
+} from 'class-validator';
+import { PlatformRole } from '../../../common/enums/platform-role.enum.js';
+
+/** DTO for creating a PLATFORM_ADMIN or SUPPORT_ADMIN — ROOT use only */
+export class CreatePlatformAdminDto {
+  @IsNotEmpty()
+  @IsString()
+  name: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  password: string;
+
+  @IsEnum(PlatformRole)
+  @IsNotEmpty()
+  role: PlatformRole;
+}
+
+/** DTO for updating a platform admin profile — ROOT use only */
+export class UpdatePlatformAdminDto {
+  @IsString()
+  @IsOptional()
+  name?: string;
+
+  @IsString()
+  @IsOptional()
+  status?: 'ACTIVE' | 'SUSPENDED';
+}
+
+/** DTO for resetting platform admin password — ROOT use only */
+export class ResetPlatformAdminPasswordDto {
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  newPassword: string;
+}
+
+/** DTO for bootstrapping the very first ROOT admin (disabled if ROOT exists) */
+export class BootstrapRootDto {
+  @IsEmail()
+  email: string;
+
+  @IsString()
+  @MinLength(12)
+  password: string;
+
+  @IsString()
+  @MinLength(12)
+  confirmPassword: string;
+}
+
+]]>
+</file>
+<file name="src/modules/platform/dto/create-platform-user.dto.ts">
+<![CDATA[
+export class CreatePlatformUserDto {
+  name!: string;
+  email!: string;
+  password!: string;
+}
+
+]]>
+</file>
+<file name="src/modules/platform/dto/create-super-admin.dto.ts">
+<![CDATA[
+import { IsEmail, IsNotEmpty, IsString, MinLength } from 'class-validator';
+
+export class CreateSuperAdminDto {
+  @IsEmail()
+  @IsNotEmpty()
+  email: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  password: string;
+}
+
+]]>
+</file>
+<file name="src/modules/platform/dto/create-tenant.dto.ts">
+<![CDATA[
+import {
+  IsEmail,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  IsString,
+  MinLength,
+} from 'class-validator';
+import { DomainType } from '../../../database/entities/business.entity.js';
+import {
+  SubscriptionPlan,
+  BusinessStatus,
+} from '../../../common/enums/business.enum.js';
+
+export class CreateTenantDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsEnum(DomainType)
+  domainType: DomainType;
+
+  @IsString()
+  @IsNotEmpty()
+  adminName: string;
+
+  @IsEmail()
+  @IsNotEmpty()
+  adminEmail: string;
+
+  @IsString()
+  @IsNotEmpty()
+  @MinLength(8)
+  adminPassword: string;
+
+  @IsOptional()
+  @IsEnum(SubscriptionPlan)
+  subscriptionPlan?: SubscriptionPlan;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
+
+  @IsOptional()
+  @IsString()
+  timezone?: string;
+
+  @IsOptional()
+  @IsString()
+  currency?: string;
+}
+
+export class UpdateTenantDto {
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsEnum(BusinessStatus)
+  status?: BusinessStatus;
+
+  @IsOptional()
+  @IsEnum(DomainType)
+  domainType?: DomainType;
+
+  @IsOptional()
+  @IsString()
+  phone?: string;
+
+  @IsOptional()
+  @IsEmail()
+  email?: string;
+
+  @IsOptional()
+  @IsString()
+  address?: string;
+}
+
+export class UpdateTenantStatusDto {
+  @IsEnum(BusinessStatus)
+  status: BusinessStatus;
+
+  @IsOptional()
+  @IsString()
+  reason?: string;
+}
+
+]]>
+</file>
+<file name="src/modules/platform/dto/index.ts">
+<![CDATA[
+export * from './create-tenant.dto.js';
+export * from './create-platform-admin.dto.js';
+export * from './reset-tenant-user-password.dto.js';
+export * from './assign-plan.dto.js';
+export * from './subscription-plan.dto.js';
+export * from './audit-log.dto.js';
+
+]]>
+</file>
+<file name="src/modules/platform/dto/reset-tenant-user-password.dto.ts">
+<![CDATA[
+import { IsOptional, IsString, MinLength } from 'class-validator';
+
+/** DTO for optional custom password during tenant user reset */
+export class ResetTenantUserPasswordDto {
+  @IsOptional()
+  @IsString()
+  @MinLength(8)
+  password?: string;
+}
+
+]]>
+</file>
+<file name="src/modules/platform/dto/subscription-plan.dto.ts">
+<![CDATA[
+import {
+  IsString,
+  IsNumber,
+  IsObject,
+  IsOptional,
+  Min,
+  IsNotEmpty,
+} from 'class-validator';
+
+class PlanLimitsDto {
+  @IsNumber()
+  @Min(0)
+  maxUsers: number;
+
+  @IsNumber()
+  @Min(0)
+  maxProducts: number;
+}
+
+export class CreateSubscriptionPlanDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsNumber()
+  @Min(0)
+  price: number;
+
+  @IsString()
+  @IsOptional()
+  currency?: string = 'INR';
+
+  @IsString()
+  @IsNotEmpty()
+  billingCycle: string;
+
+  @IsObject()
+  @IsNotEmpty()
+  features: Record<string, boolean>;
+
+  @IsObject()
+  @IsNotEmpty()
+  limits: PlanLimitsDto;
+}
+
+export class UpdateSubscriptionPlanDto {
+  @IsOptional()
+  @IsString()
+  name?: string;
+
+  @IsOptional()
+  @IsNumber()
+  @Min(0)
+  price?: number;
+
+  @IsOptional()
+  @IsObject()
+  features?: Record<string, boolean>;
+
+  @IsOptional()
+  @IsObject()
+  limits?: Partial<PlanLimitsDto>;
+}
+
+]]>
+</file>
+<file name="src/modules/platform/platform.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { TenantManagementService } from './services/tenant-management.service.js';
+import { TenantManagementController } from './controllers/tenant-management.controller.js';
+import { AuditLogController } from './controllers/audit-log.controller.js';
+
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Business } from '../../database/entities/business.entity.js';
+import { User } from '../../database/entities/user.entity.js';
+import { Role } from '../../database/entities/role.entity.js';
+import { Permission } from '../../database/entities/permission.entity.js';
+import { Subscription } from '../../database/entities/subscription.entity.js';
+import { Invoice } from '../../database/entities/invoice.entity.js';
+
+import { SubscriptionPlanService } from './services/subscription-plan.service.js';
+import { SubscriptionPlanController } from './controllers/subscription-plan.controller.js';
+import { SubscriptionPlan } from '../../database/entities/subscription-plan.entity.js';
+import { AuditLog } from '../../database/entities/audit-log.entity.js';
+import { AuditLogService } from './services/audit-log.service.js';
+
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([
+      Business,
+      User,
+      Role,
+      Permission,
+      Subscription,
+      Invoice,
+      SubscriptionPlan,
+      AuditLog,
+    ]),
+  ],
+  controllers: [
+    TenantManagementController,
+    SubscriptionPlanController,
+    AuditLogController,
+  ],
+  providers: [
+    TenantManagementService,
+    SubscriptionPlanService,
+    AuditLogService,
+  ],
+  exports: [AuditLogService],
+})
+export class PlatformModule {}
+
+]]>
+</file>
+<file name="src/modules/platform/services/audit-log.service.ts">
+<![CDATA[
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { AuditLog } from '../../../database/entities/audit-log.entity.js';
+import { AuditLogQueryDto, CreateAuditLogDto } from '../dto/audit-log.dto.js';
+
+@Injectable()
+export class AuditLogService {
+  constructor(
+    @InjectRepository(AuditLog)
+    private readonly auditLogRepository: Repository<AuditLog>,
+  ) {}
+
+  /**
+   * Records a new audit log entry
+   */
+  async logAction(dto: CreateAuditLogDto) {
+    const log = this.auditLogRepository.create(dto);
+    return this.auditLogRepository.save(log);
+  }
+
+  /**
+   * Retrieves audit logs with filtering and pagination
+   */
+  async findAll(query: AuditLogQueryDto) {
+    const { page = 1, limit = 10, userId, userEmail, role, action } = query;
+    const qb = this.auditLogRepository.createQueryBuilder('log');
+
+    if (userId) {
+      qb.andWhere('log.userId = :userId', { userId });
+    }
+    if (userEmail) {
+      qb.andWhere('log.userEmail ILIKE :userEmail', {
+        userEmail: `%${userEmail}%`,
+      });
+    }
+    if (role) {
+      qb.andWhere('log.userRole = :role', { role });
+    }
+    if (action) {
+      qb.andWhere('log.action = :action', { action });
+    }
+
+    const [data, total] = await qb
+      .orderBy('log.createdAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    return {
+      total,
+      page,
+      limit,
+      totalPages: Math.ceil(total / limit),
+      data,
+    };
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/platform/services/subscription-plan.service.ts">
+<![CDATA[
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, LessThan } from 'typeorm';
+import type { QueryDeepPartialEntity } from 'typeorm/query-builder/QueryPartialEntity.js';
+import { SubscriptionPlan } from '../../../database/entities/subscription-plan.entity.js';
+import { Business } from '../../../database/entities/business.entity.js';
+import { BusinessStatus } from '../../../common/enums/business.enum.js';
+import {
+  CreateSubscriptionPlanDto,
+  UpdateSubscriptionPlanDto,
+} from '../dto/subscription-plan.dto.js';
+import { AuditLogService } from './audit-log.service.js';
+import { AuditAction } from '../../../common/enums/audit-action.enum.js';
+
+@Injectable()
+export class SubscriptionPlanService {
+  constructor(
+    @InjectRepository(SubscriptionPlan)
+    private readonly planRepository: Repository<SubscriptionPlan>,
+    @InjectRepository(Business)
+    private readonly businessRepository: Repository<Business>,
+    private readonly auditLogService: AuditLogService,
+  ) {}
+
+  async createPlan(
+    dto: CreateSubscriptionPlanDto,
+    metadata: {
+      userId: string;
+      userEmail?: string;
+      ipAddress?: string;
+      userAgent?: string;
+    },
+  ) {
+    const { userId, userEmail, ipAddress, userAgent } = metadata;
+    const exists = await this.planRepository.findOne({
+      where: { name: dto.name },
+    });
+    if (exists) throw new ConflictException('Plan name already exists');
+
+    // Auto-calculate duration
+    let durationDays = 30;
+    if (dto.billingCycle === 'YEARLY') durationDays = 365;
+
+    const plan = this.planRepository.create({
+      ...dto,
+      durationDays,
+      maxUsers: dto.limits.maxUsers,
+      maxProducts: dto.limits.maxProducts,
+      updatedBy: userId,
+    });
+    const saved = await this.planRepository.save(plan);
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      userId,
+      userEmail,
+      action: AuditAction.CREATE_PLAN,
+      entityType: 'subscription_plan',
+      entityId: saved.id,
+      entityName: saved.name,
+      ipAddress,
+      userAgent,
+      newValue: saved,
+    });
+
+    return saved;
+  }
+
+  private formatPlan(plan: SubscriptionPlan) {
+    return {
+      id: plan.id,
+      name: plan.name,
+      price: plan.price,
+      currency: plan.currency,
+      billingCycle: plan.billingCycle,
+      status: plan.status,
+      features: plan.features,
+      limits: {
+        maxUsers: plan.maxUsers,
+        maxProducts: plan.maxProducts,
+      },
+      version: plan.version,
+      updatedBy: plan.updatedBy,
+      createdAt: plan.createdAt,
+      updatedAt: plan.updatedAt,
+    };
+  }
+
+  async findAll(status?: 'ACTIVE' | 'INACTIVE') {
+    const where = status ? { status } : {};
+    const plans = await this.planRepository.find({
+      where,
+      order: { createdAt: 'DESC' },
+    });
+
+    return {
+      data: plans.map((plan) => this.formatPlan(plan)),
+      meta: {
+        total: plans.length,
+      },
+    };
+  }
+
+  async findOne(id: string) {
+    const plan = await this.planRepository.findOne({ where: { id } });
+    if (!plan) throw new NotFoundException('Plan not found');
+    return this.formatPlan(plan);
+  }
+
+  async updatePlan(
+    id: string,
+    dto: UpdateSubscriptionPlanDto,
+    metadata: { userId: string; ipAddress?: string; userAgent?: string },
+  ) {
+    const { userId, ipAddress, userAgent } = metadata;
+
+    const plan = await this.planRepository.findOne({ where: { id } });
+    if (!plan) throw new NotFoundException('Plan not found');
+
+    // Revenue Safety Check
+    const criticalFields = ['price', 'currency', 'billingCycle'];
+    const isUpdatingCriticalField = criticalFields.some(
+      (field) => dto[field] !== undefined,
+    );
+
+    if (isUpdatingCriticalField && plan.status === 'ACTIVE') {
+      const usageCount = await this.businessRepository.count({
+        where: { subscriptionPlan: plan.name },
+      });
+      if (usageCount > 0) {
+        throw new ConflictException(
+          'Cannot modify price or billing cycle of an active plan with subscribers. Please deactivate this plan and create a new version.',
+        );
+      }
+    }
+
+    const { limits, ...restDto } = dto;
+    const updateData: Partial<SubscriptionPlan> & {
+      maxUsers?: number;
+      maxProducts?: number;
+    } = {
+      ...(restDto as unknown as Partial<SubscriptionPlan>),
+      updatedBy: userId,
+    };
+
+    // Handle limits
+    if (limits) {
+      if (limits.maxUsers !== undefined) updateData.maxUsers = limits.maxUsers;
+      if (limits.maxProducts !== undefined)
+        updateData.maxProducts = limits.maxProducts;
+    }
+
+    // Increment version on update
+    updateData.version = (plan.version || 0) + 1;
+
+    await this.planRepository.update(
+      id,
+      updateData as unknown as QueryDeepPartialEntity<SubscriptionPlan>,
+    );
+
+    // Fetch and return full updated object
+    const updatedPlan = await this.planRepository.findOne({ where: { id } });
+    if (!updatedPlan) throw new Error('Update verification failed');
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      userId,
+      action: AuditAction.UPDATE_PLAN,
+      entityType: 'subscription_plan',
+      entityId: id,
+      entityName: plan.name,
+      ipAddress,
+      userAgent,
+      oldValue: plan,
+      newValue: updatedPlan,
+    });
+
+    return {
+      message: 'Subscription plan updated successfully',
+      data: this.formatPlan(updatedPlan),
+    };
+  }
+
+  async setStatus(
+    id: string,
+    status: 'ACTIVE' | 'INACTIVE',
+    metadata: { userId: string; ipAddress?: string; userAgent?: string },
+  ) {
+    const { userId, ipAddress, userAgent } = metadata;
+    const plan = await this.findOne(id);
+    await this.planRepository.update(id, { status, updatedBy: userId });
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      userId,
+      action: AuditAction.UPDATE_PLAN,
+      entityType: 'subscription_plan',
+      entityId: id,
+      entityName: plan.name,
+      ipAddress,
+      userAgent,
+      newValue: { status },
+    });
+
+    return { message: `Plan ${status.toLowerCase()} successfully`, status };
+  }
+
+  async deletePlan(
+    id: string,
+    metadata: { userId: string; ipAddress?: string; userAgent?: string },
+  ) {
+    const { userId, ipAddress, userAgent } = metadata;
+    const plan = await this.planRepository.findOne({ where: { id } });
+    if (!plan) throw new NotFoundException('Plan not found');
+
+    // Check if assigned to any tenants
+    const usageCount = await this.businessRepository.count({
+      where: { subscriptionPlan: plan.name },
+    });
+
+    if (usageCount > 0) {
+      throw new ConflictException(
+        'Plan is assigned to tenants and cannot be deleted',
+      );
+    }
+
+    await this.planRepository.delete(id);
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      userId,
+      action: AuditAction.DELETE_PLAN,
+      entityType: 'subscription_plan',
+      entityId: id,
+      entityName: plan.name,
+      ipAddress,
+      userAgent,
+      oldValue: plan,
+    });
+
+    return { message: 'Subscription plan deleted successfully' };
+  }
+
+  async getUsageSummary(id: string) {
+    const plan = await this.planRepository.findOne({ where: { id } });
+    if (!plan) throw new NotFoundException('Plan not found');
+
+    // Status Counts
+    const activeCount = await this.businessRepository.count({
+      where: { subscriptionPlan: plan.name, status: BusinessStatus.ACTIVE },
+    });
+
+    const trialCount = await this.businessRepository.count({
+      where: { subscriptionPlan: plan.name, status: BusinessStatus.TRIAL },
+    });
+
+    const suspendedCount = await this.businessRepository.count({
+      where: { subscriptionPlan: plan.name, status: BusinessStatus.SUSPENDED },
+    });
+
+    // Expired count (status=ACTIVE but subscriptionExpiresAt < now)
+    const now = new Date();
+    const expiredCount = await this.businessRepository.count({
+      where: {
+        subscriptionPlan: plan.name,
+        status: BusinessStatus.ACTIVE,
+        subscriptionExpiresAt: LessThan(now),
+      },
+    });
+
+    const totalSubscriptions = activeCount + trialCount + suspendedCount;
+
+    // Revenue Calculations
+    const price = Number(plan.price);
+    let mrr = 0;
+
+    if (plan.billingCycle === 'MONTHLY') {
+      mrr = activeCount * price;
+    } else if (plan.billingCycle === 'YEARLY') {
+      mrr = (activeCount * price) / 12;
+    }
+
+    const arr = mrr * 12;
+
+    return {
+      planId: plan.id,
+      planName: plan.name,
+      subscriptions: {
+        total: totalSubscriptions,
+        active: activeCount,
+        trial: trialCount,
+        expired: expiredCount,
+        suspended: suspendedCount,
+      },
+      revenue: {
+        mrr: Number(mrr.toFixed(2)),
+        arr: Number(arr.toFixed(2)),
+        currency: plan.currency,
+      },
+    };
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/platform/services/tenant-management.service.ts">
+<![CDATA[
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  ForbiddenException,
+  BadRequestException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, IsNull, Not, DataSource } from 'typeorm';
+import { Business } from '../../../database/entities/business.entity.js';
+import { BusinessStatus } from '../../../common/enums/business.enum.js';
+import { User } from '../../../database/entities/user.entity.js';
+import { Role } from '../../../database/entities/role.entity.js';
+import { Permission } from '../../../database/entities/permission.entity.js';
+import { SubscriptionPlan } from '../../../database/entities/subscription-plan.entity.js';
+import { Subscription } from '../../../database/entities/subscription.entity.js';
+import { Invoice } from '../../../database/entities/invoice.entity.js';
+import { HashUtil } from '../../../common/utils/hash.util.js';
+import { PlatformRole } from '../../../common/enums/platform-role.enum.js';
+import { AuditLogService } from './audit-log.service.js';
+import { AuditAction } from '../../../common/enums/audit-action.enum.js';
+
+import {
+  CreateTenantDto,
+  UpdateTenantDto,
+  CreatePlatformAdminDto,
+  UpdatePlatformAdminDto,
+  ResetPlatformAdminPasswordDto,
+  BootstrapRootDto,
+  UpdateTenantStatusDto,
+  AssignPlanDto,
+} from '../dto/index.js';
+
+@Injectable()
+export class TenantManagementService {
+  constructor(
+    @InjectRepository(Business)
+    private readonly businessRepository: Repository<Business>,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>,
+    @InjectRepository(Permission)
+    private readonly permissionRepository: Repository<Permission>,
+    @InjectRepository(Subscription)
+    private readonly subscriptionRepository: Repository<Subscription>,
+    @InjectRepository(Invoice)
+    private readonly invoiceRepository: Repository<Invoice>,
+    private readonly auditLogService: AuditLogService,
+    private readonly dataSource: DataSource,
+  ) {}
+
+  // ═══════════════════════════════════════════════════
+  // ROOT BOOTSTRAP — public, works ONCE only
+  // ═══════════════════════════════════════════════════
+
+  async bootstrapRoot(dto: BootstrapRootDto) {
+    if (dto.password !== dto.confirmPassword) {
+      throw new BadRequestException('Passwords do not match');
+    }
+    const rootExists = await this.userRepository.findOne({
+      where: { platformRole: PlatformRole.ROOT },
+    });
+    if (rootExists) {
+      throw new ForbiddenException(
+        'ROOT already exists. Bootstrap is disabled.',
+      );
+    }
+    const hashed = await HashUtil.hash(dto.password);
+    const root = new User();
+    Object.assign(root, {
+      email: dto.email,
+      password: hashed,
+      platformRole: PlatformRole.ROOT,
+      isActive: true,
+    });
+    const saved = await this.userRepository.save(root);
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      action: AuditAction.BOOTSTRAP_ROOT,
+      entityType: 'user',
+      entityId: saved.id,
+      entityName: saved.email,
+      userEmail: saved.email,
+      userRole: PlatformRole.ROOT,
+      newValue: { email: saved.email, role: saved.platformRole },
+    });
+
+    return {
+      id: saved.id,
+      email: saved.email,
+      platformRole: saved.platformRole,
+      createdAt: saved.createdAt,
+    };
+  }
+
+  // ═══════════════════════════════════════════════════
+  // PLATFORM ADMIN MANAGEMENT — ROOT only
+  // ═══════════════════════════════════════════════════
+
+  async createAdmin(
+    dto: CreatePlatformAdminDto,
+    caller: {
+      userId: string;
+      platformRole: PlatformRole;
+      ipAddress?: string;
+      userAgent?: string;
+    },
+  ) {
+    const { userId: creatorId, platformRole: callerRole } = caller;
+
+    // 1. Role Validation
+    if (dto.role === PlatformRole.ROOT) {
+      throw new ForbiddenException('Cannot create another ROOT admin');
+    }
+
+    if (
+      callerRole === PlatformRole.PLATFORM_ADMIN &&
+      dto.role !== PlatformRole.SUPPORT_ADMIN
+    ) {
+      throw new ForbiddenException(
+        'Platform Admins can only create Support Admins',
+      );
+    }
+
+    // 2. Existence Check
+    const existing = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
+    if (existing) throw new ConflictException('Email already exists');
+
+    // 3. Create Admin
+    const hashed = await HashUtil.hash(dto.password);
+    const admin = new User();
+    Object.assign(admin, {
+      name: dto.name,
+      email: dto.email,
+      password: hashed,
+      platformRole: dto.role,
+      createdBy: creatorId,
+      isActive: true,
+    });
+    const saved = await this.userRepository.save(admin);
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      userId: creatorId,
+      userRole: callerRole,
+      action: AuditAction.CREATE_PLATFORM_ADMIN,
+      entityType: 'user',
+      entityId: saved.id,
+      entityName: saved.email,
+      newValue: {
+        name: saved.name,
+        email: saved.email,
+        role: saved.platformRole,
+      },
+    });
+
+    return {
+      id: saved.id,
+      name: saved.name,
+      email: saved.email,
+      platformRole: saved.platformRole,
+      status: saved.isActive ? 'ACTIVE' : 'SUSPENDED',
+      createdBy: saved.createdBy,
+      createdAt: saved.createdAt,
+    };
+  }
+
+  async findAllAdmins(
+    callerRole: PlatformRole,
+    options: { page: number; limit: number },
+  ) {
+    const { page, limit } = options;
+    const queryBuilder = this.userRepository
+      .createQueryBuilder('u')
+      .select([
+        'u.id',
+        'u.name',
+        'u.email',
+        'u.platformRole',
+        'u.isActive',
+        'u.lastLogin',
+        'u.createdAt',
+      ])
+      .where('u.platformRole IS NOT NULL');
+
+    if (callerRole !== PlatformRole.ROOT) {
+      queryBuilder.andWhere('u.platformRole != :root', {
+        root: PlatformRole.ROOT,
+      });
+    }
+
+    const [users, total] = await queryBuilder
+      .orderBy('u.createdAt', 'ASC')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
+
+    return {
+      total,
+      page,
+      limit,
+      data: users.map((u) => ({
+        id: u.id,
+        name: u.name,
+        email: u.email,
+        platformRole: u.platformRole,
+        status: u.isActive ? 'ACTIVE' : 'SUSPENDED',
+        lastLoginAt: u.lastLogin,
+      })),
+    };
+  }
+
+  async findOneAdmin(id: string, callerRole: PlatformRole) {
+    const user = await this.userRepository.findOne({
+      where: { id, platformRole: Not(IsNull()) },
+    });
+    if (!user) throw new NotFoundException('Platform Admin not found');
+
+    // Hierarchy Security: PLATFORM_ADMIN cannot view ROOT
+    if (
+      callerRole !== PlatformRole.ROOT &&
+      user.platformRole === PlatformRole.ROOT
+    ) {
+      throw new ForbiddenException(
+        'You do not have permission to view this admin',
+      );
+    }
+
+    return {
+      id: user.id,
+      name: user.name,
+      email: user.email,
+      platformRole: user.platformRole,
+      status: user.isActive ? 'ACTIVE' : 'SUSPENDED',
+      lastLoginAt: user.lastLogin,
+      createdBy: user.createdBy,
+      createdAt: user.createdAt,
+      updatedAt: user.updatedAt,
+    };
+  }
+
+  async updateAdmin(
+    id: string,
+    dto: UpdatePlatformAdminDto,
+    metadata: { ipAddress?: string; userAgent?: string },
+  ) {
+    const { ipAddress, userAgent } = metadata;
+
+    const user = await this.userRepository.findOne({
+      where: { id, platformRole: Not(IsNull()) },
+    });
+    if (!user) throw new NotFoundException('Platform Admin not found');
+
+    const updateData: Partial<User> = {};
+    if (dto.name) updateData.name = dto.name;
+    if (dto.status) updateData.isActive = dto.status === 'ACTIVE';
+
+    await this.userRepository.update(id, updateData);
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      action: AuditAction.UPDATE_PLATFORM_ADMIN,
+      entityType: 'user',
+      entityId: id,
+      entityName: user.email,
+      ipAddress,
+      userAgent,
+      oldValue: { name: user.name, isActive: user.isActive },
+      newValue: updateData,
+    });
+
+    return { message: 'Platform admin updated successfully' };
+  }
+
+  async suspendAdmin(
+    id: string,
+    caller: { userId: string; ipAddress?: string; userAgent?: string },
+  ) {
+    const { userId: callerId, ipAddress, userAgent } = caller;
+
+    const user = await this.userRepository.findOne({
+      where: { id, platformRole: Not(IsNull()) },
+    });
+    if (!user) throw new NotFoundException('Platform Admin not found');
+
+    if (user.platformRole === PlatformRole.ROOT) {
+      throw new ForbiddenException('Cannot suspend ROOT');
+    }
+    if (user.id === callerId) {
+      throw new ForbiddenException('Cannot suspend yourself');
+    }
+
+    await this.userRepository.update(id, { isActive: false });
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      userId: callerId,
+      action: AuditAction.SUSPEND_PLATFORM_ADMIN,
+      entityType: 'user',
+      entityId: id,
+      entityName: user.email,
+      ipAddress,
+      userAgent,
+    });
+
+    return {
+      message: 'Platform admin suspended successfully',
+      status: 'SUSPENDED',
+    };
+  }
+
+  async activateAdmin(
+    id: string,
+    metadata: { ipAddress?: string; userAgent?: string },
+  ) {
+    const { ipAddress, userAgent } = metadata;
+
+    const user = await this.userRepository.findOne({
+      where: { id, platformRole: Not(IsNull()) },
+    });
+    if (!user) throw new NotFoundException('Platform Admin not found');
+
+    await this.userRepository.update(id, { isActive: true });
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      action: AuditAction.ACTIVATE_PLATFORM_ADMIN,
+      entityType: 'user',
+      entityId: id,
+      entityName: user.email,
+      ipAddress,
+      userAgent,
+    });
+
+    return {
+      message: 'Platform admin activated successfully',
+      status: 'ACTIVE',
+    };
+  }
+
+  async resetAdminPassword(
+    id: string,
+    dto: ResetPlatformAdminPasswordDto,
+    metadata: { ipAddress?: string; userAgent?: string },
+  ) {
+    const { ipAddress, userAgent } = metadata;
+
+    const user = await this.userRepository.findOne({
+      where: { id, platformRole: Not(IsNull()) },
+    });
+    if (!user) throw new NotFoundException('Platform Admin not found');
+
+    const hashed = await HashUtil.hash(dto.newPassword);
+    await this.userRepository.update(id, {
+      password: hashed,
+      refreshToken: null,
+    });
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      action: AuditAction.RESET_PLATFORM_ADMIN_PASSWORD,
+      entityType: 'user',
+      entityId: id,
+      entityName: user.email,
+      ipAddress,
+      userAgent,
+    });
+
+    return { message: 'Password reset successfully' };
+  }
+
+  async deleteAdmin(
+    id: string,
+    caller: { userId: string; ipAddress?: string; userAgent?: string },
+  ) {
+    const { userId: callerId, ipAddress, userAgent } = caller;
+
+    const user = await this.userRepository.findOne({
+      where: { id, platformRole: Not(IsNull()) },
+    });
+    if (!user) throw new NotFoundException('Platform Admin not found');
+
+    if (user.platformRole === PlatformRole.ROOT) {
+      throw new ForbiddenException('Cannot delete ROOT');
+    }
+    if (user.id === callerId) {
+      throw new ForbiddenException('Cannot delete yourself');
+    }
+    await this.userRepository.softDelete(id);
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      userId: callerId,
+      action: AuditAction.DELETE_PLATFORM_ADMIN,
+      entityType: 'user',
+      entityId: id,
+      entityName: user.email,
+      ipAddress,
+      userAgent,
+      oldValue: { name: user.name, email: user.email, role: user.platformRole },
+    });
+
+    return { message: 'Platform admin deleted successfully' };
+  }
+
+  // ═══════════════════════════════════════════════════
+  // SUPPORT CAPABILITIES — Tenant User Password Reset
+  // ═══════════════════════════════════════════════════
+
+  async resetTenantUserPassword(
+    userId: string,
+    metadata: { password?: string; ipAddress?: string; userAgent?: string },
+  ) {
+    const { password: newPassword, ipAddress, userAgent } = metadata;
+
+    const user = await this.userRepository.findOne({
+      where: { id: userId, platformRole: IsNull() }, // Only tenant users
+    });
+    if (!user) throw new NotFoundException('Tenant user not found');
+
+    const password = newPassword || Math.random().toString(36).slice(-10); // Generate if not provided
+    const hashed = await HashUtil.hash(password);
+
+    await this.userRepository.update(userId, {
+      password: hashed,
+      refreshToken: null, // Invalidate current session
+    });
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      action: AuditAction.RESET_TENANT_USER_PASSWORD,
+      entityType: 'user',
+      entityId: userId,
+      entityName: user.email,
+      businessId: user.businessId,
+      ipAddress,
+      userAgent,
+    });
+
+    return {
+      message: 'Tenant user password reset successfully',
+      newPassword: newPassword ? '******' : password, // Only return if generated
+    };
+  }
+
+  // ═══════════════════════════════════════════════════
+  // TENANT MANAGEMENT — ROOT + PLATFORM_ADMIN
+  // ═══════════════════════════════════════════════════
+
+  async createTenant(
+    dto: CreateTenantDto,
+    creator: { userId: string; ipAddress?: string; userAgent?: string },
+  ) {
+    const { userId: creatorId, ipAddress, userAgent } = creator;
+
+    // 1. Global Pre-checks
+    const existingBusiness = await this.businessRepository.findOne({
+      where: { name: dto.name },
+    });
+    if (existingBusiness)
+      throw new ConflictException('A business with this name already exists');
+
+    const existingUser = await this.userRepository.findOne({
+      where: { email: dto.adminEmail },
+    });
+    if (existingUser)
+      throw new ConflictException('Admin email already exists in the system');
+
+    // 2. Transactional Creation
+    return await this.dataSource.transaction(async (manager) => {
+      // A. Auto-generate company code
+      const slug = dto.name
+        .replace(/[^a-zA-Z0-9]/g, '')
+        .toUpperCase()
+        .slice(0, 8);
+      const suffix = Math.random().toString(36).substring(2, 5).toUpperCase();
+      const companyCode = `${slug}${suffix}`;
+
+      // B. Create Business
+      const business = manager.create(Business, {
+        name: dto.name,
+        companyCode,
+        domainType: dto.domainType,
+        status: BusinessStatus.TRIAL,
+        subscriptionPlan: dto.subscriptionPlan || 'STARTER',
+        phone: dto.phone,
+        email: dto.email,
+        address: dto.address,
+        timezone: dto.timezone || 'Asia/Kolkata',
+        currency: dto.currency || 'INR',
+      });
+      const savedBusiness = await manager.save(business);
+
+      // C. Create default OWNER Role
+      const ownerRole = manager.create(Role, {
+        name: 'OWNER',
+        businessId: savedBusiness.id,
+      });
+      const savedRole = await manager.save(ownerRole);
+
+      // D. Create Admin User
+      const hashedPassword = await HashUtil.hash(dto.adminPassword);
+      const adminUser = manager.create(User, {
+        name: dto.adminName,
+        email: dto.adminEmail,
+        password: hashedPassword,
+        businessId: savedBusiness.id,
+        roleId: savedRole.id,
+        createdBy: creatorId,
+        isActive: true,
+      });
+      const savedUser = await manager.save(adminUser);
+
+      // E. Create Initial Trial Subscription (7 days)
+      const trialStart = new Date();
+      const trialEnd = new Date();
+      trialEnd.setDate(trialEnd.getDate() + 7);
+
+      const subscription = manager.create(Subscription, {
+        businessId: savedBusiness.id,
+        plan: savedBusiness.subscriptionPlan,
+        startDate: trialStart,
+        endDate: trialEnd,
+        status: 'TRIAL',
+      });
+      await manager.save(subscription);
+
+      // Audit Log (inside transaction)
+      const log = manager.create('AuditLog', {
+        userId: creatorId,
+        action: AuditAction.CREATE_TENANT,
+        entityType: 'business',
+        entityId: savedBusiness.id,
+        entityName: savedBusiness.name,
+        businessId: savedBusiness.id,
+        ipAddress,
+        userAgent,
+        newValue: {
+          name: savedBusiness.name,
+          code: savedBusiness.companyCode,
+          plan: savedBusiness.subscriptionPlan,
+        },
+      });
+      await manager.save(log);
+
+      return {
+        businessId: savedBusiness.id,
+        name: savedBusiness.name,
+        companyCode: savedBusiness.companyCode,
+        status: savedBusiness.status,
+        adminUserId: savedUser.id,
+        subscriptionStatus: 'TRIAL',
+        createdAt: savedBusiness.createdAt,
+      };
+    });
+  }
+
+  async findAllTenants(options: {
+    page?: number;
+    limit?: number;
+    search?: string;
+    status?: BusinessStatus;
+    plan?: string;
+    sortBy?: string;
+    order?: 'ASC' | 'DESC';
+  }) {
+    const {
+      page = 1,
+      limit = 10,
+      search,
+      status,
+      plan,
+      sortBy = 'createdAt',
+      order = 'DESC',
+    } = options;
+
+    const qb = this.businessRepository.createQueryBuilder('b');
+
+    // Search logic - using EXISTS to avoid duplicate business rows from joins
+    if (search) {
+      qb.where(
+        '(b.name ILIKE :search OR b.companyCode ILIKE :search OR EXISTS (SELECT 1 FROM users u WHERE u.businessId = b.id AND u.email ILIKE :search))',
+        {
+          search: `%${search}%`,
+        },
+      );
+    }
+
+    // Filters
+    if (status) {
+      qb.andWhere('b.status = :status', { status });
+    }
+    if (plan) {
+      qb.andWhere('b.subscriptionPlan = :plan', { plan });
+    }
+
+    const total = await qb.getCount();
+    const totalPages = Math.ceil(total / limit);
+
+    // Sorting & Select
+    // Note: isSubscriptionActive is a calculated field
+    const data = await qb
+      .select([
+        'b.id as "businessId"',
+        'b.name as "name"',
+        'b.companyCode as "companyCode"',
+        'b.status as "status"',
+        'b.subscriptionPlan as "plan"',
+        'b.createdAt as "createdAt"',
+      ])
+      .addSelect((subQuery) => {
+        return subQuery
+          .select('COUNT(s.id) > 0', 'isActive')
+          .from(Subscription, 's')
+          .where('s.businessId = b.id')
+          .andWhere('s.status = :activeStatus', { activeStatus: 'ACTIVE' });
+      }, 'isSubscriptionActive')
+      .orderBy(`b.${sortBy}`, order)
+      .offset((page - 1) * limit)
+      .limit(limit)
+      .getRawMany();
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
+      },
+    };
+  }
+
+  async findOneTenant(id: string) {
+    const tenant = await this.businessRepository.findOne({ where: { id } });
+    if (!tenant) throw new NotFoundException('Tenant not found');
+
+    // Fetch latest subscription
+    const subscription = await this.subscriptionRepository.findOne({
+      where: { businessId: id },
+      order: { createdAt: 'DESC' },
+    });
+
+    // Fetch primary admin (Owner)
+    const admin = await this.userRepository.findOne({
+      where: { businessId: id, platformRole: IsNull() },
+      order: { createdAt: 'ASC' },
+    });
+
+    return {
+      businessId: tenant.id,
+      name: tenant.name,
+      companyCode: tenant.companyCode,
+      domainType: tenant.domainType,
+      status: tenant.status,
+      createdAt: tenant.createdAt,
+      updatedAt: tenant.updatedAt,
+      subscription: subscription
+        ? {
+            plan: subscription.plan,
+            status: subscription.status,
+            startDate: subscription.startDate,
+            endDate: subscription.endDate,
+          }
+        : {
+            plan: tenant.subscriptionPlan,
+            status: 'INACTIVE',
+            startDate: null,
+            endDate: null,
+          },
+      admin: admin
+        ? {
+            id: admin.id,
+            name: admin.name,
+            email: admin.email,
+          }
+        : null,
+    };
+  }
+
+  async updateTenant(id: string, dto: UpdateTenantDto) {
+    const tenant = await this.businessRepository.findOne({ where: { id } });
+    if (!tenant) throw new NotFoundException('Tenant not found');
+
+    await this.businessRepository.update(id, dto);
+    return { message: 'Tenant updated successfully' };
+  }
+
+  async deleteTenant(id: string) {
+    const tenant = await this.businessRepository.findOne({ where: { id } });
+    if (!tenant) throw new NotFoundException('Tenant not found');
+
+    // Note: In real app, consider cascading / soft delete
+    await this.businessRepository.softDelete(id);
+    return { message: 'Tenant deleted successfully' };
+  }
+
+  async updateTenantStatus(
+    id: string,
+    dto: UpdateTenantStatusDto,
+    metadata: { userId: string; ipAddress?: string; userAgent?: string },
+  ) {
+    const { userId: updatedBy, ipAddress, userAgent } = metadata;
+
+    const business = await this.businessRepository.findOne({ where: { id } });
+    if (!business) throw new NotFoundException('Tenant not found');
+
+    await this.businessRepository.update(id, {
+      status: dto.status,
+      statusReason: dto.reason,
+      statusChangedBy: updatedBy,
+    });
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      userId: updatedBy,
+      action: AuditAction.UPDATE_TENANT_STATUS,
+      entityType: 'business',
+      entityId: id,
+      entityName: business.name,
+      businessId: id,
+      ipAddress,
+      userAgent,
+      oldValue: { status: business.status },
+      newValue: { status: dto.status, reason: dto.reason },
+    });
+
+    return {
+      message: `Tenant ${dto.status.toLowerCase()} successfully`,
+      status: dto.status,
+    };
+  }
+
+  async disableTenant(id: string, updatedBy: string) {
+    // Note: This is a legacy helper, updating to match internal call if needed,
+    // but it's likely called from elsewhere.
+    return this.updateTenantStatus(
+      id,
+      {
+        status: BusinessStatus.SUSPENDED,
+        reason: 'Disabled by platform admin',
+      },
+      { userId: updatedBy },
+    );
+  }
+
+  // ════════════════════════════════════════════════════════════════
+  // SUBSCRIPTION & BILLING
+  // ════════════════════════════════════════════════════════════════
+
+  async assignPlan(
+    tenantId: string,
+    dto: AssignPlanDto,
+    metadata: { userId: string; ipAddress?: string; userAgent?: string },
+  ) {
+    const { userId: updaterId, ipAddress, userAgent } = metadata;
+
+    return this.dataSource.transaction(async (manager) => {
+      const tenant = await manager.findOne(Business, {
+        where: { id: tenantId },
+      });
+      if (!tenant) throw new NotFoundException('Tenant not found');
+
+      const plan = await manager.findOne(SubscriptionPlan, {
+        where: { id: dto.planId },
+      });
+      if (!plan) throw new NotFoundException('Subscription plan not found');
+      if (plan.status !== 'ACTIVE')
+        throw new BadRequestException('Plan is not active');
+
+      // Deactivate current active subscriptions
+      await manager.update(
+        Subscription,
+        { businessId: tenantId, status: 'ACTIVE' },
+        { status: 'DEACTIVATED' },
+      );
+
+      // Calculate Dates
+      const startDate = new Date();
+      const endDate = new Date();
+      endDate.setDate(startDate.getDate() + (plan.durationDays || 30));
+
+      // Update business limits and plan
+      await manager.update(Business, tenantId, {
+        subscriptionPlan: plan.name,
+        subscriptionExpiresAt: endDate,
+        status: BusinessStatus.ACTIVE,
+        maxUsers: plan.maxUsers,
+        maxProducts: plan.maxProducts,
+        maxBranches: 1, // Default
+      });
+
+      // Log NEW subscription
+      const subscription = manager.create(Subscription, {
+        businessId: tenantId,
+        plan: plan.name,
+        startDate,
+        endDate,
+        status: 'ACTIVE',
+      });
+      const savedSubscription = await manager.save(subscription);
+
+      // Audit Log
+      const log = manager.create('AuditLog', {
+        userId: updaterId,
+        action: AuditAction.ASSIGN_PLAN,
+        entityType: 'business',
+        entityId: tenantId,
+        entityName: tenant.name,
+        businessId: tenantId,
+        ipAddress,
+        userAgent,
+        oldValue: { plan: tenant.subscriptionPlan },
+        newValue: { plan: plan.name, subscriptionId: savedSubscription.id },
+      });
+      await manager.save(log);
+
+      return {
+        message: 'Plan assigned successfully',
+        data: {
+          id: savedSubscription.id,
+          tenantId: savedSubscription.businessId,
+          plan: {
+            id: plan.id,
+            name: plan.name,
+          },
+          status: savedSubscription.status,
+          startDate: savedSubscription.startDate,
+          expiresAt: savedSubscription.endDate,
+        },
+      };
+    });
+  }
+
+  async getSubscription(tenantId: string) {
+    const tenant = await this.businessRepository.findOne({
+      where: { id: tenantId },
+    });
+    if (!tenant) throw new NotFoundException('Tenant not found');
+
+    return {
+      plan: tenant.subscriptionPlan,
+      status: tenant.status,
+      expiresAt: tenant.subscriptionExpiresAt,
+    };
+  }
+
+  async getPayments(tenantId: string) {
+    const invoices = await this.invoiceRepository.find({
+      where: { businessId: tenantId },
+      order: { createdAt: 'DESC' },
+    });
+
+    return invoices.map((inv) => ({
+      paymentId: inv.id,
+      amount: inv.totalAmount,
+      status: 'SUCCESS', // Mock status as requested since no Payment entity
+      date: inv.createdAt,
+    }));
+  }
+
+  // ════════════════════════════════════════════════════════════════
+  // TENANT USER ADMINISTRATION
+  // ════════════════════════════════════════════════════════════════
+
+  async getTenantUsers(
+    tenantId: string,
+    options: { page?: number; limit?: number; search?: string } = {},
+  ) {
+    const { page = 1, limit = 10, search } = options;
+
+    const qb = this.userRepository
+      .createQueryBuilder('u')
+      .leftJoinAndSelect('u.role', 'r')
+      .where('u.businessId = :tenantId', { tenantId })
+      .andWhere('u.platformRole IS NULL');
+
+    if (search) {
+      qb.andWhere('(u.name ILIKE :search OR u.email ILIKE :search)', {
+        search: `%${search}%`,
+      });
+    }
+
+    const total = await qb.getCount();
+    const totalPages = Math.ceil(total / limit);
+
+    const users = await qb
+      .orderBy('u.createdAt', 'DESC')
+      .offset((page - 1) * limit)
+      .limit(limit)
+      .getMany();
+
+    const data = users.map((u) => ({
+      id: u.id,
+      name: u.name,
+      email: u.email,
+      role: u.role
+        ? {
+            id: u.role.id,
+            name: u.role.name,
+          }
+        : null,
+      status: u.isActive ? 'ACTIVE' : 'SUSPENDED',
+      lastLoginAt: u.lastLogin,
+    }));
+
+    return {
+      data,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages,
+      },
+    };
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/roles/dto/index.ts">
+<![CDATA[
+export * from './role.dto.js';
+
+]]>
+</file>
+<file name="src/modules/roles/dto/role.dto.ts">
+<![CDATA[
+import { IsNotEmpty, IsString } from 'class-validator';
+
+export class CreateRoleDto {
+  @IsString()
+  @IsNotEmpty()
+  name: string;
+
+  @IsString()
+  description?: string;
+}
+
+export class AssignPermissionsDto {
+  @IsNotEmpty()
+  permissionIds: string[];
+}
+
+]]>
+</file>
+<file name="src/modules/roles/permissions.controller.ts">
+<![CDATA[
+import { Controller, Get, UseGuards } from '@nestjs/common';
+import { PermissionsService } from './permissions.service.js';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
+import { TenantGuard } from '../../common/guards/tenant.guard.js';
+
+@Controller('permissions')
+@UseGuards(JwtAuthGuard, TenantGuard)
+export class PermissionsController {
+  constructor(private readonly permissionsService: PermissionsService) {}
+
+  @Get()
+  async findAll() {
+    return this.permissionsService.findAll();
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/roles/permissions.service.ts">
+<![CDATA[
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { Permission } from '../../database/entities/permission.entity.js';
+
+@Injectable()
+export class PermissionsService {
+  constructor(
+    @InjectRepository(Permission)
+    private readonly permissionRepository: Repository<Permission>,
+  ) {}
+
+  async findAll() {
+    const permissions = await this.permissionRepository.find({
+      order: { key: 'ASC' },
+    });
+    return { data: permissions };
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/roles/roles.controller.ts">
+<![CDATA[
+import { Controller, Post, Get, Body, Param, UseGuards } from '@nestjs/common';
+import { RolesService } from './roles.service.js';
+import { CreateRoleDto, AssignPermissionsDto } from './dto/index.js';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
+import { TenantGuard } from '../../common/guards/tenant.guard.js';
+import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
+
+@Controller('roles')
+@UseGuards(JwtAuthGuard, TenantGuard)
+export class RolesController {
+  constructor(private readonly rolesService: RolesService) {}
+
+  @Post()
+  async create(
+    @Body() dto: CreateRoleDto,
+    @CurrentUser('businessId') businessId: string,
+  ) {
+    return this.rolesService.create(dto, businessId);
+  }
+
+  @Post(':id/permissions')
+  async assignPermissions(
+    @Param('id') id: string,
+    @Body() dto: AssignPermissionsDto,
+    @CurrentUser('businessId') businessId: string,
+  ) {
+    return this.rolesService.assignPermissions(id, dto, businessId);
+  }
+
+  @Get()
+  async findAll(@CurrentUser('businessId') businessId: string) {
+    return this.rolesService.findAll(businessId);
+  }
+
+  @Get(':id')
+  async findOne(
+    @Param('id') id: string,
+    @CurrentUser('businessId') businessId: string,
+  ) {
+    return this.rolesService.findOne(id, businessId);
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/roles/roles.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { Role } from '../../database/entities/role.entity.js';
+import { Permission } from '../../database/entities/permission.entity.js';
+import { RolesService } from './roles.service.js';
+import { RolesController } from './roles.controller.js';
+import { PermissionsService } from './permissions.service.js';
+import { PermissionsController } from './permissions.controller.js';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([Role, Permission])],
+  controllers: [RolesController, PermissionsController],
+  providers: [RolesService, PermissionsService],
+  exports: [RolesService, PermissionsService],
+})
+export class RolesModule {}
+
+]]>
+</file>
+<file name="src/modules/roles/roles.service.ts">
+<![CDATA[
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository, In } from 'typeorm';
+import { Role } from '../../database/entities/role.entity.js';
+import { Permission } from '../../database/entities/permission.entity.js';
+import { CreateRoleDto, AssignPermissionsDto } from './dto/index.js';
+
+@Injectable()
+export class RolesService {
+  constructor(
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>,
+    @InjectRepository(Permission)
+    private readonly permissionRepository: Repository<Permission>,
+  ) {}
+
+  async create(dto: CreateRoleDto, businessId: string) {
+    const role = new Role();
+    Object.assign(role, {
+      ...dto,
+      businessId,
+      permissions: [],
+    });
+    return this.roleRepository.save(role);
+  }
+
+  async assignPermissions(
+    id: string,
+    dto: AssignPermissionsDto,
+    businessId: string,
+  ) {
+    const role = await this.findOne(id, businessId);
+
+    const permissions = await this.permissionRepository.find({
+      where: { id: In(dto.permissionIds) },
+    });
+
+    role.permissions = permissions;
+    return this.roleRepository.save(role);
+  }
+
+  async findAll(businessId: string) {
+    return this.roleRepository.find({
+      where: { businessId },
+      relations: ['permissions'],
+      order: { name: 'ASC' },
+    });
+  }
+
+  async findOne(id: string, businessId: string) {
+    const role = await this.roleRepository.findOne({
+      where: { id, businessId },
+      relations: ['permissions'],
+    });
+    if (!role) {
+      throw new NotFoundException('Role not found');
+    }
+    return role;
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/subscription/subscription.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { SubscriptionService } from './subscription.service.js';
+
+@Module({
+  providers: [SubscriptionService],
+})
+export class SubscriptionModule {}
+
+]]>
+</file>
+<file name="src/modules/subscription/subscription.service.ts">
+<![CDATA[
+import { Injectable } from '@nestjs/common';
+
+@Injectable()
+export class SubscriptionService {}
+
+]]>
+</file>
+<file name="src/modules/support/controllers/platform-support.controller.ts">
+<![CDATA[
+import {
+  Controller,
+  Get,
+  Post,
+  Patch,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import type { AuthenticatedRequest } from '../../../common/interfaces/authenticated-request.interface.js';
+import { SupportService } from '../support.service.js';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard.js';
+import { PlatformRoleGuard } from '../../../common/guards/platform-role.guard.js';
+import { PlatformRoles } from '../../../common/decorators/platform-roles.decorator.js';
+import { PlatformRole } from '../../../common/enums/platform-role.enum.js';
+import {
+  QuerySupportTicketDto,
+  AddSupportMessageDto,
+  AssignTicketDto,
+  UpdateTicketStatusDto,
+} from '../dto/support.dto.js';
+import { SenderType } from '../../../database/entities/support-message.entity.js';
+
+@Controller('platform/support')
+@UseGuards(JwtAuthGuard, PlatformRoleGuard)
+@PlatformRoles(
+  PlatformRole.ROOT,
+  PlatformRole.PLATFORM_ADMIN,
+  PlatformRole.SUPPORT_ADMIN,
+)
+export class PlatformSupportController {
+  constructor(private readonly supportService: SupportService) {}
+
+  @Get('tickets')
+  async findAll(@Query() query: QuerySupportTicketDto) {
+    return this.supportService.listAllTickets(query);
+  }
+
+  @Get('tickets/my-tickets')
+  async findMyTickets(
+    @Query() query: QuerySupportTicketDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    query.assignedTo = req.user.userId;
+    return this.supportService.listAllTickets(query);
+  }
+
+  @Get('tickets/:id')
+  async findOne(@Param('id') id: string) {
+    return this.supportService.getPlatformTicketDetails(id);
+  }
+
+  @Post('tickets/:id/reply')
+  async reply(
+    @Param('id') id: string,
+    @Body() dto: AddSupportMessageDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.supportService.addMessage(
+      id,
+      req.user.userId,
+      SenderType.PLATFORM,
+      dto,
+    );
+  }
+
+  @Patch('tickets/:id/assign')
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async assign(@Param('id') id: string, @Body() dto: AssignTicketDto) {
+    return this.supportService.assignTicket(id, dto);
+  }
+
+  @Patch('tickets/:id/status')
+  updateStatus(@Param('id') id: string, @Body() dto: UpdateTicketStatusDto) {
+    return this.supportService.updateStatus(id, dto);
+  }
+
+  @Patch('tickets/:id/close')
+  async close(@Param('id') id: string) {
+    return this.supportService.updateStatus(id, {
+      status: 'CLOSED',
+    } as UpdateTicketStatusDto);
+  }
+
+  @Get('stats')
+  async getStats() {
+    return this.supportService.getStats();
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/support/controllers/tenant-support.controller.ts">
+<![CDATA[
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Body,
+  Param,
+  Query,
+  UseGuards,
+  Request,
+} from '@nestjs/common';
+import type { AuthenticatedRequest } from '../../../common/interfaces/authenticated-request.interface.js';
+import { SupportService } from '../support.service.js';
+import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard.js';
+import { TenantGuard } from '../../../common/guards/tenant.guard.js';
+
+import {
+  CreateSupportTicketDto,
+  AddSupportMessageDto,
+  QuerySupportTicketDto,
+} from '../dto/support.dto.js';
+import { SenderType } from '../../../database/entities/support-message.entity.js';
+
+@Controller('tenant/support')
+@UseGuards(JwtAuthGuard, TenantGuard)
+export class TenantSupportController {
+  constructor(private readonly supportService: SupportService) {}
+
+  @Post('tickets')
+  async create(
+    @Body() dto: CreateSupportTicketDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.supportService.createTicket(
+      req.user.businessId!,
+      req.user.userId,
+      dto,
+    );
+  }
+
+  @Get('tickets')
+  async findAll(
+    @Query() query: QuerySupportTicketDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.supportService.listTenantTickets(req.user.businessId!, query);
+  }
+
+  @Get('tickets/:id')
+  async findOne(@Param('id') id: string, @Request() req: AuthenticatedRequest) {
+    return this.supportService.getTenantTicketDetails(id, req.user.businessId!);
+  }
+
+  @Post('tickets/:id/messages')
+  async addMessage(
+    @Param('id') id: string,
+    @Body() dto: AddSupportMessageDto,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    // Verify ownership/access
+    await this.supportService.getTenantTicketDetails(id, req.user.businessId!);
+    return this.supportService.addMessage(
+      id,
+      req.user.userId,
+      SenderType.TENANT,
+      dto,
+    );
+  }
+
+  @Patch('tickets/:id/close')
+  async close(@Param('id') id: string, @Request() req: AuthenticatedRequest) {
+    return this.supportService.closeTicketByTenant(id, req.user.businessId!);
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/support/dto/index.ts">
+<![CDATA[
+export * from './support.dto.js';
+
+]]>
+</file>
+<file name="src/modules/support/dto/support.dto.ts">
+<![CDATA[
+import {
+  IsString,
+  IsEnum,
+  IsNotEmpty,
+  IsOptional,
+  MaxLength,
+} from 'class-validator';
+import { TicketPriority } from '../../../common/enums/ticket-priority.enum.js';
+import { TicketCategory } from '../../../common/enums/ticket-category.enum.js';
+import { TicketStatus } from '../../../common/enums/ticket-status.enum.js';
+
+export class CreateSupportTicketDto {
+  @IsString()
+  @IsNotEmpty()
+  @MaxLength(255)
+  title: string;
+
+  @IsString()
+  @IsNotEmpty()
+  description: string;
+
+  @IsEnum(TicketPriority)
+  @IsOptional()
+  priority?: TicketPriority;
+
+  @IsEnum(TicketCategory)
+  @IsOptional()
+  category?: TicketCategory;
+}
+
+export class AddSupportMessageDto {
+  @IsString()
+  @IsNotEmpty()
+  message: string;
+}
+
+export class UpdateTicketStatusDto {
+  @IsEnum(TicketStatus)
+  status: TicketStatus;
+
+  @IsString()
+  @IsOptional()
+  reason?: string;
+}
+
+export class AssignTicketDto {
+  @IsString()
+  @IsNotEmpty()
+  supportAdminId: string;
+}
+
+export class QuerySupportTicketDto {
+  @IsEnum(TicketStatus)
+  @IsOptional()
+  status?: TicketStatus;
+
+  @IsEnum(TicketPriority)
+  @IsOptional()
+  priority?: TicketPriority;
+
+  @IsEnum(TicketCategory)
+  @IsOptional()
+  category?: TicketCategory;
+
+  @IsString()
+  @IsOptional()
+  tenantId?: string;
+
+  @IsString()
+  @IsOptional()
+  assignedTo?: string;
+
+  @IsOptional()
+  page?: number = 1;
+
+  @IsOptional()
+  limit?: number = 10;
+}
+
+]]>
+</file>
+<file name="src/modules/support/support.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { SupportTicket } from '../../database/entities/support-ticket.entity.js';
+import { SupportMessage } from '../../database/entities/support-message.entity.js';
+import { SupportAttachment } from '../../database/entities/support-attachment.entity.js';
+import { SupportService } from './support.service.js';
+import { PlatformModule } from '../platform/platform.module.js';
+
+import { TenantSupportController } from './controllers/tenant-support.controller.js';
+import { PlatformSupportController } from './controllers/platform-support.controller.js';
+
+@Module({
+  imports: [
+    TypeOrmModule.forFeature([
+      SupportTicket,
+      SupportMessage,
+      SupportAttachment,
+    ]),
+    PlatformModule,
+  ],
+
+  controllers: [TenantSupportController, PlatformSupportController],
+  providers: [SupportService],
+  exports: [SupportService],
+})
+export class SupportModule {}
+
+]]>
+</file>
+<file name="src/modules/support/support.service.ts">
+<![CDATA[
+import { Injectable, NotFoundException } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { SupportTicket } from '../../database/entities/support-ticket.entity.js';
+import {
+  SupportMessage,
+  SenderType,
+} from '../../database/entities/support-message.entity.js';
+import { SupportAttachment } from '../../database/entities/support-attachment.entity.js';
+import { TicketStatus } from '../../common/enums/ticket-status.enum.js';
+import { AuditLogService } from '../platform/services/audit-log.service.js';
+import { AuditAction } from '../../common/enums/audit-action.enum.js';
+
+import {
+  CreateSupportTicketDto,
+  AddSupportMessageDto,
+  UpdateTicketStatusDto,
+  AssignTicketDto,
+  QuerySupportTicketDto,
+} from './dto/support.dto.js';
+
+@Injectable()
+export class SupportService {
+  constructor(
+    @InjectRepository(SupportTicket)
+    private readonly ticketRepository: Repository<SupportTicket>,
+    @InjectRepository(SupportMessage)
+    private readonly messageRepository: Repository<SupportMessage>,
+    @InjectRepository(SupportAttachment)
+    private readonly attachmentRepository: Repository<SupportAttachment>,
+    private readonly auditLogService: AuditLogService,
+  ) {}
+
+  // ─── Tenant Side ───────────────────────────────────────
+
+  async createTicket(
+    tenantId: string,
+    userId: string,
+    dto: CreateSupportTicketDto,
+  ) {
+    const ticket = this.ticketRepository.create({
+      ...dto,
+      tenantId,
+      createdBy: userId,
+      status: TicketStatus.OPEN,
+    });
+    const savedTicket = await this.ticketRepository.save(ticket);
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      userId,
+      action: AuditAction.CREATE_TICKET,
+
+      entityType: 'support_ticket',
+      entityId: savedTicket.id,
+      entityName: savedTicket.title,
+      businessId: tenantId,
+    });
+
+    // Initial message
+
+    await this.addMessage(savedTicket.id, userId, SenderType.TENANT, {
+      message: dto.description,
+    });
+
+    return savedTicket;
+  }
+
+  async listTenantTickets(tenantId: string, query: QuerySupportTicketDto) {
+    const { page = 1, limit = 10, status, priority, category } = query;
+    const [data, total] = await this.ticketRepository.findAndCount({
+      where: {
+        tenantId,
+        ...(status && { status }),
+        ...(priority && { priority }),
+        ...(category && { category }),
+      },
+      order: { createdAt: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return { data, total, page, limit };
+  }
+
+  async getTenantTicketDetails(ticketId: string, tenantId: string) {
+    const ticket = await this.ticketRepository.findOne({
+      where: { id: ticketId, tenantId },
+      relations: ['creator', 'assignee'],
+    });
+    if (!ticket) throw new NotFoundException('Ticket not found');
+
+    const messages = await this.messageRepository.find({
+      where: { ticketId },
+      relations: ['sender'],
+      order: { createdAt: 'ASC' },
+    });
+
+    const attachments = await this.attachmentRepository.find({
+      where: { ticketId },
+      order: { createdAt: 'ASC' },
+    });
+
+    return { ...ticket, messages, attachments };
+  }
+
+  async closeTicketByTenant(ticketId: string, tenantId: string) {
+    const ticket = await this.ticketRepository.findOne({
+      where: { id: ticketId, tenantId },
+    });
+    if (!ticket) throw new NotFoundException('Ticket not found');
+
+    ticket.status = TicketStatus.CLOSED;
+    return this.ticketRepository.save(ticket);
+  }
+
+  // ─── Platform Side ─────────────────────────────────────
+
+  async listAllTickets(query: QuerySupportTicketDto) {
+    const {
+      page = 1,
+      limit = 10,
+      status,
+      priority,
+      category,
+      tenantId,
+      assignedTo,
+    } = query;
+    const [data, total] = await this.ticketRepository.findAndCount({
+      where: {
+        ...(tenantId && { tenantId }),
+        ...(status && { status }),
+        ...(priority && { priority }),
+        ...(category && { category }),
+        ...(assignedTo && { assignedTo }),
+      },
+      relations: ['tenant', 'creator', 'assignee'],
+      order: { createdAt: 'DESC' },
+      skip: (page - 1) * limit,
+      take: limit,
+    });
+
+    return { data, total, page, limit };
+  }
+
+  async getPlatformTicketDetails(ticketId: string) {
+    const ticket = await this.ticketRepository.findOne({
+      where: { id: ticketId },
+      relations: ['tenant', 'creator', 'assignee'],
+    });
+    if (!ticket) throw new NotFoundException('Ticket not found');
+
+    const messages = await this.messageRepository.find({
+      where: { ticketId },
+      relations: ['sender'],
+      order: { createdAt: 'ASC' },
+    });
+
+    const attachments = await this.attachmentRepository.find({
+      where: { ticketId },
+      order: { createdAt: 'ASC' },
+    });
+
+    return { ...ticket, messages, attachments };
+  }
+
+  async assignTicket(ticketId: string, dto: AssignTicketDto) {
+    const ticket = await this.ticketRepository.findOne({
+      where: { id: ticketId },
+    });
+    if (!ticket) throw new NotFoundException('Ticket not found');
+
+    ticket.assignedTo = dto.supportAdminId;
+    const saved = await this.ticketRepository.save(ticket);
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      action: AuditAction.ASSIGN_TICKET,
+      entityType: 'support_ticket',
+      entityId: ticketId,
+      entityName: ticket.title,
+      newValue: { assignedTo: dto.supportAdminId },
+    });
+
+    return saved;
+  }
+
+  async updateStatus(ticketId: string, dto: UpdateTicketStatusDto) {
+    const ticket = await this.ticketRepository.findOne({
+      where: { id: ticketId },
+    });
+    if (!ticket) throw new NotFoundException('Ticket not found');
+
+    ticket.status = dto.status;
+    const saved = await this.ticketRepository.save(ticket);
+
+    // Audit Log
+    await this.auditLogService.logAction({
+      action: AuditAction.UPDATE_TICKET_STATUS,
+
+      entityType: 'support_ticket',
+      entityId: ticketId,
+      entityName: ticket.title,
+      newValue: { status: dto.status },
+    });
+
+    return saved;
+  }
+
+  async getStats() {
+    const stats = await this.ticketRepository
+      .createQueryBuilder('ticket')
+      .select('ticket.status', 'status')
+      .addSelect('COUNT(ticket.id)', 'count')
+      .groupBy('ticket.status')
+      .getRawMany();
+
+    const formatted = {
+      OPEN: 0,
+      IN_PROGRESS: 0,
+      WAITING_CUSTOMER: 0,
+      RESOLVED: 0,
+      CLOSED: 0,
+    };
+
+    stats.forEach((s: { status: string; count: string }) => {
+      formatted[s.status as keyof typeof formatted] = parseInt(s.count);
+    });
+
+    return {
+      ...formatted,
+      total: Object.values(formatted).reduce((a, b) => a + b, 0),
+    };
+  }
+
+  // ─── Common ───────────────────────────────────────────
+
+  async addMessage(
+    ticketId: string,
+    userId: string,
+    senderType: SenderType,
+    dto: AddSupportMessageDto,
+  ) {
+    const ticket = await this.ticketRepository.findOne({
+      where: { id: ticketId },
+    });
+    if (!ticket) throw new NotFoundException('Ticket not found');
+
+    const msg = this.messageRepository.create({
+      ticketId,
+      senderId: userId,
+      senderType,
+      message: dto.message,
+    });
+
+    // Update ticket status to IN_PROGRESS if platform admin replies to an OPEN ticket
+    if (
+      senderType === SenderType.PLATFORM &&
+      ticket.status === TicketStatus.OPEN
+    ) {
+      ticket.status = TicketStatus.IN_PROGRESS;
+      await this.ticketRepository.save(ticket);
+    }
+
+    // Update ticket status to WAITING_CUSTOMER if platform admin replies
+    if (senderType === SenderType.PLATFORM) {
+      ticket.status = TicketStatus.WAITING_CUSTOMER;
+      await this.ticketRepository.save(ticket);
+    }
+
+    // Update ticket status back to OPEN/IN_PROGRESS if tenant replies when WAITING_CUSTOMER
+    if (
+      senderType === SenderType.TENANT &&
+      ticket.status === TicketStatus.WAITING_CUSTOMER
+    ) {
+      ticket.status = TicketStatus.IN_PROGRESS;
+      await this.ticketRepository.save(ticket);
+    }
+
+    const savedMsg = await this.messageRepository.save(msg);
+
+    // Audit Log for reply
+    await this.auditLogService.logAction({
+      userId,
+      action: AuditAction.REPLY_TICKET,
+      entityType: 'support_ticket',
+      entityId: ticketId,
+      entityName: ticket.title,
+    });
+
+    return savedMsg;
+  }
+
+  async addAttachment(ticketId: string, userId: string, fileUrl: string) {
+    const attachment = this.attachmentRepository.create({
+      ticketId,
+      fileUrl,
+      uploadedBy: userId,
+    });
+    return this.attachmentRepository.save(attachment);
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/users/dto/create-user.dto.ts">
+<![CDATA[
+export class CreateUserDto {
+  name: string;
+  email: string;
+  password: string;
+  roleId: string;
+}
+
+export class UpdateUserDto {
+  name?: string;
+  isActive?: boolean;
+  roleId?: string;
+}
+
+]]>
+</file>
+<file name="src/modules/users/dto/index.ts">
+<![CDATA[
+export * from './create-user.dto.js';
+
+]]>
+</file>
+<file name="src/modules/users/users.controller.ts">
+<![CDATA[
+import {
+  Controller,
+  Post,
+  Get,
+  Patch,
+  Body,
+  Param,
+  UseGuards,
+  Query,
+} from '@nestjs/common';
+import { UsersService } from './users.service.js';
+import { CreateUserDto, UpdateUserDto } from './dto/index.js';
+import { JwtAuthGuard } from '../../common/guards/jwt-auth.guard.js';
+import { TenantGuard } from '../../common/guards/tenant.guard.js';
+import { PermissionsGuard } from '../../common/guards/permissions.guard.js';
+import { Permissions } from '../../common/decorators/permissions.decorator.js';
+import { CurrentUser } from '../../common/decorators/current-user.decorator.js';
+
+@Controller('users')
+@UseGuards(JwtAuthGuard, TenantGuard, PermissionsGuard)
+export class UsersController {
+  constructor(private readonly usersService: UsersService) {}
+
+  @Post()
+  @Permissions('create_user')
+  async create(
+    @Body() dto: CreateUserDto,
+    @CurrentUser('businessId') businessId: string,
+  ) {
+    return this.usersService.create(dto, businessId);
+  }
+
+  @Get()
+  @Permissions('view_user')
+  async findAll(
+    @CurrentUser('businessId') businessId: string,
+    @Query('page') page?: number,
+    @Query('limit') limit?: number,
+  ) {
+    return this.usersService.findAll(
+      businessId,
+      page ? Number(page) : 1,
+      limit ? Number(limit) : 10,
+    );
+  }
+
+  @Patch(':id/role')
+  @Permissions('update_user') // Assuming update_user for role change
+  async updateRole(
+    @Param('id') id: string,
+    @Body('roleId') roleId: string,
+    @CurrentUser('businessId') businessId: string,
+  ) {
+    return this.usersService.updateRole(id, roleId, businessId);
+  }
+
+  @Patch(':id/deactivate')
+  @Permissions('delete_user')
+  async deactivate(
+    @Param('id') id: string,
+    @CurrentUser('businessId') businessId: string,
+  ) {
+    return this.usersService.deactivate(id, businessId);
+  }
+
+  @Patch(':id/activate')
+  @Permissions('update_user')
+  async activate(
+    @Param('id') id: string,
+    @CurrentUser('businessId') businessId: string,
+  ) {
+    return this.usersService.activate(id, businessId);
+  }
+
+  @Get(':id')
+  @Permissions('view_user')
+  async findOne(
+    @Param('id') id: string,
+    @CurrentUser('businessId') businessId: string,
+  ) {
+    return this.usersService.findOne(id, businessId);
+  }
+
+  @Patch(':id')
+  @Permissions('update_user')
+  async update(
+    @Param('id') id: string,
+    @Body() dto: UpdateUserDto,
+    @CurrentUser('businessId') businessId: string,
+  ) {
+    return this.usersService.update(id, dto, businessId);
+  }
+}
+
+]]>
+</file>
+<file name="src/modules/users/users.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { UsersService } from './users.service.js';
+import { UsersController } from './users.controller.js';
+
+import { TypeOrmModule } from '@nestjs/typeorm';
+import { User } from '../../database/entities/user.entity.js';
+import { Role } from '../../database/entities/role.entity.js';
+
+@Module({
+  imports: [TypeOrmModule.forFeature([User, Role])],
+  controllers: [UsersController],
+  providers: [UsersService],
+  exports: [UsersService],
+})
+export class UsersModule {}
+
+]]>
+</file>
+<file name="src/modules/users/users.service.ts">
+<![CDATA[
+import {
+  Injectable,
+  ConflictException,
+  NotFoundException,
+  BadRequestException,
+} from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
+import { Repository } from 'typeorm';
+import { User } from '../../database/entities/user.entity.js';
+import { Role } from '../../database/entities/role.entity.js';
+import { HashUtil } from '../../common/utils/hash.util.js';
+import { CreateUserDto, UpdateUserDto } from './dto/index.js';
+
+@Injectable()
+export class UsersService {
+  constructor(
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
+    @InjectRepository(Role)
+    private readonly roleRepository: Repository<Role>,
+  ) {}
+
+  async create(dto: CreateUserDto, businessId: string) {
+    const existing = await this.userRepository.findOne({
+      where: { email: dto.email },
+    });
+    if (existing) {
+      throw new ConflictException('Email already exists');
+    }
+
+    // Validate role exists for this business
+    const role = await this.roleRepository.findOne({
+      where: { id: dto.roleId, businessId },
+    });
+    if (!role) {
+      throw new BadRequestException('Invalid role for this business');
+    }
+
+    const hashedPassword = await HashUtil.hash(dto.password);
+    const user = new User();
+    Object.assign(user, {
+      ...dto,
+      password: hashedPassword,
+      businessId,
+      isActive: true,
+    });
+
+    const saved = await this.userRepository.save(user);
+    return {
+      id: saved.id,
+      name: saved.name,
+      email: saved.email,
+      businessId: saved.businessId,
+      role: {
+        id: role.id,
+        name: role.name,
+      },
+      isActive: saved.isActive,
+    };
+  }
+
+  async findAll(businessId: string, page = 1, limit = 10) {
+    const [data, total] = await this.userRepository.findAndCount({
+      where: { businessId },
+      relations: ['role'],
+      skip: (page - 1) * limit,
+      take: limit,
+      order: { createdAt: 'DESC' },
+    });
+
+    return {
+      total,
+      page,
+      limit,
+      data: data.map((u) => ({
+        id: u.id,
+        email: u.email,
+        role: u.role?.name,
+        isActive: u.isActive,
+      })),
+    };
+  }
+
+  async findOne(id: string, businessId: string) {
+    const user = await this.userRepository.findOne({
+      where: { id, businessId },
+      relations: ['role'],
+    });
+    if (!user) {
+      throw new NotFoundException('User not found');
+    }
+    return user;
+  }
+
+  async updateRole(id: string, roleId: string, businessId: string) {
+    const user = await this.findOne(id, businessId);
+
+    const role = await this.roleRepository.findOne({
+      where: { id: roleId, businessId },
+    });
+    if (!role) {
+      throw new BadRequestException('Invalid role for this business');
+    }
+
+    user.roleId = roleId;
+    await this.userRepository.save(user);
+    return { message: 'Role updated successfully' };
+  }
+
+  async deactivate(id: string, businessId: string) {
+    const user = await this.findOne(id, businessId);
+    user.isActive = false;
+    await this.userRepository.save(user);
+    return { message: 'User deactivated' };
+  }
+
+  async activate(id: string, businessId: string) {
+    const user = await this.findOne(id, businessId);
+    user.isActive = true;
+    await this.userRepository.save(user);
+    return { message: 'User activated' };
+  }
+
+  async update(id: string, dto: UpdateUserDto, businessId: string) {
+    const user = await this.findOne(id, businessId);
+    Object.assign(user, dto);
+    return this.userRepository.save(user);
+  }
+}
+
+]]>
+</file>
+<file name="src/queues/queue.module.ts">
+<![CDATA[
+import { Module } from '@nestjs/common';
+import { RedisModule } from '../redis/redis.module.js';
+
+@Module({
+  imports: [RedisModule],
+})
+export class QueueModule {}
+
+]]>
+</file>
+<file name="src/redis/redis.module.ts">
+<![CDATA[
+import { Module, Global } from '@nestjs/common';
+import { ConfigService } from '@nestjs/config';
+import { Redis } from 'ioredis';
+
+@Global()
+@Module({
+  providers: [
+    {
+      provide: 'REDIS_CLIENT',
+      useFactory: (configService: ConfigService) => {
+        return new Redis({
+          host: configService.get<string>('redis.host'),
+          port: configService.get<number>('redis.port'),
+        });
+      },
+      inject: [ConfigService],
+    },
+  ],
+  exports: ['REDIS_CLIENT'],
+})
+export class RedisModule {}
+
+]]>
+</file>
+</files>

@@ -6,10 +6,11 @@ import {
 } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Not, IsNull, FindOperator } from 'typeorm';
+import { Repository, Not, IsNull, FindOperator, DataSource } from 'typeorm';
 import { randomBytes } from 'crypto';
 import { User } from '../../database/entities/user.entity.js';
 import { Business } from '../../database/entities/business.entity.js';
+import { Subscription } from '../../database/entities/subscription.entity.js';
 import { HashUtil } from '../../common/utils/hash.util.js';
 import { PlatformRole } from '../../common/enums/platform-role.enum.js';
 import { AuditLogService } from '../platform/services/audit-log.service.js';
@@ -30,8 +31,11 @@ export class AuthService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Business)
     private readonly businessRepository: Repository<Business>,
+    @InjectRepository(Subscription)
+    private readonly subscriptionRepository: Repository<Subscription>,
     private readonly auditLogService: AuditLogService,
     private readonly jwtService: JwtService,
+    private readonly dataSource: DataSource,
   ) {}
 
   // ─────────────────────── helpers ───────────────────────
@@ -61,122 +65,173 @@ export class AuthService {
     );
   }
 
-  // ─────────────────────── 1. LOGIN ──────────────────────
+  // ─────────────────────── 1. REGISTER ───────────────────
+  // DEPRECATED: Use TenantProvisioningService.createTenant via AuthController
+
+  // ─────────────────────── 2. LOGIN ──────────────────────
 
   async login(
     dto: LoginDto,
     metadata?: { ipAddress?: string; userAgent?: string },
   ) {
-    const { ipAddress, userAgent } = metadata || {};
+    try {
+      const { ipAddress, userAgent } = metadata || {};
 
-    let user: User | null;
+      let user: User | null;
 
-    if (dto.companyCode) {
-      // Tenant Login
-      const business = await this.businessRepository.findOne({
-        where: { companyCode: dto.companyCode },
-      });
+      if (dto.companyCode) {
+        // Tenant Login
+        const business = await this.businessRepository.findOne({
+          where: { companyCode: dto.companyCode },
+        });
 
-      if (
-        !business ||
-        (business.status as string) === 'SUSPENDED' ||
-        (business.status as string) === 'CANCELLED'
-      ) {
-        throw new UnauthorizedException(
-          'Invalid business or business is inactive',
-        );
+        if (
+          !business ||
+          (business.status as string) === 'SUSPENDED' ||
+          (business.status as string) === 'CANCELLED'
+        ) {
+          throw new UnauthorizedException(
+            'Invalid business or business is inactive',
+          );
+        }
+        user = await this.userRepository.findOne({
+          where: { email: dto.email, businessId: business.id },
+          relations: ['role', 'role.permissions'],
+          select: [
+            'id',
+            'email',
+            'name',
+            'password',
+            'platformRole',
+            'businessId',
+            'roleId',
+            'isActive',
+          ],
+        });
+      } else {
+        // Platform Login (ROOT / PLATFORM_ADMIN / SUPPORT_ADMIN)
+        user = await this.userRepository.findOne({
+          where: {
+            email: dto.email,
+            platformRole: Not(IsNull()) as unknown as PlatformRole,
+          },
+          relations: ['role', 'role.permissions'],
+          select: [
+            'id',
+            'email',
+            'name',
+            'password',
+            'platformRole',
+            'businessId',
+            'roleId',
+            'isActive',
+            'lastLogin',
+            'refreshToken',
+          ],
+        });
       }
-      user = await this.userRepository.findOne({
-        where: { email: dto.email, businessId: business.id },
-        relations: ['role', 'role.permissions'],
-        select: [
-          'id',
-          'email',
-          'name',
-          'password',
-          'platformRole',
-          'businessId',
-          'roleId',
-          'isActive',
-        ],
-      });
-    } else {
-      // Platform Login (ROOT / PLATFORM_ADMIN / SUPPORT_ADMIN)
-      user = await this.userRepository.findOne({
-        where: {
-          email: dto.email,
-          platformRole: Not(IsNull()) as unknown as PlatformRole,
-        },
-        relations: ['role', 'role.permissions'],
-        select: [
-          'id',
-          'email',
-          'name',
-          'password',
-          'platformRole',
-          'businessId',
-          'roleId',
-          'isActive',
-        ],
-      });
-    }
 
-    if (!user || !user.isActive) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+      if (!user || !user.isActive) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
 
-    const isPasswordValid = await HashUtil.compare(dto.password, user.password);
-    if (!isPasswordValid) {
-      throw new UnauthorizedException('Invalid credentials');
-    }
+      const isPasswordValid = await HashUtil.compare(dto.password, user.password);
+      if (!isPasswordValid) {
+        throw new UnauthorizedException('Invalid credentials');
+      }
 
-    const loginPayload = {
-      sub: user.id,
-      email: user.email,
-      platformRole: user.platformRole,
-      businessId: user.businessId,
-    };
-    const accessToken = await this.jwtService.signAsync(loginPayload);
-    const refreshToken = await this.jwtService.signAsync(loginPayload, {
-      expiresIn: '7d',
-    });
-
-    await this.userRepository.update(user.id, {
-      refreshToken: refreshToken,
-      lastLogin: new Date(),
-    });
-
-    // Audit Log for Platform Users
-    if (user.platformRole) {
-      await this.auditLogService.logAction({
+      const loginPayload = {
+        sub: user.id,
         userId: user.id,
-        userEmail: user.email,
-        userRole: user.platformRole,
-        action: AuditAction.LOGIN,
-        entityType: 'user',
-        entityId: user.id,
-        ipAddress,
-        userAgent,
-      });
-    }
-
-    return {
-      accessToken,
-      refreshToken,
-      expiresIn: 3600,
-      user: {
-        id: user.id,
-        name: user.name,
         email: user.email,
         type: user.platformRole ? 'PLATFORM' : 'TENANT',
-        ...(user.platformRole && { platformRole: user.platformRole }),
-        ...(user.businessId && { businessId: user.businessId }),
-        ...(user.role?.name && { role: user.role.name }),
-      },
-    };
+        businessId: user.businessId,
+        platformRole: user.platformRole || null,
+        roleId: user.roleId,
+        role: user.role?.name || null,
+      };
+      const accessToken = await this.jwtService.signAsync(loginPayload);
+      const refreshToken = await this.jwtService.signAsync(loginPayload, {
+        expiresIn: '7d',
+      });
+
+      await this.userRepository.update(user.id, {
+        refreshToken: refreshToken,
+        lastLogin: new Date(),
+      });
+
+      // Audit Log for Platform Users
+      if (user.platformRole) {
+        await this.auditLogService.logAction({
+          userId: user.id,
+          userEmail: user.email,
+          userRole: user.platformRole,
+          action: AuditAction.LOGIN,
+          entityType: 'user',
+          entityId: user.id,
+          ipAddress,
+          userAgent,
+        });
+      }
+
+      let business: Business | null = null;
+      let subscription: Subscription | null = null;
+
+      if (user.businessId) {
+        business = await this.businessRepository.findOne({
+          where: { id: user.businessId },
+        });
+
+        if (business) {
+          subscription = await this.subscriptionRepository.findOne({
+            where: { businessId: business.id },
+            order: { endDate: 'DESC' },
+          });
+        }
+      }
+
+      const response: any = {
+        accessToken,
+        refreshToken,
+        expiresIn: 3600,
+        user: {
+          id: user.id,
+          name: user.name,
+          email: user.email,
+          type: user.platformRole ? 'PLATFORM' : 'TENANT',
+          ...(user.platformRole && { platformRole: user.platformRole }),
+          ...(user.role?.name && { role: user.role.name }),
+        },
+      };
+
+      if (business) {
+        response.business = {
+          id: business.id,
+          name: business.name,
+          companyCode: business.companyCode,
+        };
+      }
+
+      if (subscription) {
+        const now = new Date();
+        const end = new Date(subscription.endDate);
+        const diff = end.getTime() - now.getTime();
+        const daysLeft = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+
+        response.subscription = {
+          plan: subscription.plan,
+          daysLeft,
+        };
+      }
+
+      return response;
+    } catch (error) {
+      console.error('AUTH LOGIN ERROR', error);
+      throw error;
+    }
   }
 
-  // ─────────────────────── 2. REFRESH TOKEN ──────────────
+  // ─────────────────────── 3. REFRESH TOKEN ──────────────
 
   async refreshToken(dto: RefreshTokenDto) {
     let payload: { userId: string; type: string };
@@ -184,10 +239,6 @@ export class AuthService {
       payload = this.jwtService.verify(dto.refreshToken);
     } catch {
       throw new UnauthorizedException('Invalid or expired refresh token');
-    }
-
-    if (payload.type !== 'refresh') {
-      throw new UnauthorizedException('Invalid token type');
     }
 
     const user = await this.userRepository.findOne({
@@ -202,7 +253,7 @@ export class AuthService {
     return { accessToken: newAccessToken, expiresIn: 3600 };
   }
 
-  // ─────────────────────── 3. LOGOUT ─────────────────────
+  // ─────────────────────── 4. LOGOUT ─────────────────────
 
   async logout(userId: string) {
     await this.userRepository.update(userId, {
@@ -211,7 +262,7 @@ export class AuthService {
     return { message: 'Logged out successfully' };
   }
 
-  // ─────────────────────── 4. CHANGE PASSWORD ────────────
+  // ─────────────────────── 5. CHANGE PASSWORD ────────────
 
   async changePassword(userId: string, dto: ChangePasswordDto) {
     const user = await this.userRepository.findOne({
@@ -233,7 +284,7 @@ export class AuthService {
     return { message: 'Password updated successfully' };
   }
 
-  // ─────────────────────── 5. FORGOT PASSWORD ────────────
+  // ─────────────────────── 6. FORGOT PASSWORD ────────────
 
   async forgotPassword(dto: ForgotPasswordDto) {
     let user: User | null;
@@ -275,7 +326,7 @@ export class AuthService {
     };
   }
 
-  // ─────────────────────── 6. RESET PASSWORD ─────────────
+  // ─────────────────────── 7. RESET PASSWORD ─────────────
 
   async resetPassword(dto: ResetPasswordDto) {
     const user = await this.userRepository.findOne({
@@ -302,8 +353,7 @@ export class AuthService {
     return { message: 'Password reset successful' };
   }
 
-  // ─────────────────────── 7. GET PROFILE ────────────────
-
+  // ─────────────────────── 8. GET PROFILE ────────────────
   async getProfile(userId: string) {
     const user = await this.userRepository.findOne({
       where: { id: userId },
@@ -323,14 +373,14 @@ export class AuthService {
     };
   }
 
-  // ─────────────────────── 8. VALIDATE TOKEN ─────────────
+  // ─────────────────────── 9. VALIDATE TOKEN ─────────────
 
   validateToken() {
     // If we reach here, JwtAuthGuard has already validated the token
     return { valid: true };
   }
 
-  // ─────────────────────── 9. GET MY PERMISSIONS ─────────
+  // ─────────────────────── 10. GET MY PERMISSIONS ────────
 
   async getMyPermissions(userId: string) {
     const user = await this.userRepository.findOne({

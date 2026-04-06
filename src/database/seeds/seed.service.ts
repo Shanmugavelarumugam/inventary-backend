@@ -6,12 +6,15 @@ import { User } from '../entities/user.entity.js';
 import { Role } from '../entities/role.entity.js';
 import { Permission } from '../entities/permission.entity.js';
 import { Business, DomainType } from '../entities/business.entity.js';
+import { Subscription } from '../entities/subscription.entity.js';
+import { SubscriptionPlan as SubscriptionPlanEntity } from '../entities/subscription-plan.entity.js';
 import { HashUtil } from '../../common/utils/hash.util.js';
 import { PlatformRole } from '../../common/enums/platform-role.enum.js';
 import {
   BusinessStatus,
   SubscriptionPlan,
 } from '../../common/enums/business.enum.js';
+import { TenantRoleMigrationService } from './tenant-role-migration.service.js';
 
 @Injectable()
 export class SeedService implements OnApplicationBootstrap {
@@ -26,14 +29,21 @@ export class SeedService implements OnApplicationBootstrap {
     private readonly permissionRepository: Repository<Permission>,
     @InjectRepository(Business)
     private readonly businessRepository: Repository<Business>,
+    @InjectRepository(Subscription)
+    private readonly subscriptionRepository: Repository<Subscription>,
+    @InjectRepository(SubscriptionPlanEntity)
+    private readonly subscriptionPlanRepository: Repository<SubscriptionPlanEntity>,
+    private readonly migrationService: TenantRoleMigrationService,
     private readonly configService: ConfigService,
   ) {}
 
   async onApplicationBootstrap() {
     await this.seedPermissions();
     await this.seedRoles();
+    await this.seedSubscriptionPlans();
     await this.seedRootAdmin(); // ROOT from env
     await this.seedTestTenant();
+    await this.migrationService.migrateAllTenants();
   }
 
   /**
@@ -42,9 +52,9 @@ export class SeedService implements OnApplicationBootstrap {
    */
   private async seedRootAdmin() {
     const email =
-      this.configService.get<string>('ROOT_EMAIL') || 'root@platform.com';
+      this.configService.get<string>('ROOT_EMAIL') || 'root@gmail.com';
     const password =
-      this.configService.get<string>('ROOT_PASSWORD') || 'RootPassword@123';
+      this.configService.get<string>('ROOT_PASSWORD') || '123456789';
 
     const exists = await this.userRepository.findOne({ where: { email } });
 
@@ -75,7 +85,7 @@ export class SeedService implements OnApplicationBootstrap {
         companyCode,
         domainType: 'pharmacy' as any as DomainType,
         status: BusinessStatus.ACTIVE,
-        subscriptionPlan: SubscriptionPlan.PRO,
+        subscriptionPlan: SubscriptionPlan.PROFESSIONAL,
       });
       business = await this.businessRepository.save(business);
     }
@@ -112,6 +122,26 @@ export class SeedService implements OnApplicationBootstrap {
         roleId: tenantAdminRole?.id,
       });
       await this.userRepository.save(tenantAdmin);
+    }
+
+    // Ensure test tenant has a subscription
+    const subExists = await this.subscriptionRepository.findOne({
+      where: { businessId: business.id },
+    });
+
+    if (!subExists) {
+      const trialEnd = new Date();
+      trialEnd.setDate(trialEnd.getDate() + 7);
+
+      const subscription = this.subscriptionRepository.create({
+        businessId: business.id,
+        plan: SubscriptionPlan.PROFESSIONAL,
+        startDate: new Date(),
+        endDate: trialEnd,
+        status: 'ACTIVE',
+      });
+      await this.subscriptionRepository.save(subscription);
+      this.logger.log(`✅ Subscription seeded for ABC Pharma`);
     }
   }
 
@@ -201,6 +231,63 @@ export class SeedService implements OnApplicationBootstrap {
       } else {
         role.permissions = template.permissions;
         await this.roleRepository.save(role);
+      }
+    }
+  }
+
+  private async seedSubscriptionPlans() {
+    const plans = [
+      {
+        name: SubscriptionPlan.FREE,
+        price: 0,
+        maxUsers: 1,
+        maxProducts: 100,
+        maxBranches: 1,
+        maxInvoices: 100,
+        billingCycle: 'MONTHLY',
+        features: { reports: 'basic' },
+      },
+      {
+        name: SubscriptionPlan.BASIC,
+        price: 999,
+        maxUsers: 3,
+        maxProducts: 2000,
+        maxBranches: 1,
+        maxInvoices: 1000,
+        billingCycle: 'MONTHLY',
+        features: { reports: 'standard', gst: true },
+      },
+      {
+        name: SubscriptionPlan.PROFESSIONAL,
+        price: 2499,
+        maxUsers: 10,
+        maxProducts: 10000,
+        maxBranches: 5,
+        maxInvoices: -1, // Unlimited
+        billingCycle: 'MONTHLY',
+        features: { reports: 'advanced', barcode: true, batchTracking: true },
+      },
+      {
+        name: SubscriptionPlan.ENTERPRISE,
+        price: 0, // Custom pricing
+        maxUsers: -1,
+        maxProducts: -1,
+        maxBranches: -1,
+        maxInvoices: -1,
+        billingCycle: 'MONTHLY',
+        features: { reports: 'enterprise', api: true, customIntegrations: true },
+      },
+    ];
+
+    for (const planData of plans) {
+      const exists = await this.subscriptionPlanRepository.findOne({
+        where: { name: planData.name },
+      });
+
+      if (!exists) {
+        const plan = this.subscriptionPlanRepository.create(planData);
+        await this.subscriptionPlanRepository.save(plan);
+        this.logger.log(`✅ Subscription Plan seeded: ${planData.name}`);
       }
     }
   }

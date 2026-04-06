@@ -3,8 +3,10 @@ import type { AuthenticatedRequest } from '../interfaces/authenticated-request.i
 import { RequestUser } from '../interfaces/authenticated-request.interface.js';
 
 export const CurrentUser = createParamDecorator(
-  (data: unknown, ctx: ExecutionContext): RequestUser | undefined => {
+  (data: string | undefined, ctx: ExecutionContext) => {
     const request = ctx.switchToHttp().getRequest<AuthenticatedRequest>();
-    return request.user;
+    const user = request.user;
+    return data ? user?.[data as keyof RequestUser] : user;
   },
 );
+

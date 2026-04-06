@@ -1,7 +1,10 @@
 import { Module } from '@nestjs/common';
 import { TenantManagementService } from './services/tenant-management.service.js';
+import { TenantProvisioningService } from './services/tenant-provisioning.service.js';
 import { TenantManagementController } from './controllers/tenant-management.controller.js';
 import { AuditLogController } from './controllers/audit-log.controller.js';
+import { TenantUserController } from './controllers/tenant-user.controller.js';
+import { TenantUserService } from './services/tenant-user.service.js';
 
 import { TypeOrmModule } from '@nestjs/typeorm';
 import { Business } from '../../database/entities/business.entity.js';
@@ -34,12 +37,15 @@ import { AuditLogService } from './services/audit-log.service.js';
     TenantManagementController,
     SubscriptionPlanController,
     AuditLogController,
+    TenantUserController,
   ],
   providers: [
     TenantManagementService,
+    TenantProvisioningService,
     SubscriptionPlanService,
     AuditLogService,
+    TenantUserService,
   ],
-  exports: [AuditLogService],
+  exports: [AuditLogService, TenantProvisioningService, TenantUserService],
 })
 export class PlatformModule {}

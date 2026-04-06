@@ -14,8 +14,9 @@ import {
 } from '@nestjs/common';
 import type { AuthenticatedRequest } from '../../../common/interfaces/authenticated-request.interface.js';
 import { TenantManagementService } from '../services/tenant-management.service.js';
+import { TenantProvisioningService } from '../services/tenant-provisioning.service.js';
 import {
-  CreateTenantDto,
+  ProvisionTenantDto,
   UpdateTenantDto,
   CreatePlatformAdminDto,
   UpdatePlatformAdminDto,
@@ -32,7 +33,10 @@ import { PlatformRole } from '../../../common/enums/platform-role.enum.js';
 
 @Controller('platform')
 export class TenantManagementController {
-  constructor(private readonly tenantService: TenantManagementService) {}
+  constructor(
+    private readonly tenantService: TenantManagementService,
+    private readonly provisioningService: TenantProvisioningService,
+  ) {}
 
   // ════════════════════════════════════════════════════════════════
   // ROOT BOOTSTRAP — Public, one-time only
@@ -156,33 +160,6 @@ export class TenantManagementController {
   }
 
   // ════════════════════════════════════════════════════════════════
-  // SUPPORT CAPABILITIES — Tenant User Password Reset
-  // ════════════════════════════════════════════════════════════════
-
-  /**
-   * POST /platform/tenants/users/:id/reset-password
-   * Allows ROOT, PLATFORM_ADMIN, and SUPPORT_ADMIN to reset tenant passwords.
-   */
-  @Post('tenants/users/:id/reset-password')
-  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
-  @PlatformRoles(
-    PlatformRole.ROOT,
-    PlatformRole.PLATFORM_ADMIN,
-    PlatformRole.SUPPORT_ADMIN,
-  )
-  async resetTenantUserPassword(
-    @Param('id') id: string,
-    @Body() dto: ResetTenantUserPasswordDto,
-    @Request() req: AuthenticatedRequest,
-  ) {
-    return this.tenantService.resetTenantUserPassword(id, {
-      password: dto.password,
-      ipAddress: req.ip,
-      userAgent: req.get('user-agent'),
-    });
-  }
-
-  // ════════════════════════════════════════════════════════════════
   // TENANT MANAGEMENT — ROOT + PLATFORM_ADMIN
   // ════════════════════════════════════════════════════════════════
 
@@ -190,14 +167,18 @@ export class TenantManagementController {
   @UseGuards(JwtAuthGuard, PlatformRoleGuard)
   @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
   async createTenant(
-    @Body() dto: CreateTenantDto,
+    @Body() dto: ProvisionTenantDto,
     @Request() req: AuthenticatedRequest,
   ) {
-    return this.tenantService.createTenant(dto, {
-      userId: req.user.userId,
-      ipAddress: req.ip,
-      userAgent: req.get('user-agent'),
-    });
+    return this.provisioningService.createTenant(
+      dto,
+      'PLATFORM_ADMIN',
+      req.user.userId,
+      {
+        ipAddress: req.ip,
+        userAgent: req.get('user-agent'),
+      },
+    );
   }
 
   /**
@@ -338,5 +319,16 @@ export class TenantManagementController {
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit?: number,
   ) {
     return this.tenantService.getTenantUsers(id, { page, limit, search });
+  }
+
+  @Get('tenants/:id/roles')
+  @UseGuards(JwtAuthGuard, PlatformRoleGuard)
+  @PlatformRoles(
+    PlatformRole.ROOT,
+    PlatformRole.PLATFORM_ADMIN,
+    PlatformRole.SUPPORT_ADMIN,
+  )
+  async getTenantRoles(@Param('id') id: string) {
+    return this.tenantService.getTenantRoles(id);
   }
 }

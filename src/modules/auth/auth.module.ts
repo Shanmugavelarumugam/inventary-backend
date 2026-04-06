@@ -11,6 +11,7 @@ import { User } from '../../database/entities/user.entity.js';
 import { Business } from '../../database/entities/business.entity.js';
 import { Role } from '../../database/entities/role.entity.js';
 import { Permission } from '../../database/entities/permission.entity.js';
+import { Subscription } from '../../database/entities/subscription.entity.js';
 import { JwtStrategy } from './strategies/jwt.strategy.js';
 
 @Module({
@@ -29,7 +30,7 @@ import { JwtStrategy } from './strategies/jwt.strategy.js';
       }),
       inject: [ConfigService],
     }),
-    TypeOrmModule.forFeature([User, Business, Role, Permission]),
+    TypeOrmModule.forFeature([User, Business, Role, Permission, Subscription]),
     PlatformModule,
   ],
 

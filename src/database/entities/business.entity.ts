@@ -29,6 +29,9 @@ export class Business {
   @Column({ unique: true })
   companyCode: string;
 
+  @Column({ nullable: true })
+  gstNumber: string;
+
   @Column({ type: 'enum', enum: DomainType })
   domainType: DomainType;
 
@@ -48,10 +51,10 @@ export class Business {
   @Column({ nullable: true, type: 'timestamp' })
   subscriptionExpiresAt: Date;
 
-  @Column({ default: 10 })
+  @Column({ default: 1 })
   maxUsers: number;
 
-  @Column({ default: 3000 })
+  @Column({ default: 100 })
   maxProducts: number;
 
   @Column({ default: 1 })

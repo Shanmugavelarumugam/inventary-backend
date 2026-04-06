@@ -35,6 +35,12 @@ export class SubscriptionPlan {
   @Column({ type: 'int', default: 0 })
   maxProducts: number;
 
+  @Column({ type: 'int', default: 1 })
+  maxBranches: number;
+
+  @Column({ type: 'int', default: 100 })
+  maxInvoices: number;
+
   @Column({ default: 'ACTIVE' })
   status: 'ACTIVE' | 'INACTIVE';
 

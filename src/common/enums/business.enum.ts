@@ -7,6 +7,8 @@ export enum BusinessStatus {
 
 export enum SubscriptionPlan {
   STARTER = 'STARTER',
-  PRO = 'PRO',
+  FREE = 'FREE',
+  BASIC = 'BASIC',
+  PROFESSIONAL = 'PROFESSIONAL',
   ENTERPRISE = 'ENTERPRISE',
 }

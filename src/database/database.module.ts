@@ -15,6 +15,20 @@ import { AuditLog } from './entities/audit-log.entity.js';
 import { SupportTicket } from './entities/support-ticket.entity.js';
 import { SupportMessage } from './entities/support-message.entity.js';
 import { SupportAttachment } from './entities/support-attachment.entity.js';
+import { Supplier } from './entities/supplier.entity.js';
+import { Purchase } from './entities/purchase.entity.js';
+import { PurchaseItem } from './entities/purchase-item.entity.js';
+import { Customer } from './entities/customer.entity.js';
+import { InvoiceItem } from './entities/invoice-item.entity.js';
+import { StockLevel } from './entities/stock-level.entity.js';
+import { StockTransfer } from './entities/stock-transfer.entity.js';
+import { StockTransferItem } from './entities/stock-transfer-item.entity.js';
+import { Category } from './entities/category.entity.js';
+
+
+import { Unit } from './entities/unit.entity.js';
+import { Brand } from './entities/brand.entity.js';
+
 
 @Module({
   imports: [
@@ -41,7 +55,22 @@ import { SupportAttachment } from './entities/support-attachment.entity.js';
           SupportTicket,
           SupportMessage,
           SupportAttachment,
+          Supplier,
+          Purchase,
+          PurchaseItem,
+          Customer,
+          Invoice,
+          InvoiceItem,
+          StockLevel,
+          StockTransfer,
+          StockTransferItem,
+          Category,
+          Unit,
+
+
+          Brand,
         ],
+
 
         autoLoadEntities: true,
         synchronize: configService.get<boolean>('database.synchronize'),

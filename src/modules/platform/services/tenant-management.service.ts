@@ -21,7 +21,6 @@ import { AuditLogService } from './audit-log.service.js';
 import { AuditAction } from '../../../common/enums/audit-action.enum.js';
 
 import {
-  CreateTenantDto,
   UpdateTenantDto,
   CreatePlatformAdminDto,
   UpdatePlatformAdminDto,
@@ -451,113 +450,7 @@ export class TenantManagementService {
   // TENANT MANAGEMENT — ROOT + PLATFORM_ADMIN
   // ═══════════════════════════════════════════════════
 
-  async createTenant(
-    dto: CreateTenantDto,
-    creator: { userId: string; ipAddress?: string; userAgent?: string },
-  ) {
-    const { userId: creatorId, ipAddress, userAgent } = creator;
-
-    // 1. Global Pre-checks
-    const existingBusiness = await this.businessRepository.findOne({
-      where: { name: dto.name },
-    });
-    if (existingBusiness)
-      throw new ConflictException('A business with this name already exists');
-
-    const existingUser = await this.userRepository.findOne({
-      where: { email: dto.adminEmail },
-    });
-    if (existingUser)
-      throw new ConflictException('Admin email already exists in the system');
-
-    // 2. Transactional Creation
-    return await this.dataSource.transaction(async (manager) => {
-      // A. Auto-generate company code
-      const slug = dto.name
-        .replace(/[^a-zA-Z0-9]/g, '')
-        .toUpperCase()
-        .slice(0, 8);
-      const suffix = Math.random().toString(36).substring(2, 5).toUpperCase();
-      const companyCode = `${slug}${suffix}`;
-
-      // B. Create Business
-      const business = manager.create(Business, {
-        name: dto.name,
-        companyCode,
-        domainType: dto.domainType,
-        status: BusinessStatus.TRIAL,
-        subscriptionPlan: dto.subscriptionPlan || 'STARTER',
-        phone: dto.phone,
-        email: dto.email,
-        address: dto.address,
-        timezone: dto.timezone || 'Asia/Kolkata',
-        currency: dto.currency || 'INR',
-      });
-      const savedBusiness = await manager.save(business);
-
-      // C. Create default OWNER Role
-      const ownerRole = manager.create(Role, {
-        name: 'OWNER',
-        businessId: savedBusiness.id,
-      });
-      const savedRole = await manager.save(ownerRole);
-
-      // D. Create Admin User
-      const hashedPassword = await HashUtil.hash(dto.adminPassword);
-      const adminUser = manager.create(User, {
-        name: dto.adminName,
-        email: dto.adminEmail,
-        password: hashedPassword,
-        businessId: savedBusiness.id,
-        roleId: savedRole.id,
-        createdBy: creatorId,
-        isActive: true,
-      });
-      const savedUser = await manager.save(adminUser);
-
-      // E. Create Initial Trial Subscription (7 days)
-      const trialStart = new Date();
-      const trialEnd = new Date();
-      trialEnd.setDate(trialEnd.getDate() + 7);
-
-      const subscription = manager.create(Subscription, {
-        businessId: savedBusiness.id,
-        plan: savedBusiness.subscriptionPlan,
-        startDate: trialStart,
-        endDate: trialEnd,
-        status: 'TRIAL',
-      });
-      await manager.save(subscription);
-
-      // Audit Log (inside transaction)
-      const log = manager.create('AuditLog', {
-        userId: creatorId,
-        action: AuditAction.CREATE_TENANT,
-        entityType: 'business',
-        entityId: savedBusiness.id,
-        entityName: savedBusiness.name,
-        businessId: savedBusiness.id,
-        ipAddress,
-        userAgent,
-        newValue: {
-          name: savedBusiness.name,
-          code: savedBusiness.companyCode,
-          plan: savedBusiness.subscriptionPlan,
-        },
-      });
-      await manager.save(log);
-
-      return {
-        businessId: savedBusiness.id,
-        name: savedBusiness.name,
-        companyCode: savedBusiness.companyCode,
-        status: savedBusiness.status,
-        adminUserId: savedUser.id,
-        subscriptionStatus: 'TRIAL',
-        createdAt: savedBusiness.createdAt,
-      };
-    });
-  }
+  // DEPRECATED: Use TenantProvisioningService.createTenant via TenantManagementController
 
   async findAllTenants(options: {
     page?: number;
@@ -916,6 +809,28 @@ export class TenantManagementService {
         limit,
         totalPages,
       },
+    };
+  }
+
+  async getTenantRoles(tenantId: string) {
+    const tenant = await this.businessRepository.findOne({
+      where: { id: tenantId },
+    });
+    if (!tenant) throw new NotFoundException('Tenant not found');
+
+    const roles = await this.roleRepository.find({
+      where: { businessId: tenantId },
+      relations: ['permissions'],
+      order: { createdAt: 'ASC' },
+    });
+
+    return {
+      data: roles.map((r) => ({
+        id: r.id,
+        name: r.name,
+        description: r.description,
+        permissions: r.permissions?.map((p) => p.key) || [],
+      })),
     };
   }
 }
