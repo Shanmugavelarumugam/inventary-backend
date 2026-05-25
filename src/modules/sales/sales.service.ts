@@ -1,11 +1,24 @@
-import { Injectable, NotFoundException, BadRequestException } from '@nestjs/common';
+import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, DataSource } from 'typeorm';
+import { Repository, DataSource, Between } from 'typeorm';
 import { Customer } from '../../database/entities/customer.entity.js';
-import { Invoice, InvoiceStatus } from '../../database/entities/invoice.entity.js';
+import {
+  Invoice,
+  InvoiceStatus,
+} from '../../database/entities/invoice.entity.js';
 import { InvoiceItem } from '../../database/entities/invoice-item.entity.js';
+import { SalesOrder } from '../../database/entities/sales-order.entity.js';
+import { SalesReturn } from '../../database/entities/sales-return.entity.js';
+import { SalesQuote } from '../../database/entities/sales-quote.entity.js';
 import { StockMovementsService } from '../inventory/movements/movements.service.js';
 import { MovementType } from '../../database/entities/stock-movement.entity.js';
+import {
+  SalesSource,
+  SalesOrderStatus,
+} from '../../common/enums/sales.enum.js';
+import { CustomersService } from '../customers/customers.service.js';
+import { PaymentMethod } from '../../database/entities/invoice.entity.js';
+import { LedgerEntryType } from '../../common/enums/customer.enum.js';
 
 @Injectable()
 export class SalesService {
@@ -16,11 +29,18 @@ export class SalesService {
     private readonly invoiceRepository: Repository<Invoice>,
     @InjectRepository(InvoiceItem)
     private readonly invoiceItemRepository: Repository<InvoiceItem>,
+    @InjectRepository(SalesOrder)
+    private readonly orderRepository: Repository<SalesOrder>,
+    @InjectRepository(SalesReturn)
+    private readonly returnRepository: Repository<SalesReturn>,
+    @InjectRepository(SalesQuote)
+    private readonly quoteRepository: Repository<SalesQuote>,
     private readonly stockMovementsService: StockMovementsService,
+    private readonly customersService: CustomersService,
     private readonly dataSource: DataSource,
   ) {}
 
-  // Customer CRUD
+  // --- Customers ---
   async findAllCustomers(businessId: string) {
     return this.customerRepository.find({ where: { businessId } });
   }
@@ -30,8 +50,8 @@ export class SalesService {
     return this.customerRepository.save(customer);
   }
 
-  // Invoice / Sales Entry
-  async findAllInvoices(businessId: string) {
+  // --- Invoices / POS ---
+  async findAllInvoices(businessId: string): Promise<Invoice[]> {
     return this.invoiceRepository.find({
       where: { businessId },
       relations: ['customer', 'createdBy', 'items', 'items.product'],
@@ -39,40 +59,63 @@ export class SalesService {
     });
   }
 
-  async processSale(businessId: string, userId: string, data: any) {
-    const { customerId, items, paymentMethod, discountAmount = 0 } = data;
+  async processSale(
+    businessId: string,
+    userId: string,
+    data: {
+      customerId?: string;
+      items: {
+        productId: string;
+        quantity: number;
+        unitPrice: number;
+        taxRate?: number;
+      }[];
+      paymentMethod: PaymentMethod;
+      discountAmount?: number;
+      source?: SalesSource;
+      orderId?: string;
+    },
+  ): Promise<Invoice> {
+    const {
+      customerId,
+      items,
+      paymentMethod,
+      discountAmount = 0,
+      source = SalesSource.POS,
+      orderId,
+    } = data;
 
     return this.dataSource.transaction(async (manager) => {
-      // 1. Generate Invoice Number (Simple sequential or random for now)
-      const invoiceNumber = `INV-${Date.now().toString().slice(-6)}`;
+      const invoiceCount = await manager.count(Invoice, {
+        where: { businessId },
+      });
+      const invoiceNumber = `INV-${(invoiceCount + 1).toString().padStart(6, '0')}`;
 
-      // 2. Initial Totals
       let subTotal = 0;
       let taxTotal = 0;
 
-      // 3. Create Invoice Header (Temporary save to get ID)
       const invoice = manager.create(Invoice, {
         businessId,
         invoiceNumber,
         customerId,
         createdById: userId,
         paymentMethod,
-        status: InvoiceStatus.PAID, // Standard POS is paid immediately
+        source,
+        orderId,
+        status: InvoiceStatus.PAID,
         discountAmount,
       });
 
       const savedInvoice = await manager.save(invoice);
 
-      // 4. Process Items & Deduct Stock
       for (const item of items) {
-        const lineSubTotal = Number(item.quantity) * Number(item.unitPrice);
-        const lineTax = lineSubTotal * (item.taxRate || 0) / 100;
+        const lineSubTotal = item.quantity * item.unitPrice;
+        const lineTax = (lineSubTotal * (item.taxRate || 0)) / 100;
         const lineTotal = lineSubTotal + lineTax;
 
         subTotal += lineSubTotal;
         taxTotal += lineTax;
 
-        // Create Invoice Item
         const invoiceItem = manager.create(InvoiceItem, {
           invoiceId: savedInvoice.id,
           productId: item.productId,
@@ -83,75 +126,248 @@ export class SalesService {
         });
         await manager.save(invoiceItem);
 
-        // --- CRITICAL: INVENTORY DEDUCTION ---
-        // Every sale decrements stock by quantity
-        await this.stockMovementsService.adjustStock(
-            businessId,
-            item.productId,
-            -item.quantity, // Negative for SALE
-            MovementType.SALE,
-            userId,
-            `Sale Invoice #${invoiceNumber}`,
-            savedInvoice.id
-        );
-      }
-
-      // 5. Finalize Header Totals
-      savedInvoice.subTotal = subTotal;
-      savedInvoice.taxAmount = taxTotal;
-      savedInvoice.totalAmount = subTotal + taxTotal - Number(discountAmount);
-      
-      return manager.save(savedInvoice);
-    });
-  }
-
-  async findOneInvoice(id: string, businessId: string) {
-    const invoice = await this.invoiceRepository.findOne({
-      where: { id, businessId },
-      relations: ['customer', 'createdBy', 'items', 'items.product'],
-    });
-    if (!invoice) throw new NotFoundException('Invoice not found');
-    return invoice;
-  }
-
-  async updateInvoice(id: string, businessId: string, data: any) {
-    const invoice = await this.findOneInvoice(id, businessId);
-    Object.assign(invoice, data);
-    return this.invoiceRepository.save(invoice);
-  }
-
-  async processPayment(id: string, businessId: string, data: any) {
-    const invoice = await this.findOneInvoice(id, businessId);
-    // In a real system, this would create a Payment record and update invoice status
-    invoice.status = InvoiceStatus.PAID;
-    if (data.paymentMethod) {
-      invoice.paymentMethod = data.paymentMethod;
-    }
-    return this.invoiceRepository.save(invoice);
-  }
-
-  async processReturn(id: string, businessId: string, userId: string, data: any) {
-    const invoice = await this.findOneInvoice(id, businessId);
-    
-    return this.dataSource.transaction(async (manager) => {
-      // 1. Mark invoice as having a return or update status
-      invoice.status = InvoiceStatus.VOID; // Simple logic for MVP: Void the invoice on return
-      await manager.save(invoice);
-
-      // 2. Adjust stock back (Positive quantity for RETURN)
-      for (const item of invoice.items) {
+        // Deduct Stock
         await this.stockMovementsService.adjustStock(
           businessId,
           item.productId,
-          item.quantity, // Positive to add back to stock
+          -item.quantity,
+          MovementType.SALE,
+          userId,
+          `Sale Invoice #${invoiceNumber}`,
+          savedInvoice.id,
+        );
+      }
+
+      savedInvoice.subTotal = subTotal;
+      savedInvoice.taxAmount = taxTotal;
+      savedInvoice.totalAmount = subTotal + taxTotal - Number(discountAmount);
+      const finalInvoice = await manager.save(savedInvoice);
+
+      // --- Customers Management Integration ---
+      if (customerId) {
+        // Loyalty Points: 1 point per 100 spent
+        const pts = Math.floor(finalInvoice.totalAmount / 100);
+        if (pts > 0) {
+          await this.customersService.addLoyaltyPoints(
+            businessId,
+            customerId,
+            pts,
+            manager,
+          );
+        }
+
+        // Credit Ledger tracking
+        if (paymentMethod === PaymentMethod.CREDIT) {
+          await this.customersService.updateBalance(
+            businessId,
+            customerId,
+            finalInvoice.totalAmount, // Increases debt
+            LedgerEntryType.INVOICE,
+            finalInvoice.id,
+            finalInvoice.invoiceNumber,
+            'Credit Sale',
+            manager,
+          );
+        }
+      }
+
+      return finalInvoice;
+    });
+  }
+
+  // --- Sales Orders ---
+  async findAllOrders(businessId: string) {
+    return this.orderRepository.find({
+      where: { businessId },
+      relations: ['customer', 'createdBy'],
+      order: { createdAt: 'DESC' },
+    });
+  }
+
+  async createOrder(
+    businessId: string,
+    userId: string,
+    data: Partial<SalesOrder>,
+  ): Promise<SalesOrder> {
+    const orderCount = await this.orderRepository.count({
+      where: { businessId },
+    });
+    const orderNumber = `ORD-${(orderCount + 1).toString().padStart(6, '0')}`;
+
+    const order = this.orderRepository.create({
+      ...data,
+      businessId,
+      orderNumber,
+      createdById: userId,
+      status: SalesOrderStatus.PENDING,
+    });
+    return this.orderRepository.save(order);
+  }
+
+  async updateOrderStatus(
+    id: string,
+    businessId: string,
+    status: SalesOrderStatus,
+  ) {
+    const order = await this.orderRepository.findOne({
+      where: { id, businessId },
+    });
+    if (!order) throw new NotFoundException('Order not found');
+    order.status = status;
+    return this.orderRepository.save(order);
+  }
+
+  // --- Returns ---
+  async processReturn(
+    businessId: string,
+    userId: string,
+    data: {
+      invoiceId: string;
+      reason?: string;
+      refundAmount: number;
+      items: { productId: string; quantity: number }[];
+    },
+  ): Promise<SalesReturn> {
+    const { invoiceId, reason, refundAmount, items } = data;
+
+    const invoice = await this.invoiceRepository.findOne({
+      where: { id: invoiceId, businessId },
+      relations: ['items'],
+    });
+    if (!invoice) throw new NotFoundException('Invoice not found');
+
+    return this.dataSource.transaction(async (manager) => {
+      const salesReturn = manager.create(SalesReturn, {
+        businessId,
+        invoiceId,
+        reason,
+        refundAmount,
+        returnedItems: items, // Properly typed since items comes from 'data'
+        createdById: userId,
+      });
+
+      const savedReturn = await manager.save(salesReturn);
+
+      // --- Customers Management Integration ---
+      if (invoice.customerId) {
+        await this.customersService.updateBalance(
+          businessId,
+          invoice.customerId,
+          -Number(refundAmount), // Decreases debt
+          LedgerEntryType.RETURN,
+          savedReturn.id,
+          `RET-${invoice.invoiceNumber}`,
+          'Sales Return Adjustment',
+          manager,
+        );
+      }
+
+      // Restore Stock
+      for (const item of items) {
+        await this.stockMovementsService.adjustStock(
+          businessId,
+          item.productId,
+          item.quantity, // Positive for restoration
           MovementType.ADJUSTMENT,
           userId,
           `Return for Invoice #${invoice.invoiceNumber}`,
-          invoice.id
+          invoice.id,
         );
       }
-      
-      return invoice;
+
+      return savedReturn;
     });
+  }
+
+  // --- Analytics ---
+  async getSalesAnalytics(businessId: string) {
+    const today = new Date();
+    today.setHours(0, 0, 0, 0);
+
+    const invoicesToday = await this.invoiceRepository.find({
+      where: {
+        businessId,
+        createdAt: Between(today, new Date()),
+      },
+    });
+
+    const totalDailySales = invoicesToday.reduce(
+      (sum, inv) => sum + Number(inv.totalAmount),
+      0,
+    );
+
+    const paymentModeSplit = invoicesToday.reduce(
+      (acc: Record<string, number>, inv) => {
+        acc[inv.paymentMethod] =
+          (acc[inv.paymentMethod] || 0) + Number(inv.totalAmount);
+        return acc;
+      },
+      {},
+    );
+
+    // Calculate dynamic weekly sales trend
+    const sevenDaysAgo = new Date();
+    sevenDaysAgo.setDate(sevenDaysAgo.getDate() - 6);
+    sevenDaysAgo.setHours(0, 0, 0, 0);
+
+    const invoicesWeek = await this.invoiceRepository.find({
+      where: {
+        businessId,
+        createdAt: Between(sevenDaysAgo, new Date()),
+      },
+      relations: ['items', 'items.product', 'items.product.category'],
+    });
+
+    // Generate weekly data
+    const weekday = ['Sun', 'Mon', 'Tue', 'Wed', 'Thu', 'Fri', 'Sat'];
+    const trendMap: Record<string, number> = {};
+    for (let i = 0; i < 7; i++) {
+      const d = new Date();
+      d.setDate(d.getDate() - i);
+      trendMap[weekday[d.getDay()]] = 0;
+    }
+
+    invoicesWeek.forEach((inv) => {
+      const dayName = weekday[new Date(inv.createdAt).getDay()];
+      if (trendMap[dayName] !== undefined) {
+        trendMap[dayName] += Number(inv.totalAmount);
+      }
+    });
+
+    const salesTrend = Object.entries(trendMap)
+      .reverse()
+      .map(([name, value]) => ({ name, value }));
+
+    // Calculate category breakdown
+    const categoryMap: Record<string, number> = {};
+    invoicesWeek.forEach((inv) => {
+      inv.items?.forEach((item) => {
+        const catName = item.product?.category?.name || 'General';
+        const itemVal = Number(item.unitPrice) * Number(item.quantity);
+        categoryMap[catName] = (categoryMap[catName] || 0) + itemVal;
+      });
+    });
+
+    const categoryData = Object.entries(categoryMap).map(([name, value]) => ({
+      name,
+      value,
+    }));
+
+    // If there's no real data, seed a basic fallback so the charts aren't completely empty
+    if (salesTrend.length === 0 || salesTrend.every((v) => v.value === 0)) {
+      salesTrend.push({ name: 'Today', value: totalDailySales || 0 });
+    }
+
+    if (categoryData.length === 0) {
+      categoryData.push({ name: 'No Data Yet', value: 1 });
+    }
+
+    return {
+      dailySales: totalDailySales,
+      orderCount: invoicesToday.length,
+      paymentModeSplit,
+      salesTrend,
+      categoryData,
+    };
   }
 }

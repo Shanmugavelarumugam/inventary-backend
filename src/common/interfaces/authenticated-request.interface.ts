@@ -7,6 +7,7 @@ export interface RequestUser {
   businessId?: string;
   roleId?: string;
   role?: string;
+  branchId?: string;
   platformRole?: PlatformRole;
 }
 

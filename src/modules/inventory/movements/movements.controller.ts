@@ -1,4 +1,4 @@
-import { Controller, Get, Post, Body, Query, UseGuards, Param } from '@nestjs/common';
+import { Controller, Get, Post, Body, Query, UseGuards } from '@nestjs/common';
 import { StockMovementsService } from './movements.service.js';
 import { MovementType } from '../../../database/entities/stock-movement.entity.js';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard.js';
@@ -21,14 +21,19 @@ export class StockMovementsController {
   }
 
   @Post('adjust')
-  @Roles(TenantRole.TENANT_ADMIN, TenantRole.BUSINESS_MANAGER, TenantRole.INVENTORY_MANAGER)
+  @Roles(
+    TenantRole.TENANT_ADMIN,
+    TenantRole.BUSINESS_MANAGER,
+    TenantRole.INVENTORY_MANAGER,
+  )
   async adjust(
     @CurrentUser('businessId') businessId: string,
-    @CurrentUser('id') userId: string,
-    @Body() data: { 
-      productId: string; 
-      quantity: number; 
-      type: MovementType; 
+    @CurrentUser('userId') userId: string,
+    @Body()
+    data: {
+      productId: string;
+      quantity: number;
+      type: MovementType;
       reason?: string;
       reference?: string;
       branchId?: string;
@@ -44,5 +49,22 @@ export class StockMovementsController {
       data.reference,
       data.branchId,
     );
+  }
+
+  @Get('analytics')
+  @Roles(
+    TenantRole.TENANT_ADMIN,
+    TenantRole.BUSINESS_MANAGER,
+    TenantRole.INVENTORY_MANAGER,
+    TenantRole.FINANCE_MANAGER,
+  )
+  async getAnalytics(@CurrentUser('businessId') businessId: string) {
+    return this.movementsService.getInventoryAnalytics(businessId);
+  }
+
+  @Get('verify-integrity')
+  @Roles(TenantRole.TENANT_ADMIN, TenantRole.BUSINESS_MANAGER)
+  async verifyIntegrity(@CurrentUser('businessId') businessId: string) {
+    return this.movementsService.verifyIntegrity(businessId);
   }
 }

@@ -11,7 +11,9 @@ export class SettingsService {
   ) {}
 
   async getBusinessProfile(businessId: string) {
-    const business = await this.businessRepository.findOne({ where: { id: businessId } });
+    const business = await this.businessRepository.findOne({
+      where: { id: businessId },
+    });
     if (!business) throw new NotFoundException('Business not found');
     return business;
   }
@@ -32,13 +34,13 @@ export class SettingsService {
     };
   }
 
-  async updateTaxSettings(businessId: string, data: any) {
+  async updateTaxSettings(businessId: string, data: { taxId?: string }) {
     const business = await this.getBusinessProfile(businessId);
     if (data.taxId) business.gstNumber = data.taxId;
     return this.businessRepository.save(business);
   }
 
-  async getInvoiceTemplate(businessId: string) {
+  getInvoiceTemplate(_businessId: string) {
     return {
       templateId: 'standard-v1',
       showLogo: true,
@@ -46,11 +48,11 @@ export class SettingsService {
     };
   }
 
-  async updateInvoiceTemplate(businessId: string, data: any) {
+  updateInvoiceTemplate(_businessId: string, _data: any) {
     return { message: 'Invoice template updated successfully' };
   }
 
-  async getNotifications(businessId: string) {
+  getNotifications(_businessId: string) {
     return {
       emailAlerts: true,
       lowStockAlerts: true,
@@ -58,18 +60,18 @@ export class SettingsService {
     };
   }
 
-  async updateNotifications(businessId: string, data: any) {
+  updateNotifications(_businessId: string, _data: any) {
     return { message: 'Notification settings updated successfully' };
   }
 
-  async getIntegrations(businessId: string) {
+  getIntegrations(_businessId: string) {
     return {
       whatsapp: 'DISCONNECTED',
       ledgerService: 'CONNECTED',
     };
   }
 
-  async updateIntegrations(businessId: string, data: any) {
+  updateIntegrations(_businessId: string, _data: any) {
     return { message: 'Integrations updated successfully' };
   }
 }

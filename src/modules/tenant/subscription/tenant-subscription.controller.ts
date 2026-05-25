@@ -1,10 +1,4 @@
-import { 
-  Controller, 
-  Get, 
-  Post, 
-  Body, 
-  UseGuards 
-} from '@nestjs/common';
+import { Controller, Get, Post, Body, UseGuards } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard.js';
 import { TenantGuard } from '../../../common/guards/tenant.guard.js';
 import { Roles } from '../../../common/decorators/roles.decorator.js';
@@ -15,7 +9,9 @@ import { TenantSubscriptionService } from './tenant-subscription.service.js';
 @Controller('tenant/subscription')
 @UseGuards(JwtAuthGuard, TenantGuard)
 export class TenantSubscriptionController {
-  constructor(private readonly subscriptionService: TenantSubscriptionService) {}
+  constructor(
+    private readonly subscriptionService: TenantSubscriptionService,
+  ) {}
 
   @Get('current')
   async getCurrent(@CurrentUser('businessId') businessId: string) {

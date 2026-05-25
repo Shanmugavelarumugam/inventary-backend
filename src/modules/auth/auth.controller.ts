@@ -30,6 +30,10 @@ import {
   ChangePasswordDto,
   ForgotPasswordDto,
   ResetPasswordDto,
+  UpdateProfileDto,
+  DiscoverWorkspacesDto,
+  GoogleLoginDto,
+  GoogleOnboardDto,
 } from './dto/index.js';
 import { ProvisionTenantDto } from '../platform/dto/index.js';
 
@@ -45,9 +49,24 @@ export class AuthController {
   @Post('register')
   @ApiOperation({ summary: 'Register a new business and admin account' })
   @ApiResponse({ status: 201, description: 'Registration successful' })
-  @ApiResponse({ status: 409, description: 'Conflict (email or business name exists)' })
+  @ApiResponse({
+    status: 409,
+    description: 'Conflict (email or business name exists)',
+  })
   async register(@Body() dto: ProvisionTenantDto) {
     return this.provisioningService.createTenant(dto, 'SELF_SERVICE');
+  }
+
+  // ─── 0.5 Discover Workspaces (Pre-Login Helper) ──────────
+  @Post('discover-workspaces')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Resolve active business links by user email' })
+  @ApiResponse({
+    status: 200,
+    description: 'Successfully listed associated domains',
+  })
+  async discover(@Body() dto: DiscoverWorkspacesDto) {
+    return this.authService.discoverWorkspaces(dto.email);
   }
 
   // ─── 1. Login (Super Admin + Tenant) ────────────────────
@@ -56,7 +75,10 @@ export class AuthController {
   @ApiOperation({ summary: 'User login' })
   @ApiResponse({ status: 200, description: 'Login successful' })
   @ApiResponse({ status: 401, description: 'Unauthorized' })
-  async login(@Body() dto: LoginDto, @Req() req: AuthenticatedRequest) {
+  async login(
+    @Body() dto: LoginDto,
+    @Req() req: AuthenticatedRequest,
+  ): Promise<any> {
     return this.authService.login(dto, {
       ipAddress: req.ip,
       userAgent: req.get('user-agent'),
@@ -141,5 +163,35 @@ export class AuthController {
   })
   async getMyPermissions(@Request() req: AuthenticatedRequest) {
     return this.authService.getMyPermissions(req.user.userId);
+  }
+
+  @Patch('me')
+  @UseGuards(JwtAuthGuard)
+  @ApiBearerAuth()
+  @ApiOperation({ summary: 'Update current user profile' })
+  @ApiResponse({ status: 200, description: 'Profile updated successfully' })
+  async updateProfile(
+    @CurrentUser() user: RequestUser,
+    @Body() dto: UpdateProfileDto,
+  ) {
+    return this.authService.updateProfile(user.userId, dto);
+  }
+
+  // ─── 10. Google Authentication ──────────────────────────
+  @Post('google')
+  @HttpCode(HttpStatus.OK)
+  @ApiOperation({ summary: 'Login or check onboarding with Google token' })
+  @ApiResponse({ status: 200, description: 'Google check successful' })
+  async googleLogin(@Body() dto: GoogleLoginDto) {
+    const decoded = await this.authService.verifyGoogleToken(dto.token);
+    return this.authService.googleLogin(decoded.email);
+  }
+
+  @Post('google-onboard')
+  @HttpCode(HttpStatus.CREATED)
+  @ApiOperation({ summary: 'Provision tenant and complete onboarding via Google' })
+  @ApiResponse({ status: 201, description: 'Tenant successfully provisioned' })
+  async googleOnboard(@Body() dto: GoogleOnboardDto) {
+    return this.authService.googleOnboard(dto, this.provisioningService);
   }
 }

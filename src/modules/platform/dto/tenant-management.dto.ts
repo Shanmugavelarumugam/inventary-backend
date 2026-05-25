@@ -1,9 +1,4 @@
-import {
-  IsEmail,
-  IsEnum,
-  IsOptional,
-  IsString,
-} from 'class-validator';
+import { IsEmail, IsEnum, IsOptional, IsString } from 'class-validator';
 import { DomainType } from '../../../database/entities/business.entity.js';
 import { BusinessStatus } from '../../../common/enums/business.enum.js';
 

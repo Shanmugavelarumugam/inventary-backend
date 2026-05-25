@@ -16,4 +16,3 @@ export class BusinessService {
     return business;
   }
 }
-

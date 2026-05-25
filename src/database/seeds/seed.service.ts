@@ -1,6 +1,7 @@
 import { Injectable, OnApplicationBootstrap, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, IsNull } from 'typeorm';
+import { Repository, IsNull, DataSource, EntityManager } from 'typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
 import { ConfigService } from '@nestjs/config';
 import { User } from '../entities/user.entity.js';
 import { Role } from '../entities/role.entity.js';
@@ -33,30 +34,87 @@ export class SeedService implements OnApplicationBootstrap {
     private readonly subscriptionRepository: Repository<Subscription>,
     @InjectRepository(SubscriptionPlanEntity)
     private readonly subscriptionPlanRepository: Repository<SubscriptionPlanEntity>,
+    @InjectDataSource()
+    private readonly dataSource: DataSource,
     private readonly migrationService: TenantRoleMigrationService,
     private readonly configService: ConfigService,
   ) {}
 
   async onApplicationBootstrap() {
-    await this.seedPermissions();
-    await this.seedRoles();
-    await this.seedSubscriptionPlans();
-    await this.seedRootAdmin(); // ROOT from env
-    await this.seedTestTenant();
-    await this.migrationService.migrateAllTenants();
+    await this.dataSource.transaction(async (manager) => {
+      await this.seedPermissions(manager);
+      await this.seedRoles(manager);
+      await this.seedSubscriptionPlans(manager);
+      await this.seedRootAdmin(manager);
+      await this.seedTestTenant(manager);
+      await this.migrationService.migrateAllTenants(manager);
+      await this.seedDemoAccounts(manager);
+    });
+  }
+
+  private async seedDemoAccounts(manager: EntityManager) {
+    const demos = [
+      { code: 'demo', name: 'Demo Business', domain: DomainType.RETAIL },
+      {
+        code: 'medicines',
+        name: 'Viyan Medicines',
+        domain: DomainType.PHARMACY,
+      },
+    ];
+
+    for (const d of demos) {
+      let business = await manager.findOne(Business, {
+        where: { companyCode: d.code },
+      });
+
+      if (!business) {
+        business = manager.create(Business, {
+          name: d.name,
+          companyCode: d.code,
+          domainType: d.domain,
+          status: BusinessStatus.ACTIVE,
+          subscriptionPlan: SubscriptionPlan.PROFESSIONAL,
+        });
+        business = await manager.save(business);
+        this.logger.log(`✅ Demo Business seeded: ${d.code}`);
+      }
+
+      // Create Admin for each
+      const email = `admin@${d.code}.com`;
+      const exists = await manager.findOne(User, { where: { email } });
+
+      if (!exists) {
+        // Find the TENANT_ADMIN role for this business
+        const role = await manager.findOne(Role, {
+          where: { name: 'TENANT_ADMIN', businessId: business.id },
+        });
+
+        const hashedPassword = await HashUtil.hash('admin123');
+        const user = manager.create(User, {
+          name: `${d.name} Admin`,
+          email,
+          password: hashedPassword,
+          businessId: business.id,
+          roleId: role?.id,
+          isActive: true,
+        });
+        await manager.save(user);
+        this.logger.log(`   + Admin seeded: ${email} / admin123`);
+      }
+    }
   }
 
   /**
    * ROOT Admin — Created once from environment variables.
    * This is the platform owner. Never created via API.
    */
-  private async seedRootAdmin() {
+  private async seedRootAdmin(manager: EntityManager) {
     const email =
       this.configService.get<string>('ROOT_EMAIL') || 'root@gmail.com';
     const password =
       this.configService.get<string>('ROOT_PASSWORD') || '123456789';
 
-    const exists = await this.userRepository.findOne({ where: { email } });
+    const exists = await manager.findOne(User, { where: { email } });
 
     if (!exists) {
       const hashedPassword = await HashUtil.hash(password);
@@ -68,48 +126,48 @@ export class SeedService implements OnApplicationBootstrap {
         platformRole: PlatformRole.ROOT,
         isActive: true,
       });
-      await this.userRepository.save(root);
+      await manager.save(root);
       this.logger.log(`✅ ROOT admin seeded: ${email}`);
     }
   }
 
-  private async seedTestTenant() {
+  private async seedTestTenant(manager: EntityManager) {
     const companyCode = 'ABC-PHARMA';
-    let business = await this.businessRepository.findOne({
+    let business = await manager.findOne(Business, {
       where: { companyCode },
     });
 
     if (!business) {
-      business = this.businessRepository.create({
+      business = manager.create(Business, {
         name: 'ABC Pharmacy',
         companyCode,
         domainType: 'pharmacy' as any as DomainType,
         status: BusinessStatus.ACTIVE,
         subscriptionPlan: SubscriptionPlan.PROFESSIONAL,
       });
-      business = await this.businessRepository.save(business);
+      business = await manager.save(business);
     }
 
-    const adminRoleTemplate = await this.roleRepository.findOne({
+    const adminRoleTemplate = await manager.findOne(Role, {
       where: { name: 'admin', businessId: IsNull() },
       relations: ['permissions'],
     });
 
-    let tenantAdminRole = await this.roleRepository.findOne({
+    let tenantAdminRole = await manager.findOne(Role, {
       where: { name: 'Tenant Admin', businessId: business.id },
     });
 
     if (!tenantAdminRole && adminRoleTemplate) {
-      tenantAdminRole = this.roleRepository.create({
+      tenantAdminRole = manager.create(Role, {
         name: 'Tenant Admin',
         businessId: business.id,
         permissions: adminRoleTemplate.permissions,
       });
-      tenantAdminRole = await this.roleRepository.save(tenantAdminRole);
+      tenantAdminRole = await manager.save(tenantAdminRole);
     }
 
     const email = 'admin@abcpharma.com';
-    const exists = await this.userRepository.findOne({ where: { email } });
+    const exists = await manager.findOne(User, { where: { email } });
 
     if (!exists) {
       const hashedPassword = await HashUtil.hash('admin123');
@@ -121,11 +179,11 @@ export class SeedService implements OnApplicationBootstrap {
         businessId: business.id,
         roleId: tenantAdminRole?.id,
       });
-      await this.userRepository.save(tenantAdmin);
+      await manager.save(tenantAdmin);
     }
 
     // Ensure test tenant has a subscription
-    const subExists = await this.subscriptionRepository.findOne({
+    const subExists = await manager.findOne(Subscription, {
       where: { businessId: business.id },
     });
 
@@ -133,19 +191,19 @@ export class SeedService implements OnApplicationBootstrap {
       const trialEnd = new Date();
       trialEnd.setDate(trialEnd.getDate() + 7);
 
-      const subscription = this.subscriptionRepository.create({
+      const subscription = manager.create(Subscription, {
         businessId: business.id,
         plan: SubscriptionPlan.PROFESSIONAL,
         startDate: new Date(),
         endDate: trialEnd,
         status: 'ACTIVE',
       });
-      await this.subscriptionRepository.save(subscription);
+      await manager.save(subscription);
       this.logger.log(`✅ Subscription seeded for ABC Pharma`);
     }
   }
 
-  private async seedPermissions() {
+  private async seedPermissions(manager: EntityManager) {
     const permissions = [
       { key: 'create_business', description: 'Can create businesses' },
       { key: 'view_business', description: 'Can view business details' },
@@ -168,19 +226,17 @@ export class SeedService implements OnApplicationBootstrap {
     ];
 
     for (const p of permissions) {
-      const exists = await this.permissionRepository.findOne({
+      const exists = await manager.findOne(Permission, {
         where: { key: p.key },
       });
       if (!exists) {
-        await this.permissionRepository.save(
-          this.permissionRepository.create(p),
-        );
+        await manager.save(manager.create(Permission, p));
       }
     }
   }
 
-  private async seedRoles() {
-    const allPermissions = await this.permissionRepository.find();
+  private async seedRoles(manager: EntityManager) {
+    const allPermissions = await manager.find(Permission);
     const getPerms = (keys: string[]) =>
       allPermissions.filter((p) => keys.includes(p.key));
 
@@ -216,26 +272,26 @@ export class SeedService implements OnApplicationBootstrap {
     ];
 
     for (const template of roleTemplates) {
-      let role = await this.roleRepository.findOne({
+      let role = await manager.findOne(Role, {
         where: { name: template.name, businessId: IsNull() },
         relations: ['permissions'],
       });
 
       if (!role) {
-        role = this.roleRepository.create({
+        role = manager.create(Role, {
           name: template.name,
           businessId: null as unknown as string,
           permissions: template.permissions,
         });
-        await this.roleRepository.save(role);
+        await manager.save(role);
       } else {
         role.permissions = template.permissions;
-        await this.roleRepository.save(role);
+        await manager.save(role);
       }
     }
   }
 
-  private async seedSubscriptionPlans() {
+  private async seedSubscriptionPlans(manager: EntityManager) {
     const plans = [
       {
         name: SubscriptionPlan.FREE,
@@ -275,18 +331,22 @@ export class SeedService implements OnApplicationBootstrap {
         maxBranches: -1,
         maxInvoices: -1,
         billingCycle: 'MONTHLY',
-        features: { reports: 'enterprise', api: true, customIntegrations: true },
+        features: {
+          reports: 'enterprise',
+          api: true,
+          customIntegrations: true,
+        },
       },
     ];
 
     for (const planData of plans) {
-      const exists = await this.subscriptionPlanRepository.findOne({
+      const exists = await manager.findOne(SubscriptionPlanEntity, {
         where: { name: planData.name },
       });
 
       if (!exists) {
-        const plan = this.subscriptionPlanRepository.create(planData);
-        await this.subscriptionPlanRepository.save(plan);
+        const plan = manager.create(SubscriptionPlanEntity, planData);
+        await manager.save(plan);
         this.logger.log(`✅ Subscription Plan seeded: ${planData.name}`);
       }
     }

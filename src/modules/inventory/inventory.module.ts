@@ -14,12 +14,22 @@ import { StockMovement } from '../../database/entities/stock-movement.entity.js'
 import { Branch } from '../../database/entities/branch.entity.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, Category, Unit, Brand, StockMovement, Branch])],
-  controllers: [ProductsController, MasterDataController, StockMovementsController],
+  imports: [
+    TypeOrmModule.forFeature([
+      Product,
+      Category,
+      Unit,
+      Brand,
+      StockMovement,
+      Branch,
+    ]),
+  ],
+  controllers: [
+    ProductsController,
+    MasterDataController,
+    StockMovementsController,
+  ],
   providers: [ProductsService, MasterDataService, StockMovementsService],
   exports: [ProductsService, MasterDataService, StockMovementsService],
 })
 export class InventoryModule {}
-
-
-

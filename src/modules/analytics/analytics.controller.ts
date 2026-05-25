@@ -46,10 +46,30 @@ export class TenantDashboardController {
   }
 
   @Get('domain-widgets')
-  async getDomainWidgets(@CurrentUser('businessId') businessId: string) {
-    // Placeholder for domain-specific widgets
-    return [];
+  getDomainWidgets(@CurrentUser('businessId') businessId: string) {
+    return this.analyticsService.getDomainWidgets(businessId);
+  }
+
+  @Get('inventory-summary')
+  async getInventorySummary(@CurrentUser('businessId') businessId: string) {
+    return this.analyticsService.getInventorySummary(businessId);
+  }
+
+  @Get('health')
+  getHealth() {
+    return {
+      status: 'UP',
+      timestamp: new Date().toISOString(),
+    };
+  }
+
+  @Get('modules')
+  getModules() {
+    return {
+      inventory: 'ACTIVE',
+      procurement: 'OPTIMIZING',
+      analytics: 'ACTIVE',
+      crm: 'INACTIVE',
+    };
   }
 }
-
-

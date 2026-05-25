@@ -143,7 +143,7 @@ export class TenantUsersService {
       relations: ['role'],
     });
     if (!user) throw new NotFoundException('User not found');
-    
+
     return {
       id: user.id,
       name: user.name,
@@ -202,7 +202,7 @@ export class TenantUsersService {
 
     user.password = await HashUtil.hash(newPassword);
     user.refreshToken = null; // Logout from all sessions
-    
+
     await this.userRepository.save(user);
     return { message: 'Password reset successfully' };
   }

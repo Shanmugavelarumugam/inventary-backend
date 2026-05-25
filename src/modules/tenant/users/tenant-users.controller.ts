@@ -7,7 +7,6 @@ import {
   Param,
   Query,
   UseGuards,
-  Req,
   Delete,
 } from '@nestjs/common';
 import { TenantUsersService } from './tenant-users.service.js';

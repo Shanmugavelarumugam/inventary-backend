@@ -18,12 +18,16 @@ export class MasterDataController {
   }
 
   @Post('categories')
-  @Roles(TenantRole.TENANT_ADMIN, TenantRole.BUSINESS_MANAGER, TenantRole.INVENTORY_MANAGER)
+  @Roles(
+    TenantRole.TENANT_ADMIN,
+    TenantRole.BUSINESS_MANAGER,
+    TenantRole.INVENTORY_MANAGER,
+  )
   async createCategory(
     @CurrentUser('businessId') businessId: string,
     @Body() data: { name: string; description?: string },
   ) {
-    return this.masterDataService.createCategory(businessId, data.name, data.description);
+    return this.masterDataService.createCategory(businessId, data.name, data);
   }
 
   @Get('units')
@@ -32,12 +36,20 @@ export class MasterDataController {
   }
 
   @Post('units')
-  @Roles(TenantRole.TENANT_ADMIN, TenantRole.BUSINESS_MANAGER, TenantRole.INVENTORY_MANAGER)
+  @Roles(
+    TenantRole.TENANT_ADMIN,
+    TenantRole.BUSINESS_MANAGER,
+    TenantRole.INVENTORY_MANAGER,
+  )
   async createUnit(
     @CurrentUser('businessId') businessId: string,
     @Body() data: { name: string; shortName?: string },
   ) {
-    return this.masterDataService.createUnit(businessId, data.name, data.shortName);
+    return this.masterDataService.createUnit(
+      businessId,
+      data.name,
+      data.shortName,
+    );
   }
 
   @Get('brands')
@@ -46,7 +58,11 @@ export class MasterDataController {
   }
 
   @Post('brands')
-  @Roles(TenantRole.TENANT_ADMIN, TenantRole.BUSINESS_MANAGER, TenantRole.INVENTORY_MANAGER)
+  @Roles(
+    TenantRole.TENANT_ADMIN,
+    TenantRole.BUSINESS_MANAGER,
+    TenantRole.INVENTORY_MANAGER,
+  )
   async createBrand(
     @CurrentUser('businessId') businessId: string,
     @Body() data: { name: string },

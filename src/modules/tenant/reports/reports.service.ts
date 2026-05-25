@@ -22,8 +22,14 @@ export class ReportsService {
       relations: ['customer', 'items', 'items.product'],
     });
 
-    const totalRevenue = invoices.reduce((sum, inv) => sum + Number(inv.totalAmount), 0);
-    const totalTax = invoices.reduce((sum, inv) => sum + Number(inv.taxAmount), 0);
+    const totalRevenue = invoices.reduce(
+      (sum, inv) => sum + Number(inv.totalAmount),
+      0,
+    );
+    const totalTax = invoices.reduce(
+      (sum, inv) => sum + Number(inv.taxAmount),
+      0,
+    );
 
     return {
       period: { from, to },
@@ -78,8 +84,14 @@ export class ReportsService {
       where: { businessId },
     });
 
-    const totalValue = products.reduce((sum, p) => sum + (Number(p.stockQty) * Number(p.purchasePrice)), 0);
-    const totalRetailValue = products.reduce((sum, p) => sum + (Number(p.stockQty) * Number(p.price)), 0);
+    const totalValue = products.reduce(
+      (sum, p) => sum + Number(p.stockQty) * Number(p.purchasePrice),
+      0,
+    );
+    const totalRetailValue = products.reduce(
+      (sum, p) => sum + Number(p.stockQty) * Number(p.price),
+      0,
+    );
 
     return {
       totalItems: products.length,
@@ -94,8 +106,14 @@ export class ReportsService {
       where: { businessId, createdAt: Between(from, to) },
     });
 
-    const totalTax = invoices.reduce((sum, inv) => sum + Number(inv.taxAmount), 0);
-    const taxableAmount = invoices.reduce((sum, inv) => sum + (Number(inv.totalAmount) - Number(inv.taxAmount)), 0);
+    const totalTax = invoices.reduce(
+      (sum, inv) => sum + Number(inv.taxAmount),
+      0,
+    );
+    const taxableAmount = invoices.reduce(
+      (sum, inv) => sum + (Number(inv.totalAmount) - Number(inv.taxAmount)),
+      0,
+    );
 
     return {
       period: { from, to },

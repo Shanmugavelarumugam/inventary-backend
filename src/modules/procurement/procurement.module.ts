@@ -12,6 +12,7 @@ import { GoodsReceiptItem } from '../../database/entities/goods-receipt-item.ent
 import { PurchaseInvoice } from '../../database/entities/purchase-invoice.entity.js';
 import { SupplierPayment } from '../../database/entities/supplier-payment.entity.js';
 import { InventoryModule } from '../inventory/inventory.module.js';
+import { SuppliersModule } from '../suppliers/suppliers.module.js';
 
 @Module({
   imports: [
@@ -27,6 +28,7 @@ import { InventoryModule } from '../inventory/inventory.module.js';
       SupplierPayment,
     ]),
     InventoryModule, // To use StockMovementsService
+    SuppliersModule,
   ],
   controllers: [ProcurementController],
   providers: [ProcurementService],

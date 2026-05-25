@@ -20,25 +20,33 @@ export class TenantSubscriptionService {
     const subscription = await this.subscriptionRepository.findOne({
       where: { businessId },
     });
-    if (!subscription) throw new NotFoundException('No active subscription found');
+    if (!subscription)
+      throw new NotFoundException('No active subscription found');
     return subscription;
   }
 
   async getPlans() {
-    return this.planRepository.find({ where: { status: 'ACTIVE' }, order: { price: 'ASC' } });
+    return this.planRepository.find({
+      where: { status: 'ACTIVE' },
+      order: { price: 'ASC' },
+    });
   }
 
   async upgrade(businessId: string, planId: string) {
     const plan = await this.planRepository.findOne({ where: { id: planId } });
     if (!plan) throw new NotFoundException('Plan not found');
 
-    const business = await this.businessRepository.findOne({ where: { id: businessId } });
+    const business = await this.businessRepository.findOne({
+      where: { id: businessId },
+    });
     if (!business) throw new NotFoundException('Business not found');
 
-    let subscription = await this.subscriptionRepository.findOne({ where: { businessId } });
+    let subscription = await this.subscriptionRepository.findOne({
+      where: { businessId },
+    });
     const endDate = new Date();
     endDate.setDate(endDate.getDate() + 30);
-    
+
     if (subscription) {
       subscription.plan = plan.name;
       subscription.status = 'ACTIVE';
@@ -62,13 +70,13 @@ export class TenantSubscriptionService {
     return { message: 'Subscription upgraded successfully', plan: plan.name };
   }
 
-  async getPayments(businessId: string) {
+  getPayments(_businessId: string) {
     // Placeholder for payment history
-    return [];
+    return Promise.resolve([]);
   }
 
-  async getInvoices(businessId: string) {
+  getInvoices(_businessId: string) {
     // Placeholder for subscription invoices
-    return [];
+    return Promise.resolve([]);
   }
 }

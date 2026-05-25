@@ -25,10 +25,8 @@ import { StockTransfer } from './entities/stock-transfer.entity.js';
 import { StockTransferItem } from './entities/stock-transfer-item.entity.js';
 import { Category } from './entities/category.entity.js';
 
-
 import { Unit } from './entities/unit.entity.js';
 import { Brand } from './entities/brand.entity.js';
-
 
 @Module({
   imports: [
@@ -67,10 +65,8 @@ import { Brand } from './entities/brand.entity.js';
           Category,
           Unit,
 
-
           Brand,
         ],
-
 
         autoLoadEntities: true,
         synchronize: configService.get<boolean>('database.synchronize'),

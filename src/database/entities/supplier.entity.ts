@@ -5,39 +5,70 @@ import {
   CreateDateColumn,
   UpdateDateColumn,
   ManyToOne,
-  OneToMany,
   Index,
   JoinColumn,
+  type Relation,
 } from 'typeorm';
 import { Business } from './business.entity.js';
+import {
+  SupplierType,
+  SupplierStatus,
+} from '../../common/enums/supplier.enum.js';
 
 @Entity('suppliers')
 export class Supplier {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ nullable: true })
-  email: string;
+  @Column({ type: 'varchar', nullable: true })
+  contactPerson: string;
 
-  @Column({ nullable: true })
+  @Index()
+  @Column({ type: 'varchar', nullable: true })
   phone: string;
 
-  @Column({ nullable: true })
-  gstNumber: string;
+  @Column({ type: 'varchar', nullable: true })
+  email: string;
 
   @Column({ type: 'text', nullable: true })
   address: string;
 
+  @Column({ type: 'varchar', nullable: true })
+  gstNumber: string;
+
+  @Column({
+    type: 'enum',
+    enum: SupplierType,
+    default: SupplierType.LOCAL_VENDOR,
+  })
+  type: SupplierType;
+
+  @Column({
+    type: 'enum',
+    enum: SupplierStatus,
+    default: SupplierStatus.ACTIVE,
+  })
+  status: SupplierStatus;
+
+  @Column({ type: 'decimal', precision: 12, scale: 2, default: 0 })
+  currentBalance: number; // Outstanding due to supplier
+
+  @Column({ type: 'text', nullable: true })
+  paymentTerms: string;
+
+  @Column({ type: 'text', nullable: true })
+  notes: string;
+
   @Index()
-  @Column()
+  @Column({ type: 'varchar' })
   businessId: string;
 
   @ManyToOne(() => Business)
   @JoinColumn({ name: 'businessId' })
-  business: Business;
+  business: Relation<Business>;
 
   @CreateDateColumn()
   createdAt: Date;

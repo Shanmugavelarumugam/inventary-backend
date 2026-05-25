@@ -22,7 +22,32 @@ import {
   ChangePasswordDto,
   ForgotPasswordDto,
   ResetPasswordDto,
+  UpdateProfileDto,
 } from './dto/index.js';
+
+export interface LoginResponse {
+  accessToken: string;
+  refreshToken: string;
+  expiresIn: number;
+  user: {
+    id: string;
+    name: string;
+    email: string;
+    type: 'PLATFORM' | 'TENANT';
+    platformRole?: PlatformRole;
+    role?: string;
+    businessId: string | null;
+  };
+  business?: {
+    id: string;
+    name: string;
+    companyCode: string;
+  };
+  subscription?: {
+    plan: string;
+    daysLeft: number;
+  };
+}
 
 @Injectable()
 export class AuthService {
@@ -73,7 +98,7 @@ export class AuthService {
   async login(
     dto: LoginDto,
     metadata?: { ipAddress?: string; userAgent?: string },
-  ) {
+  ): Promise<LoginResponse> {
     try {
       const { ipAddress, userAgent } = metadata || {};
 
@@ -115,7 +140,7 @@ export class AuthService {
             email: dto.email,
             platformRole: Not(IsNull()) as unknown as PlatformRole,
           },
-          relations: ['role', 'role.permissions'],
+          relations: ['role'],
           select: [
             'id',
             'email',
@@ -135,7 +160,10 @@ export class AuthService {
         throw new UnauthorizedException('Invalid credentials');
       }
 
-      const isPasswordValid = await HashUtil.compare(dto.password, user.password);
+      const isPasswordValid = await HashUtil.compare(
+        dto.password,
+        user.password,
+      );
       if (!isPasswordValid) {
         throw new UnauthorizedException('Invalid credentials');
       }
@@ -190,7 +218,7 @@ export class AuthService {
         }
       }
 
-      const response: any = {
+      const response: LoginResponse = {
         accessToken,
         refreshToken,
         expiresIn: 3600,
@@ -199,6 +227,7 @@ export class AuthService {
           name: user.name,
           email: user.email,
           type: user.platformRole ? 'PLATFORM' : 'TENANT',
+          businessId: user.businessId || null,
           ...(user.platformRole && { platformRole: user.platformRole }),
           ...(user.role?.name && { role: user.role.name }),
         },
@@ -370,6 +399,7 @@ export class AuthService {
       ...(user.businessId && { businessId: user.businessId }),
       ...(user.role?.name && { role: user.role.name }),
       permissions: user.role?.permissions?.map((p) => p.key) || [],
+      settings: user.settings || {},
     };
   }
 
@@ -393,5 +423,213 @@ export class AuthService {
       role: user.role?.name || null,
       permissions: user.role?.permissions?.map((p) => p.key) || [],
     };
+  }
+
+  async updateProfile(userId: string, dto: UpdateProfileDto) {
+    await this.userRepository.update(userId, {
+      name: dto.name,
+      ...(dto.settings && { settings: dto.settings }),
+    });
+    return this.getProfile(userId);
+  }
+
+  async discoverWorkspaces(email: string) {
+    // 1. Fetch all active user records matching this email, bringing in the business relation
+    const userAccounts = await this.userRepository.find({
+      where: { email, isActive: true, businessId: Not(IsNull()) },
+      relations: ['business'],
+    });
+
+    // 2. Deduplicate and map back only valid businesses
+    const workspacesMap = new Map();
+
+    for (const u of userAccounts) {
+      if (u.business) {
+        workspacesMap.set(u.business.id, {
+          businessId: u.business.id,
+          name: u.business.name,
+          companyCode: u.business.companyCode,
+          // placeholder logo link for client parity if dynamic images aren't setup yet
+          logo: null,
+        });
+      }
+    }
+
+    return {
+      workspaces: Array.from(workspacesMap.values()),
+    };
+  }
+
+  async generateLoginResponseForUser(user: User): Promise<LoginResponse> {
+    const loginPayload = {
+      sub: user.id,
+      userId: user.id,
+      email: user.email,
+      type: user.platformRole ? 'PLATFORM' : 'TENANT',
+      businessId: user.businessId,
+      platformRole: user.platformRole || null,
+      roleId: user.roleId,
+      role: user.role?.name || null,
+    };
+    const accessToken = await this.jwtService.signAsync(loginPayload);
+    const refreshToken = await this.jwtService.signAsync(loginPayload, {
+      expiresIn: '7d',
+    });
+
+    await this.userRepository.update(user.id, {
+      refreshToken: refreshToken,
+      lastLogin: new Date(),
+    });
+
+    let business: Business | null = null;
+    let subscription: Subscription | null = null;
+
+    if (user.businessId) {
+      business = await this.businessRepository.findOne({
+        where: { id: user.businessId },
+      });
+
+      if (business) {
+        subscription = await this.subscriptionRepository.findOne({
+          where: { businessId: business.id },
+          order: { endDate: 'DESC' },
+        });
+      }
+    }
+
+    const response: LoginResponse = {
+      accessToken,
+      refreshToken,
+      expiresIn: 3600,
+      user: {
+        id: user.id,
+        name: user.name,
+        email: user.email,
+        type: user.platformRole ? 'PLATFORM' : 'TENANT',
+        businessId: user.businessId || null,
+        ...(user.platformRole && { platformRole: user.platformRole }),
+        ...(user.role?.name && { role: user.role.name }),
+      },
+    };
+
+    if (business) {
+      response.business = {
+        id: business.id,
+        name: business.name,
+        companyCode: business.companyCode,
+      };
+    }
+
+    if (subscription) {
+      const now = new Date();
+      const end = new Date(subscription.endDate);
+      const diff = end.getTime() - now.getTime();
+      const daysLeft = Math.max(0, Math.ceil(diff / (1000 * 60 * 60 * 24)));
+
+      response.subscription = {
+        plan: subscription.plan,
+        daysLeft,
+      };
+    }
+
+    return response;
+  }
+
+  async verifyGoogleToken(token: string): Promise<{ email: string; name: string }> {
+    try {
+      const { OAuth2Client } = await import('google-auth-library');
+      const clientId = process.env.GOOGLE_CLIENT_ID;
+      if (!clientId) {
+        throw new BadRequestException('Google Client ID is not configured on the server');
+      }
+      const client = new OAuth2Client(clientId);
+      const ticket = await client.verifyIdToken({
+        idToken: token,
+        audience: clientId,
+      });
+      const payload = ticket.getPayload();
+      if (!payload || !payload.email) {
+        throw new UnauthorizedException('Invalid Google ID Token payload');
+      }
+      return {
+        email: payload.email,
+        name: payload.name || payload.email.split('@')[0],
+      };
+    } catch (error) {
+      console.error('Google token verification failed', error);
+      throw new UnauthorizedException('Google ID Token verification failed');
+    }
+  }
+
+  async googleLogin(email: string): Promise<any> {
+    const user = await this.userRepository.findOne({
+      where: { email },
+      relations: ['role'],
+      select: [
+        'id',
+        'email',
+        'name',
+        'password',
+        'platformRole',
+        'businessId',
+        'roleId',
+        'isActive',
+      ],
+    });
+
+    if (!user) {
+      return { onboardingRequired: true };
+    }
+
+    if (!user.isActive) {
+      throw new UnauthorizedException('User account is inactive');
+    }
+
+    const loginResponse = await this.generateLoginResponseForUser(user);
+    return {
+      onboardingRequired: false,
+      ...loginResponse,
+    };
+  }
+
+  async googleOnboard(dto: any, provisioningService: any): Promise<any> {
+    const decoded = await this.verifyGoogleToken(dto.token);
+
+    const randomPassword = randomBytes(16).toString('hex');
+
+    const provisionDto = {
+      businessName: dto.businessName,
+      domainType: dto.domainType as any,
+      phone: dto.phone,
+      address: dto.address,
+      adminName: decoded.name,
+      adminEmail: decoded.email,
+      adminPassword: randomPassword,
+      businessEmail: decoded.email,
+    };
+
+    const provisionResult = await provisioningService.createTenant(provisionDto, 'SELF_SERVICE');
+
+    const user = await this.userRepository.findOne({
+      where: { id: provisionResult.adminUser.id },
+      relations: ['role'],
+      select: [
+        'id',
+        'email',
+        'name',
+        'password',
+        'platformRole',
+        'businessId',
+        'roleId',
+        'isActive',
+      ],
+    });
+
+    if (!user) {
+      throw new BadRequestException('Failed to retrieve provisioned user');
+    }
+
+    const loginResponse = await this.generateLoginResponseForUser(user);
+    return loginResponse;
   }
 }

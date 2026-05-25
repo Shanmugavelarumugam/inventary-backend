@@ -8,11 +8,12 @@ import {
   OneToMany,
   Index,
   JoinColumn,
+  type Relation,
 } from 'typeorm';
 import { Supplier } from './supplier.entity.js';
 import { Business } from './business.entity.js';
 import { User } from './user.entity.js';
-import type { PurchaseOrderItem } from './purchase-order-item.entity.js';
+import { PurchaseOrderItem } from './purchase-order-item.entity.js';
 
 export enum POStatus {
   DRAFT = 'DRAFT',
@@ -66,8 +67,8 @@ export class PurchaseOrder {
   @JoinColumn({ name: 'createdById' })
   createdBy: User;
 
-  @OneToMany('PurchaseOrderItem', (item: any) => item.purchaseOrder)
-  items: PurchaseOrderItem[];
+  @OneToMany(() => PurchaseOrderItem, (item) => item.purchaseOrder)
+  items: Relation<PurchaseOrderItem>[];
 
   @Column({ type: 'text', nullable: true })
   notes: string;

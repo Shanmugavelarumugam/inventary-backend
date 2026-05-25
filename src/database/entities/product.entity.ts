@@ -7,6 +7,7 @@ import {
   ManyToOne,
   Index,
   JoinColumn,
+  type Relation,
 } from 'typeorm';
 import { Business } from './business.entity.js';
 import { Category } from './category.entity.js';
@@ -24,14 +25,14 @@ export class Product {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ unique: true, nullable: true })
-  sku: string;
+  @Column({ type: 'varchar', unique: true, nullable: true })
+  sku: string | null;
 
-  @Column({ nullable: true })
-  barcode: string;
+  @Column({ type: 'varchar', nullable: true })
+  barcode: string | null;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, default: 0 })
   purchasePrice: number;
@@ -42,35 +43,35 @@ export class Product {
   @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
   taxRate: number; // GST/VAT percentage
 
-  @Column({ default: 0 })
+  @Column({ type: 'int', default: 0 })
   stockQty: number;
 
-  @Column({ default: 10 })
+  @Column({ type: 'int', default: 10 })
   minStockLevel: number;
 
   @Column({ type: 'decimal', precision: 10, scale: 2, nullable: true })
-  mrp: number;
+  mrp: number | null;
 
   @Column({ type: 'decimal', precision: 5, scale: 2, default: 0 })
   discount: number;
 
   @Column({ type: 'timestamp', nullable: true })
-  manufactureDate: Date;
+  manufactureDate: Date | null;
 
   @Column({ type: 'timestamp', nullable: true })
-  expiryDate: Date;
+  expiryDate: Date | null;
 
   @Column({ type: 'varchar', nullable: true })
-  batchNumber: string;
+  batchNumber: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  manufacturer: string;
+  manufacturer: string | null;
 
   @Column({ type: 'varchar', nullable: true })
-  scheduleType: string; // e.g., Schedule H, H1 (Pharmacy)
+  scheduleType: string | null; // e.g., Schedule H, H1 (Pharmacy)
 
   @Column({ type: 'varchar', nullable: true })
-  shelfLocation: string;
+  shelfLocation: string | null;
 
   @Column({ default: false })
   isRecipeItem: boolean; // Restaurant domain
@@ -88,28 +89,28 @@ export class Product {
 
   @ManyToOne(() => Business)
   @JoinColumn({ name: 'businessId' })
-  business: Business;
+  business: Relation<Business>;
 
   @Column({ nullable: true })
-  categoryId: string;
+  categoryId: string | null;
 
   @ManyToOne(() => Category, { nullable: true })
   @JoinColumn({ name: 'categoryId' })
-  category: Category;
+  category: Relation<Category>;
 
   @Column({ nullable: true })
-  unitId: string;
+  unitId: string | null;
 
   @ManyToOne(() => Unit, { nullable: true })
   @JoinColumn({ name: 'unitId' })
-  unit: Unit;
+  unit: Relation<Unit>;
 
   @Column({ nullable: true })
-  brandId: string;
+  brandId: string | null;
 
   @ManyToOne(() => Brand, { nullable: true })
   @JoinColumn({ name: 'brandId' })
-  brand: Brand;
+  brand: Relation<Brand>;
 
   @CreateDateColumn()
   createdAt: Date;
@@ -117,4 +118,3 @@ export class Product {
   @UpdateDateColumn()
   updatedAt: Date;
 }
-

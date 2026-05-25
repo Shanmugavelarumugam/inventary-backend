@@ -8,6 +8,7 @@ import {
   Index,
   JoinColumn,
   OneToMany,
+  type Relation,
 } from 'typeorm';
 import { Business } from './business.entity.js';
 import { Product } from './product.entity.js';
@@ -25,20 +26,20 @@ export class Category {
   @Column()
   name: string;
 
-  @Column({ nullable: true })
-  code: string;
+  @Column({ type: 'varchar', nullable: true })
+  code: string | null;
 
-  @Column({ nullable: true })
-  description: string;
+  @Column({ type: 'text', nullable: true })
+  description: string | null;
 
-  @Column({ default: 0 })
+  @Column({ type: 'int', default: 0 })
   displayOrder: number;
 
-  @Column({ nullable: true })
-  icon: string;
+  @Column({ type: 'varchar', nullable: true })
+  icon: string | null;
 
-  @Column({ nullable: true })
-  color: string;
+  @Column({ type: 'varchar', nullable: true })
+  color: string | null;
 
   @Column({
     type: 'enum',
@@ -53,20 +54,22 @@ export class Category {
 
   @ManyToOne(() => Business)
   @JoinColumn({ name: 'businessId' })
-  business: Business;
+  business: Relation<Business>;
 
   @Column({ nullable: true })
-  parentCategoryId: string;
+  parentCategoryId: string | null;
 
-  @ManyToOne(() => Category, (category) => category.children, { onDelete: 'SET NULL' })
+  @ManyToOne(() => Category, (category) => category.children, {
+    onDelete: 'SET NULL',
+  })
   @JoinColumn({ name: 'parentCategoryId' })
-  parent: Category;
+  parent: Relation<Category>;
 
   @OneToMany(() => Category, (category) => category.parent)
-  children: Category[];
+  children: Relation<Category>[];
 
   @OneToMany(() => Product, (product) => product.category)
-  products: Product[];
+  products: Relation<Product>[];
 
   @CreateDateColumn()
   createdAt: Date;

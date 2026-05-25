@@ -1,0 +1,19 @@
+export enum SupplierType {
+  WHOLESALE = 'WHOLESALE',
+  DISTRIBUTOR = 'DISTRIBUTOR',
+  LOCAL_VENDOR = 'LOCAL_VENDOR',
+  MANUFACTURER = 'MANUFACTURER',
+}
+
+export enum SupplierStatus {
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
+  BLOCKED = 'BLOCKED',
+}
+
+export enum SupplierLedgerType {
+  PURCHASE_INVOICE = 'PURCHASE_INVOICE',
+  PAYMENT = 'PAYMENT',
+  RETURN = 'RETURN',
+  ADJUSTMENT = 'ADJUSTMENT',
+}

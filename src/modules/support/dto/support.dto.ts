@@ -70,6 +70,10 @@ export class QuerySupportTicketDto {
   @IsOptional()
   assignedTo?: string;
 
+  @IsString()
+  @IsOptional()
+  search?: string;
+
   @IsOptional()
   page?: number = 1;
 

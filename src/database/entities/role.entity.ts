@@ -6,6 +6,7 @@ import {
   JoinTable,
   Index,
   CreateDateColumn,
+  type Relation,
 } from 'typeorm';
 import { Permission } from './permission.entity.js';
 
@@ -14,14 +15,14 @@ export class Role {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   name: string;
 
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   description: string;
 
   @Index()
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   businessId: string;
 
   @ManyToMany(() => Permission)
@@ -30,7 +31,7 @@ export class Role {
     joinColumn: { name: 'roleId', referencedColumnName: 'id' },
     inverseJoinColumn: { name: 'permissionId', referencedColumnName: 'id' },
   })
-  permissions: Permission[];
+  permissions: Relation<Permission>[];
 
   @CreateDateColumn()
   createdAt: Date;

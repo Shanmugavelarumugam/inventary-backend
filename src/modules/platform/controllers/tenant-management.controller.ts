@@ -22,7 +22,6 @@ import {
   UpdatePlatformAdminDto,
   ResetPlatformAdminPasswordDto,
   BootstrapRootDto,
-  ResetTenantUserPasswordDto,
   AssignPlanDto,
 } from '../dto/index.js';
 import { BusinessStatus } from '../../../common/enums/business.enum.js';
@@ -73,10 +72,12 @@ export class TenantManagementController {
     @Request() req: AuthenticatedRequest,
     @Query('page', new DefaultValuePipe(1), ParseIntPipe) page: number,
     @Query('limit', new DefaultValuePipe(10), ParseIntPipe) limit: number,
+    @Query('search') search?: string,
   ) {
     return this.tenantService.findAllAdmins(req.user.platformRole!, {
       page,
       limit,
+      search,
     });
   }
 

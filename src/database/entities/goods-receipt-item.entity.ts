@@ -7,6 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
   Index,
+  type Relation,
 } from 'typeorm';
 import { GoodsReceipt } from './goods-receipt.entity.js';
 import { Product } from './product.entity.js';
@@ -21,8 +22,7 @@ export class GoodsReceiptItem {
   goodsReceiptId: string;
 
   @ManyToOne(() => GoodsReceipt, (gr) => gr.items, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'goodsReceiptId' })
-  goodsReceipt: GoodsReceipt;
+  goodsReceipt: Relation<GoodsReceipt>;
 
   @Index()
   @Column()

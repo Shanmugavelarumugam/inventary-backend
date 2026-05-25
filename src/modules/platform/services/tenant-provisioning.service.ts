@@ -1,8 +1,4 @@
-import {
-  Injectable,
-  ConflictException,
-  BadRequestException,
-} from '@nestjs/common';
+import { Injectable, ConflictException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, DataSource } from 'typeorm';
 import { Business } from '../../../database/entities/business.entity.js';
@@ -10,10 +6,16 @@ import { User } from '../../../database/entities/user.entity.js';
 import { Role } from '../../../database/entities/role.entity.js';
 import { Subscription } from '../../../database/entities/subscription.entity.js';
 import { HashUtil } from '../../../common/utils/hash.util.js';
-import { BusinessStatus, SubscriptionPlan } from '../../../common/enums/business.enum.js';
+import {
+  BusinessStatus,
+  SubscriptionPlan,
+} from '../../../common/enums/business.enum.js';
 import { AuditLogService } from './audit-log.service.js';
 import { AuditAction } from '../../../common/enums/audit-action.enum.js';
-import { ProvisionTenantDto, ProvisionTenantResponseDto } from '../dto/provision-tenant.dto.js';
+import {
+  ProvisionTenantDto,
+  ProvisionTenantResponseDto,
+} from '../dto/provision-tenant.dto.js';
 
 @Injectable()
 export class TenantProvisioningService {
@@ -69,7 +71,7 @@ export class TenantProvisioningService {
         companyCode,
         domainType: dto.domainType,
         status: BusinessStatus.ACTIVE,
-        subscriptionPlan: SubscriptionPlan.FREE as any,
+        subscriptionPlan: SubscriptionPlan.FREE,
         phone: dto.phone,
         email: dto.businessEmail,
         address: dto.address,
@@ -87,12 +89,12 @@ export class TenantProvisioningService {
         'FINANCE_MANAGER',
         'VIEWER',
       ];
-      
-      const roleEntities = roleNames.map(name => 
-        manager.create(Role, { name, businessId: savedBusiness.id })
+
+      const roleEntities = roleNames.map((name) =>
+        manager.create(Role, { name, businessId: savedBusiness.id }),
       );
       const savedRoles = await manager.save(roleEntities);
-      
+
       // Find the TENANT_ADMIN role for the primary user
       const adminRole = savedRoles.find((r) => r.name === 'TENANT_ADMIN');
       if (!adminRole) {
@@ -161,7 +163,7 @@ export class TenantProvisioningService {
         },
         subscription: {
           plan: savedSub.plan,
-          status: savedSub.status as string,
+          status: savedSub.status,
           trialDays: 7,
         },
       };

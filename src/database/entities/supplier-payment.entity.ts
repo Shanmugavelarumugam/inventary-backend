@@ -7,6 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
   Index,
+  type Relation,
 } from 'typeorm';
 import { PurchaseInvoice } from './purchase-invoice.entity.js';
 import { Business } from './business.entity.js';
@@ -28,9 +29,10 @@ export class SupplierPayment {
   @Column()
   invoiceId: string;
 
-  @ManyToOne(() => PurchaseInvoice, (invoice) => invoice.payments, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'invoiceId' })
-  invoice: PurchaseInvoice;
+  @ManyToOne(() => PurchaseInvoice, (invoice) => invoice.payments, {
+    onDelete: 'CASCADE',
+  })
+  invoice: Relation<PurchaseInvoice>;
 
   @Index()
   @Column()

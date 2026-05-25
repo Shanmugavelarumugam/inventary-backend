@@ -2,7 +2,6 @@ import { NestFactory } from '@nestjs/core';
 import { AppModule } from './src/app.module.js';
 import { getRepositoryToken } from '@nestjs/typeorm';
 import { User } from './src/database/entities/user.entity.js';
-import { Role } from './src/database/entities/role.entity.js';
 import { Repository } from 'typeorm';
 
 async function checkUser() {

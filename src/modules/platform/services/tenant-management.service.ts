@@ -170,9 +170,9 @@ export class TenantManagementService {
 
   async findAllAdmins(
     callerRole: PlatformRole,
-    options: { page: number; limit: number },
+    options: { page: number; limit: number; search?: string },
   ) {
-    const { page, limit } = options;
+    const { page, limit, search } = options;
     const queryBuilder = this.userRepository
       .createQueryBuilder('u')
       .select([
@@ -186,9 +186,19 @@ export class TenantManagementService {
       ])
       .where('u.platformRole IS NOT NULL');
 
-    if (callerRole !== PlatformRole.ROOT) {
+    if (callerRole === PlatformRole.PLATFORM_ADMIN) {
+      queryBuilder.andWhere('u.platformRole = :support', {
+        support: PlatformRole.SUPPORT_ADMIN,
+      });
+    } else if (callerRole !== PlatformRole.ROOT) {
       queryBuilder.andWhere('u.platformRole != :root', {
         root: PlatformRole.ROOT,
+      });
+    }
+
+    if (search) {
+      queryBuilder.andWhere('(u.name ILIKE :search OR u.email ILIKE :search)', {
+        search: `%${search}%`,
       });
     }
 
@@ -512,6 +522,12 @@ export class TenantManagementService {
           .where('s.businessId = b.id')
           .andWhere('s.status = :activeStatus', { activeStatus: 'ACTIVE' });
       }, 'isSubscriptionActive')
+      .addSelect((subQuery) => {
+        return subQuery
+          .select('COALESCE(SUM(inv.totalAmount), 0)', 'total')
+          .from(Invoice, 'inv')
+          .where('inv.businessId = b.id');
+      }, 'totalRevenue')
       .orderBy(`b.${sortBy}`, order)
       .offset((page - 1) * limit)
       .limit(limit)

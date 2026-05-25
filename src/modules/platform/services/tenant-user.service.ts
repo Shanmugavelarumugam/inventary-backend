@@ -5,13 +5,14 @@ import {
   BadRequestException,
 } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Not, IsNull, ILike } from 'typeorm';
+import { Repository, Not, IsNull } from 'typeorm';
 import { User } from '../../../database/entities/user.entity.js';
-import { Business, DomainType } from '../../../database/entities/business.entity.js';
+import { Business } from '../../../database/entities/business.entity.js';
 import { Role } from '../../../database/entities/role.entity.js';
 import { AuditLogService } from './audit-log.service.js';
 import { AuditAction } from '../../../common/enums/audit-action.enum.js';
 import { HashUtil } from '../../../common/utils/hash.util.js';
+import { PlatformRole } from '../../../common/enums/platform-role.enum.js';
 import {
   CreatePlatformTenantUserDto,
   UpdatePlatformTenantUserDto,
@@ -24,6 +25,13 @@ interface FindAllFilters {
   businessId?: string;
   role?: string;
   status?: string;
+}
+
+export interface AuditInfo {
+  userId: string;
+  platformRole: PlatformRole;
+  ipAddress: string;
+  userAgent: string;
 }
 
 @Injectable()
@@ -43,20 +51,22 @@ export class TenantUserService {
     const limit = filters.limit || 20;
     const skip = (page - 1) * limit;
 
-    const query = this.userRepository.createQueryBuilder('user')
+    const query = this.userRepository
+      .createQueryBuilder('user')
       .leftJoinAndSelect('user.business', 'business')
       .leftJoinAndSelect('user.role', 'role')
       .where('user.businessId IS NOT NULL');
 
     if (filters.search) {
-      query.andWhere(
-        '(user.name ILIKE :search OR user.email ILIKE :search)',
-        { search: `%${filters.search}%` },
-      );
+      query.andWhere('(user.name ILIKE :search OR user.email ILIKE :search)', {
+        search: `%${filters.search}%`,
+      });
     }
 
     if (filters.businessId) {
-      query.andWhere('user.businessId = :businessId', { businessId: filters.businessId });
+      query.andWhere('user.businessId = :businessId', {
+        businessId: filters.businessId,
+      });
     }
 
     if (filters.role) {
@@ -79,11 +89,13 @@ export class TenantUserService {
       name: u.name,
       email: u.email,
       role: u.role?.name || null,
-      business: u.business ? {
-        id: u.business.id,
-        name: u.business.name,
-        companyCode: u.business.companyCode,
-      } : null,
+      business: u.business
+        ? {
+            id: u.business.id,
+            name: u.business.name,
+            companyCode: u.business.companyCode,
+          }
+        : null,
       isActive: u.isActive,
       lastLogin: u.lastLogin,
       createdAt: u.createdAt,
@@ -101,7 +113,7 @@ export class TenantUserService {
 
   async findOne(id: string) {
     const user = await this.userRepository.findOne({
-      where: { id, businessId: Not(IsNull()) as any },
+      where: { id, businessId: Not(IsNull()) },
       relations: ['business', 'role'],
     });
 
@@ -114,17 +126,19 @@ export class TenantUserService {
       name: user.name,
       email: user.email,
       role: user.role?.name || null,
-      business: user.business ? {
-        id: user.business.id,
-        name: user.business.name,
-      } : null,
+      business: user.business
+        ? {
+            id: user.business.id,
+            name: user.business.name,
+          }
+        : null,
       isActive: user.isActive,
       lastLogin: user.lastLogin,
       createdAt: user.createdAt,
     };
   }
 
-  async create(dto: CreatePlatformTenantUserDto, auditInfo: any) {
+  async create(dto: CreatePlatformTenantUserDto, auditInfo: AuditInfo) {
     const business = await this.businessRepository.findOne({
       where: { id: dto.businessId },
     });
@@ -137,7 +151,7 @@ export class TenantUserService {
     const role = await this.roleRepository.findOne({
       where: [
         { id: dto.roleId, businessId: business.id },
-        { id: dto.roleId, businessId: IsNull() as any }, // Platform-provided templates
+        { id: dto.roleId, businessId: IsNull() }, // Platform-provided templates
       ],
     });
 
@@ -193,9 +207,13 @@ export class TenantUserService {
     };
   }
 
-  async update(id: string, dto: UpdatePlatformTenantUserDto, auditInfo: any) {
+  async update(
+    id: string,
+    dto: UpdatePlatformTenantUserDto,
+    auditInfo: AuditInfo,
+  ) {
     const user = await this.userRepository.findOne({
-      where: { id, businessId: Not(IsNull()) as any },
+      where: { id, businessId: Not(IsNull()) },
     });
 
     if (!user) {
@@ -206,7 +224,7 @@ export class TenantUserService {
       const role = await this.roleRepository.findOne({
         where: [
           { id: dto.roleId, businessId: user.businessId },
-          { id: dto.roleId, businessId: IsNull() as any },
+          { id: dto.roleId, businessId: IsNull() },
         ],
       });
       if (!role) {
@@ -237,9 +255,9 @@ export class TenantUserService {
     return { message: 'Tenant user updated successfully' };
   }
 
-  async resetPassword(id: string, newPassword: string, auditInfo: any) {
+  async resetPassword(id: string, newPassword: string, auditInfo: AuditInfo) {
     const user = await this.userRepository.findOne({
-      where: { id, businessId: Not(IsNull()) as any },
+      where: { id, businessId: Not(IsNull()) },
       relations: ['business'],
     });
 
@@ -248,7 +266,7 @@ export class TenantUserService {
     }
 
     const hashedPassword = await HashUtil.hash(newPassword);
-    
+
     await this.userRepository.update(id, {
       password: hashedPassword,
       refreshToken: null, // Force logout
@@ -270,9 +288,9 @@ export class TenantUserService {
     return { message: 'Password reset successfully' };
   }
 
-  async setStatus(id: string, isActive: boolean, auditInfo: any) {
+  async setStatus(id: string, isActive: boolean, auditInfo: AuditInfo) {
     const user = await this.userRepository.findOne({
-      where: { id, businessId: Not(IsNull()) as any },
+      where: { id, businessId: Not(IsNull()) },
     });
 
     if (!user) {
@@ -287,7 +305,9 @@ export class TenantUserService {
     await this.auditLogService.logAction({
       userId: auditInfo.userId,
       userRole: auditInfo.platformRole,
-      action: isActive ? AuditAction.ACTIVATE_TENANT_USER : AuditAction.DEACTIVATE_TENANT_USER,
+      action: isActive
+        ? AuditAction.ACTIVATE_TENANT_USER
+        : AuditAction.DEACTIVATE_TENANT_USER,
       entityType: 'user',
       entityId: user.id,
       entityName: user.name,

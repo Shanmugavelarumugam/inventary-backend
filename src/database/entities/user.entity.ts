@@ -8,6 +8,7 @@ import {
   ManyToOne,
   Index,
   JoinColumn,
+  type Relation,
 } from 'typeorm';
 import { Business } from './business.entity.js';
 import { Role } from './role.entity.js';
@@ -18,14 +19,14 @@ export class User {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   name: string;
 
   @Index({ unique: true })
-  @Column({ unique: true })
+  @Column({ type: 'varchar', unique: true })
   email: string;
 
-  @Column({ select: false })
+  @Column({ type: 'varchar', select: false })
   password: string;
 
   /**
@@ -35,24 +36,24 @@ export class User {
   @Column({ type: 'enum', enum: PlatformRole, nullable: true })
   platformRole: PlatformRole;
 
-  @Column({ default: true })
+  @Column({ type: 'boolean', default: true })
   isActive: boolean;
 
   @Index()
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   businessId: string;
 
   @ManyToOne(() => Business)
   @JoinColumn({ name: 'businessId' })
-  business: Business;
+  business: Relation<Business>;
 
   @Index()
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   roleId: string;
 
   @ManyToOne(() => Role)
   @JoinColumn({ name: 'roleId' })
-  role: Role;
+  role: Relation<Role>;
 
   // ─── Security Tokens ───────────────────────────────────
   @Column({ type: 'varchar', nullable: true, select: false })
@@ -66,12 +67,15 @@ export class User {
 
   // ─── Audit ─────────────────────────────────────────────
   /** Tracks who created this platform user (userId of creator) */
-  @Column({ nullable: true })
+  @Column({ type: 'varchar', nullable: true })
   createdBy: string;
 
   /** Updated on every successful login */
   @Column({ nullable: true, type: 'timestamp' })
   lastLogin: Date;
+
+  @Column({ type: 'jsonb', default: {} })
+  settings: Record<string, any>;
 
   @CreateDateColumn()
   createdAt: Date;

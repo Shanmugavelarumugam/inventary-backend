@@ -12,14 +12,16 @@ import { ProcurementModule } from './modules/procurement/procurement.module.js';
 import { SalesModule } from './modules/sales/sales.module.js';
 import { HealthModule } from './health/health.module.js';
 
-
 import { RedisModule } from './redis/redis.module.js';
 import { QueueModule } from './queues/queue.module.js';
 import { RolesModule } from './modules/roles/roles.module.js';
 import { SupportModule } from './modules/support/support.module.js';
 import { TenantModule } from './modules/tenant/tenant.module.js';
 import { AnalyticsModule } from './modules/analytics/analytics.module.js';
-
+import { CustomersModule } from './modules/customers/customers.module.js';
+import { SuppliersModule } from './modules/suppliers/suppliers.module.js';
+import { MaintenanceGuard } from './common/guards/maintenance.guard.js';
+import { APP_GUARD } from '@nestjs/core';
 
 import configuration from './config/configuration.js';
 import appConfig from './config/app.config.js';
@@ -47,16 +49,23 @@ import { AppService } from './app.service.js';
     SalesModule,
     HealthModule,
 
-
     RedisModule,
     QueueModule,
     RolesModule,
     SupportModule,
     TenantModule,
     AnalyticsModule,
+    CustomersModule,
+    SuppliersModule,
   ],
 
   controllers: [AppController],
-  providers: [AppService],
+  providers: [
+    AppService,
+    {
+      provide: APP_GUARD,
+      useClass: MaintenanceGuard,
+    },
+  ],
 })
 export class AppModule {}

@@ -3,6 +3,7 @@ import {
   Get,
   Post,
   Patch,
+  Delete,
   Body,
   Param,
   Query,
@@ -84,8 +85,23 @@ export class PlatformSupportController {
     } as UpdateTicketStatusDto);
   }
 
+  @Delete('tickets/:id')
+  @PlatformRoles(PlatformRole.ROOT, PlatformRole.PLATFORM_ADMIN)
+  async delete(@Param('id') id: string) {
+    return this.supportService.deleteTicket(id);
+  }
+
   @Get('stats')
   async getStats() {
     return this.supportService.getStats();
+  }
+
+  @Post('tickets/:id/attachments')
+  async addAttachment(
+    @Param('id') id: string,
+    @Body('fileUrl') fileUrl: string,
+    @Request() req: AuthenticatedRequest,
+  ) {
+    return this.supportService.addAttachment(id, req.user.userId, fileUrl);
   }
 }

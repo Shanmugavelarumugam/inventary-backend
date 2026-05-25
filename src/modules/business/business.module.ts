@@ -11,4 +11,3 @@ import { Business } from '../../database/entities/business.entity.js';
   exports: [BusinessService],
 })
 export class BusinessModule {}
-

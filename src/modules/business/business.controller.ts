@@ -14,4 +14,3 @@ export class BusinessController {
     return this.businessService.findOne(businessId);
   }
 }
-

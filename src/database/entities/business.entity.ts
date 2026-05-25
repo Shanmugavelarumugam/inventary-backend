@@ -44,6 +44,7 @@ export class Business {
   status: BusinessStatus;
 
   @Column({
+    type: 'varchar',
     nullable: true,
   })
   subscriptionPlan: string;

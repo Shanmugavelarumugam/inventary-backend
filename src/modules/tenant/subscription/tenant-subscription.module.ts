@@ -7,7 +7,9 @@ import { TenantSubscriptionController } from './tenant-subscription.controller.j
 import { TenantSubscriptionService } from './tenant-subscription.service.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Subscription, SubscriptionPlan, Business])],
+  imports: [
+    TypeOrmModule.forFeature([Subscription, SubscriptionPlan, Business]),
+  ],
   controllers: [TenantSubscriptionController],
   providers: [TenantSubscriptionService],
   exports: [TenantSubscriptionService],

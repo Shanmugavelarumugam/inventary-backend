@@ -7,6 +7,7 @@ import {
   ManyToOne,
   JoinColumn,
   Index,
+  type Relation,
 } from 'typeorm';
 import { PurchaseOrder } from './purchase-order.entity.js';
 import { Product } from './product.entity.js';
@@ -21,8 +22,7 @@ export class PurchaseOrderItem {
   purchaseOrderId: string;
 
   @ManyToOne(() => PurchaseOrder, (po) => po.items, { onDelete: 'CASCADE' })
-  @JoinColumn({ name: 'purchaseOrderId' })
-  purchaseOrder: PurchaseOrder;
+  purchaseOrder: Relation<PurchaseOrder>;
 
   @Index()
   @Column()

@@ -6,9 +6,9 @@ export class Permission {
   id: string;
 
   @Index({ unique: true })
-  @Column({ unique: true })
+  @Column({ type: 'varchar', unique: true })
   key: string;
 
-  @Column()
+  @Column({ type: 'varchar' })
   description: string;
 }

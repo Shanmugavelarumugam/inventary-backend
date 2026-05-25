@@ -5,9 +5,10 @@ import {
   ManyToOne,
   Index,
   JoinColumn,
+  type Relation,
 } from 'typeorm';
-import { StockTransfer } from './stock-transfer.entity.js';
 import { Product } from './product.entity.js';
+import { StockTransfer } from './stock-transfer.entity.js';
 
 @Entity('stock_transfer_items')
 export class StockTransferItem {
@@ -18,9 +19,11 @@ export class StockTransferItem {
   @Column()
   transferId: string;
 
-  @ManyToOne(() => StockTransfer, (transfer) => transfer.items, { onDelete: 'CASCADE' })
+  @ManyToOne(() => StockTransfer, (transfer) => transfer.items, {
+    onDelete: 'CASCADE',
+  })
   @JoinColumn({ name: 'transferId' })
-  transfer: StockTransfer;
+  transfer: Relation<StockTransfer>;
 
   @Index()
   @Column()

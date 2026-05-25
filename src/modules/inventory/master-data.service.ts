@@ -5,7 +5,6 @@ import { Category } from '../../database/entities/category.entity.js';
 import { Unit } from '../../database/entities/unit.entity.js';
 import { Brand } from '../../database/entities/brand.entity.js';
 
-
 @Injectable()
 export class MasterDataService {
   constructor(
@@ -19,29 +18,39 @@ export class MasterDataService {
 
   // Categories
   async getCategories(businessId: string) {
-    return this.categoryRepository.find({ 
-      where: { businessId }, 
+    return this.categoryRepository.find({
+      where: { businessId },
       relations: ['parent'],
-      order: { displayOrder: 'ASC', name: 'ASC' } 
+      order: { displayOrder: 'ASC', name: 'ASC' },
     });
   }
 
-  async createCategory(businessId: string, name: string, data: any) {
-    const category = this.categoryRepository.create({ 
+  async createCategory(
+    businessId: string,
+    name: string,
+    data: Partial<Category>,
+  ) {
+    const category = this.categoryRepository.create({
       ...data,
-      name, 
-      businessId 
+      name,
+      businessId,
     });
     return this.categoryRepository.save(category);
   }
 
-  async updateCategory(id: string, businessId: string, data: any) {
-    const category = await this.categoryRepository.findOne({ where: { id, businessId } });
+  async updateCategory(
+    id: string,
+    businessId: string,
+    data: Partial<Category>,
+  ) {
+    const category = await this.categoryRepository.findOne({
+      where: { id, businessId },
+    });
     if (!category) throw new Error('Category not found');
-    
+
     // Explicitly handle parentCategoryId to avoid issues with null
     if (data.parentCategoryId === '') {
-      data.parentCategoryId = null;
+      category.parentCategoryId = null;
     }
 
     Object.assign(category, data);
@@ -49,16 +58,16 @@ export class MasterDataService {
   }
 
   async deleteCategory(id: string, businessId: string) {
-    const category = await this.categoryRepository.findOne({ 
+    const category = await this.categoryRepository.findOne({
       where: { id, businessId },
-      relations: ['products', 'children']
+      relations: ['products', 'children'],
     });
     if (!category) throw new Error('Category not found');
-    
+
     if (category.products && category.products.length > 0) {
       throw new Error('Cannot delete category with linked products');
     }
-    
+
     if (category.children && category.children.length > 0) {
       throw new Error('Cannot delete category with sub-categories');
     }
@@ -68,7 +77,10 @@ export class MasterDataService {
 
   // Units
   async getUnits(businessId: string) {
-    return this.unitRepository.find({ where: { businessId }, order: { name: 'ASC' } });
+    return this.unitRepository.find({
+      where: { businessId },
+      order: { name: 'ASC' },
+    });
   }
 
   async createUnit(businessId: string, name: string, shortName?: string) {
@@ -76,22 +88,29 @@ export class MasterDataService {
     return this.unitRepository.save(unit);
   }
 
-  async updateUnit(id: string, businessId: string, data: any) {
-    const unit = await this.unitRepository.findOne({ where: { id, businessId } });
+  async updateUnit(id: string, businessId: string, data: Partial<Unit>) {
+    const unit = await this.unitRepository.findOne({
+      where: { id, businessId },
+    });
     if (!unit) throw new Error('Unit not found');
     Object.assign(unit, data);
     return this.unitRepository.save(unit);
   }
 
   async deleteUnit(id: string, businessId: string) {
-    const unit = await this.unitRepository.findOne({ where: { id, businessId } });
+    const unit = await this.unitRepository.findOne({
+      where: { id, businessId },
+    });
     if (!unit) throw new Error('Unit not found');
     return this.unitRepository.remove(unit);
   }
 
   // Brands
   async getBrands(businessId: string) {
-    return this.brandRepository.find({ where: { businessId }, order: { name: 'ASC' } });
+    return this.brandRepository.find({
+      where: { businessId },
+      order: { name: 'ASC' },
+    });
   }
 
   async createBrand(businessId: string, name: string) {
@@ -99,15 +118,19 @@ export class MasterDataService {
     return this.brandRepository.save(brand);
   }
 
-  async updateBrand(id: string, businessId: string, data: any) {
-    const brand = await this.brandRepository.findOne({ where: { id, businessId } });
+  async updateBrand(id: string, businessId: string, data: Partial<Brand>) {
+    const brand = await this.brandRepository.findOne({
+      where: { id, businessId },
+    });
     if (!brand) throw new Error('Brand not found');
     Object.assign(brand, data);
     return this.brandRepository.save(brand);
   }
 
   async deleteBrand(id: string, businessId: string) {
-    const brand = await this.brandRepository.findOne({ where: { id, businessId } });
+    const brand = await this.brandRepository.findOne({
+      where: { id, businessId },
+    });
     if (!brand) throw new Error('Brand not found');
     return this.brandRepository.remove(brand);
   }

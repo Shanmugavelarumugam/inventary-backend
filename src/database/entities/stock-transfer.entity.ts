@@ -8,28 +8,18 @@ import {
   OneToMany,
   Index,
   JoinColumn,
+  type Relation,
 } from 'typeorm';
 import { Branch } from './branch.entity.js';
 import { Business } from './business.entity.js';
 import { User } from './user.entity.js';
-import type { StockTransferItem } from './stock-transfer-item.entity.js';
-
-
-export enum TransferStatus {
-  DRAFT = 'DRAFT',
-  PENDING = 'PENDING',
-  SHIPPED = 'SHIPPED',
-  RECEIVED = 'RECEIVED',
-  CANCELLED = 'CANCELLED',
-}
+import { StockTransferStatus } from '../../common/enums/branch.enum.js';
+import { StockTransferItem } from './stock-transfer-item.entity.js';
 
 @Entity('stock_transfers')
 export class StockTransfer {
   @PrimaryGeneratedColumn('uuid')
   id: string;
-
-  @Column({ nullable: true })
-  transferNumber: string;
 
   @Index()
   @Column()
@@ -47,18 +37,34 @@ export class StockTransfer {
   @JoinColumn({ name: 'toBranchId' })
   toBranch: Branch;
 
-  @Column({ type: 'date' })
-  transferDate: Date;
-
   @Column({
     type: 'enum',
-    enum: TransferStatus,
-    default: TransferStatus.PENDING,
+    enum: StockTransferStatus,
+    default: StockTransferStatus.PENDING,
   })
-  status: TransferStatus;
+  status: StockTransferStatus;
 
   @Column({ type: 'text', nullable: true })
   notes: string;
+
+  @Column({ nullable: true })
+  transferredById: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'transferredById' })
+  transferredBy: User;
+
+  @Column({ nullable: true })
+  receivedById: string;
+
+  @ManyToOne(() => User)
+  @JoinColumn({ name: 'receivedById' })
+  receivedBy: User;
+
+  @OneToMany(() => StockTransferItem, (item) => item.transfer, {
+    cascade: true,
+  })
+  items: Relation<StockTransferItem>[];
 
   @Index()
   @Column()
@@ -67,16 +73,6 @@ export class StockTransfer {
   @ManyToOne(() => Business)
   @JoinColumn({ name: 'businessId' })
   business: Business;
-
-  @Column({ nullable: true })
-  createdById: string;
-
-  @ManyToOne(() => User)
-  @JoinColumn({ name: 'createdById' })
-  createdBy: User;
-
-  @OneToMany('StockTransferItem', (item: any) => item.transfer)
-  items: StockTransferItem[];
 
   @CreateDateColumn()
   createdAt: Date;

@@ -8,8 +8,6 @@ import {
   Query,
   UseGuards,
   Req,
-  DefaultValuePipe,
-  ParseIntPipe,
 } from '@nestjs/common';
 import type { AuthenticatedRequest } from '../../../common/interfaces/authenticated-request.interface.js';
 import { TenantUserService } from '../services/tenant-user.service.js';
@@ -38,7 +36,7 @@ export class TenantUserController {
   async findAll(@Query() query: FindAllTenantUsersQueryDto) {
     const page = query.page ?? 1;
     const limit = query.limit ?? 20;
-    
+
     return this.tenantUserService.findAll({
       page,
       limit,
@@ -67,9 +65,9 @@ export class TenantUserController {
   ) {
     return this.tenantUserService.create(dto, {
       userId: req.user.userId,
-      platformRole: req.user.platformRole,
-      ipAddress: req.ip,
-      userAgent: req.get('user-agent'),
+      platformRole: req.user.platformRole!,
+      ipAddress: req.ip || 'unknown',
+      userAgent: req.get('user-agent') || 'unknown',
     });
   }
 
@@ -82,9 +80,9 @@ export class TenantUserController {
   ) {
     return this.tenantUserService.update(id, dto, {
       userId: req.user.userId,
-      platformRole: req.user.platformRole,
-      ipAddress: req.ip,
-      userAgent: req.get('user-agent'),
+      platformRole: req.user.platformRole!,
+      ipAddress: req.ip || 'unknown',
+      userAgent: req.get('user-agent') || 'unknown',
     });
   }
 
@@ -101,9 +99,9 @@ export class TenantUserController {
   ) {
     return this.tenantUserService.resetPassword(id, dto.newPassword, {
       userId: req.user.userId,
-      platformRole: req.user.platformRole,
-      ipAddress: req.ip,
-      userAgent: req.get('user-agent'),
+      platformRole: req.user.platformRole!,
+      ipAddress: req.ip || 'unknown',
+      userAgent: req.get('user-agent') || 'unknown',
     });
   }
 
@@ -112,9 +110,9 @@ export class TenantUserController {
   async deactivate(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     return this.tenantUserService.setStatus(id, false, {
       userId: req.user.userId,
-      platformRole: req.user.platformRole,
-      ipAddress: req.ip,
-      userAgent: req.get('user-agent'),
+      platformRole: req.user.platformRole!,
+      ipAddress: req.ip || 'unknown',
+      userAgent: req.get('user-agent') || 'unknown',
     });
   }
 
@@ -123,9 +121,9 @@ export class TenantUserController {
   async activate(@Param('id') id: string, @Req() req: AuthenticatedRequest) {
     return this.tenantUserService.setStatus(id, true, {
       userId: req.user.userId,
-      platformRole: req.user.platformRole,
-      ipAddress: req.ip,
-      userAgent: req.get('user-agent'),
+      platformRole: req.user.platformRole!,
+      ipAddress: req.ip || 'unknown',
+      userAgent: req.get('user-agent') || 'unknown',
     });
   }
 }

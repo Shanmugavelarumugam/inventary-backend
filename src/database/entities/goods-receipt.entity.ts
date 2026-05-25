@@ -8,11 +8,12 @@ import {
   OneToMany,
   Index,
   JoinColumn,
+  type Relation,
 } from 'typeorm';
 import { PurchaseOrder } from './purchase-order.entity.js';
 import { Business } from './business.entity.js';
 import { User } from './user.entity.js';
-import type { GoodsReceiptItem } from './goods-receipt-item.entity.js';
+import { GoodsReceiptItem } from './goods-receipt-item.entity.js';
 
 @Entity('goods_receipts')
 export class GoodsReceipt {
@@ -46,8 +47,8 @@ export class GoodsReceipt {
   @Column({ type: 'date' })
   receivedDate: Date;
 
-  @OneToMany('GoodsReceiptItem', (item: any) => item.goodsReceipt)
-  items: GoodsReceiptItem[];
+  @OneToMany(() => GoodsReceiptItem, (item) => item.goodsReceipt)
+  items: Relation<GoodsReceiptItem>[];
 
   @Column({ type: 'text', nullable: true })
   notes: string;

@@ -67,18 +67,29 @@ export class SupportService {
   }
 
   async listTenantTickets(tenantId: string, query: QuerySupportTicketDto) {
-    const { page = 1, limit = 10, status, priority, category } = query;
-    const [data, total] = await this.ticketRepository.findAndCount({
-      where: {
-        tenantId,
-        ...(status && { status }),
-        ...(priority && { priority }),
-        ...(category && { category }),
-      },
-      order: { createdAt: 'DESC' },
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+    const { page = 1, limit = 10, status, priority, category, search } = query;
+    const queryBuilder = this.ticketRepository
+      .createQueryBuilder('ticket')
+      .where('ticket.tenantId = :tenantId', { tenantId });
+
+    if (status) queryBuilder.andWhere('ticket.status = :status', { status });
+    if (priority)
+      queryBuilder.andWhere('ticket.priority = :priority', { priority });
+    if (category)
+      queryBuilder.andWhere('ticket.category = :category', { category });
+
+    if (search) {
+      queryBuilder.andWhere(
+        '(ticket.title ILIKE :search OR ticket.description ILIKE :search)',
+        { search: `%${search}%` },
+      );
+    }
+
+    const [data, total] = await queryBuilder
+      .orderBy('ticket.createdAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
 
     return { data, total, page, limit };
   }
@@ -125,20 +136,36 @@ export class SupportService {
       category,
       tenantId,
       assignedTo,
+      search,
     } = query;
-    const [data, total] = await this.ticketRepository.findAndCount({
-      where: {
-        ...(tenantId && { tenantId }),
-        ...(status && { status }),
-        ...(priority && { priority }),
-        ...(category && { category }),
-        ...(assignedTo && { assignedTo }),
-      },
-      relations: ['tenant', 'creator', 'assignee'],
-      order: { createdAt: 'DESC' },
-      skip: (page - 1) * limit,
-      take: limit,
-    });
+    const queryBuilder = this.ticketRepository
+      .createQueryBuilder('ticket')
+      .leftJoinAndSelect('ticket.tenant', 'tenant')
+      .leftJoinAndSelect('ticket.creator', 'creator')
+      .leftJoinAndSelect('ticket.assignee', 'assignee');
+
+    if (tenantId)
+      queryBuilder.andWhere('ticket.tenantId = :tenantId', { tenantId });
+    if (status) queryBuilder.andWhere('ticket.status = :status', { status });
+    if (priority)
+      queryBuilder.andWhere('ticket.priority = :priority', { priority });
+    if (category)
+      queryBuilder.andWhere('ticket.category = :category', { category });
+    if (assignedTo)
+      queryBuilder.andWhere('ticket.assignedTo = :assignedTo', { assignedTo });
+
+    if (search) {
+      queryBuilder.andWhere(
+        '(ticket.title ILIKE :search OR ticket.description ILIKE :search)',
+        { search: `%${search}%` },
+      );
+    }
+
+    const [data, total] = await queryBuilder
+      .orderBy('ticket.createdAt', 'DESC')
+      .skip((page - 1) * limit)
+      .take(limit)
+      .getManyAndCount();
 
     return { data, total, page, limit };
   }
@@ -298,5 +325,16 @@ export class SupportService {
       uploadedBy: userId,
     });
     return this.attachmentRepository.save(attachment);
+  }
+
+  async deleteTicket(ticketId: string) {
+    const ticket = await this.ticketRepository.findOne({
+      where: { id: ticketId },
+    });
+    if (!ticket) throw new NotFoundException('Ticket not found');
+
+    // In a real app, maybe soft delete or archive. Here we delete.
+    await this.ticketRepository.delete(ticketId);
+    return { message: 'Ticket deleted successfully' };
   }
 }

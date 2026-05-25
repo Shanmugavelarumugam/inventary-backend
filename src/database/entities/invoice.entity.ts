@@ -8,12 +8,13 @@ import {
   OneToMany,
   Index,
   JoinColumn,
+  type Relation,
 } from 'typeorm';
 import { Business } from './business.entity.js';
 import { Customer } from './customer.entity.js';
 import { User } from './user.entity.js';
-import type { InvoiceItem } from './invoice-item.entity.js';
-
+import { SalesSource } from '../../common/enums/sales.enum.js';
+import { InvoiceItem } from './invoice-item.entity.js';
 
 export enum InvoiceStatus {
   DRAFT = 'DRAFT',
@@ -72,6 +73,19 @@ export class Invoice {
   })
   paymentMethod: PaymentMethod;
 
+  @Column({
+    type: 'enum',
+    enum: SalesSource,
+    default: SalesSource.POS,
+  })
+  source: SalesSource;
+
+  @Column({ nullable: true })
+  orderId: string;
+
+  @Column({ type: 'text', nullable: true })
+  batchInfo: string;
+
   @Index()
   @Column()
   businessId: string;
@@ -87,8 +101,8 @@ export class Invoice {
   @JoinColumn({ name: 'createdById' })
   createdBy: User;
 
-  @OneToMany('InvoiceItem', (item: any) => item.invoice)
-  items: InvoiceItem[];
+  @OneToMany(() => InvoiceItem, (item) => item.invoice)
+  items: Relation<InvoiceItem>[];
 
   @CreateDateColumn()
   createdAt: Date;

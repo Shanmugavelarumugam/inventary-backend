@@ -5,11 +5,13 @@ import { TenantDashboardController } from './analytics.controller.js';
 import { Product } from '../../database/entities/product.entity.js';
 import { StockMovement } from '../../database/entities/stock-movement.entity.js';
 import { Invoice } from '../../database/entities/invoice.entity.js';
+import { Business } from '../../database/entities/business.entity.js';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Product, StockMovement, Invoice])],
+  imports: [
+    TypeOrmModule.forFeature([Product, StockMovement, Invoice, Business]),
+  ],
   controllers: [TenantDashboardController],
   providers: [AnalyticsService],
 })
 export class AnalyticsModule {}
-

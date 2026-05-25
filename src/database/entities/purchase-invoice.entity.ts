@@ -8,10 +8,11 @@ import {
   Index,
   JoinColumn,
   OneToMany,
+  type Relation,
 } from 'typeorm';
 import { PurchaseOrder } from './purchase-order.entity.js';
 import { Business } from './business.entity.js';
-import type { SupplierPayment } from './supplier-payment.entity.js';
+import { SupplierPayment } from './supplier-payment.entity.js';
 
 export enum InvoiceStatus {
   UNPAID = 'UNPAID',
@@ -63,8 +64,8 @@ export class PurchaseInvoice {
   @Column({ type: 'date', nullable: true })
   dueDate: Date;
 
-  @OneToMany('SupplierPayment', (payment: any) => payment.invoice)
-  payments: SupplierPayment[];
+  @OneToMany(() => SupplierPayment, (payment) => payment.invoice)
+  payments: Relation<SupplierPayment>[];
 
   @CreateDateColumn()
   createdAt: Date;

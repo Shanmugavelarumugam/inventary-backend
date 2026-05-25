@@ -1,8 +1,14 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, Like, DataSource } from 'typeorm';
-import { Product, ProductStatus } from '../../../database/entities/product.entity.js';
-import { StockMovement, MovementType } from '../../../database/entities/stock-movement.entity.js';
+import { Repository, DataSource } from 'typeorm';
+import {
+  Product,
+  ProductStatus,
+} from '../../../database/entities/product.entity.js';
+import {
+  StockMovement,
+  MovementType,
+} from '../../../database/entities/stock-movement.entity.js';
 
 @Injectable()
 export class ProductsService {
@@ -12,16 +18,78 @@ export class ProductsService {
     private readonly dataSource: DataSource,
   ) {}
 
-  async findAll(businessId: string, search?: string) {
-    const where: any = { businessId };
+  async findAll(
+    businessId: string,
+    options: {
+      search?: string;
+      categoryId?: string;
+      brandId?: string;
+      minStock?: boolean;
+      outOfStock?: boolean;
+      page?: number;
+      limit?: number;
+      sortBy?: string;
+      sortOrder?: 'ASC' | 'DESC';
+    } = {},
+  ) {
+    const {
+      search,
+      categoryId,
+      brandId,
+      minStock,
+      outOfStock,
+      page = 1,
+      limit = 10,
+      sortBy = 'createdAt',
+      sortOrder = 'DESC',
+    } = options;
+
+    const queryBuilder = this.productRepository
+      .createQueryBuilder('product')
+      .leftJoinAndSelect('product.category', 'category')
+      .leftJoinAndSelect('product.unit', 'unit')
+      .leftJoinAndSelect('product.brand', 'brand')
+      .where('product.businessId = :businessId', { businessId });
+
     if (search) {
-      where.name = Like(`%${search}%`);
+      queryBuilder.andWhere(
+        '(product.name ILIKE :search OR product.sku ILIKE :search OR product.barcode ILIKE :search)',
+        { search: `%${search}%` },
+      );
     }
-    return this.productRepository.find({
-      where,
-      relations: ['category', 'unit', 'brand'],
-      order: { createdAt: 'DESC' },
-    });
+
+    if (categoryId) {
+      queryBuilder.andWhere('product.categoryId = :categoryId', { categoryId });
+    }
+
+    if (brandId) {
+      queryBuilder.andWhere('product.brandId = :brandId', { brandId });
+    }
+
+    if (minStock) {
+      queryBuilder.andWhere('product.stockQty <= product.minStockLevel');
+    }
+
+    if (outOfStock) {
+      queryBuilder.andWhere('product.stockQty = 0');
+    }
+
+    queryBuilder
+      .orderBy(`product.${sortBy}`, sortOrder)
+      .skip((page - 1) * limit)
+      .take(limit);
+
+    const [items, total] = await queryBuilder.getManyAndCount();
+
+    return {
+      items,
+      meta: {
+        total,
+        page,
+        limit,
+        totalPages: Math.ceil(total / limit),
+      },
+    };
   }
 
   async findOne(id: string, businessId: string) {
@@ -65,7 +133,13 @@ export class ProductsService {
 
   async duplicate(id: string, businessId: string) {
     const original = await this.findOne(id, businessId);
-    const { id: _, createdAt: __, updatedAt: ___, sku: ____, ...rest } = original;
+    const {
+      id: _,
+      createdAt: __,
+      updatedAt: ___,
+      sku: ____,
+      ...rest
+    } = original;
     const copy = this.productRepository.create({
       ...rest,
       sku: `${original.sku}-COPY-${Date.now().toString().slice(-4)}`,
@@ -75,7 +149,11 @@ export class ProductsService {
     return this.productRepository.save(copy);
   }
 
-  async setProductStatus(id: string, businessId: string, status: ProductStatus) {
+  async setProductStatus(
+    id: string,
+    businessId: string,
+    status: ProductStatus,
+  ) {
     const product = await this.findOne(id, businessId);
     product.status = status;
     return this.productRepository.save(product);
@@ -88,22 +166,45 @@ export class ProductsService {
 
   async bulkImport(businessId: string, productsData: Partial<Product>[]) {
     return this.dataSource.transaction(async (manager) => {
-      const products = productsData.map(data => 
-        manager.create(Product, { ...data, businessId })
+      const products = productsData.map((data) =>
+        manager.create(Product, { ...data, businessId }),
       );
       return manager.save(Product, products);
     });
   }
 
   async generateBarcode(id: string, businessId: string) {
-    const product = await this.findOne(id, businessId);
-    // Placeholder logic for barcode generation
-    // In a real app, this might generate a GS1-compliant code or just return the SKU
+    await this.findOne(id, businessId);
+
+    // EAN-13 Standard: 200 prefix for internal use + 9 digits + checksum
+    // We use a combination of business short hash and a timestamp/random part for the 9 digits
+    const prefix = '200';
+    const randomPart = Math.floor(Math.random() * 1000000000)
+      .toString()
+      .padStart(9, '0');
+    const base = prefix + randomPart;
+
+    const checksum = this.calculateEan13Checksum(base);
+    const barcode = base + checksum;
+
     return {
-      barcode: `BC-${product.sku}-${Date.now()}`,
-      productId: id
+      barcode,
+      productId: id,
+      format: 'EAN-13',
     };
   }
+
+  private calculateEan13Checksum(code: string): number {
+    let sum = 0;
+    for (let i = 0; i < 12; i++) {
+      const digit = parseInt(code[i], 10);
+      if (i % 2 === 0) {
+        sum += digit;
+      } else {
+        sum += digit * 3;
+      }
+    }
+    const remainder = sum % 10;
+    return remainder === 0 ? 0 : 10 - remainder;
+  }
 }
-
-

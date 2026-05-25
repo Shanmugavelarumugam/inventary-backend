@@ -8,10 +8,20 @@ import { Redis } from 'ioredis';
     {
       provide: 'REDIS_CLIENT',
       useFactory: (configService: ConfigService) => {
-        return new Redis({
+        const client = new Redis({
           host: configService.get<string>('redis.host'),
           port: configService.get<number>('redis.port'),
+          maxRetriesPerRequest: null,
+          enableOfflineQueue: false,
+          lazyConnect: true,
         });
+        client.on('error', (err) => {
+          console.warn(
+            '⚠️ [Redis Module] Connection failed or server offline:',
+            err.message,
+          );
+        });
+        return client;
       },
       inject: [ConfigService],
     },

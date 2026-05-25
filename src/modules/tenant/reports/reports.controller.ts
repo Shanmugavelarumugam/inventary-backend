@@ -1,9 +1,4 @@
-import { 
-  Controller, 
-  Get, 
-  UseGuards, 
-  Query,
-} from '@nestjs/common';
+import { Controller, Get, UseGuards, Query } from '@nestjs/common';
 import { JwtAuthGuard } from '../../../common/guards/jwt-auth.guard.js';
 import { TenantGuard } from '../../../common/guards/tenant.guard.js';
 import { CurrentUser } from '../../../common/decorators/current-user.decorator.js';
@@ -15,7 +10,9 @@ export class ReportsController {
   constructor(private readonly reportsService: ReportsService) {}
 
   private parseDates(from?: string, to?: string) {
-    const fromDate = from ? new Date(from) : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
+    const fromDate = from
+      ? new Date(from)
+      : new Date(new Date().getFullYear(), new Date().getMonth(), 1);
     const toDate = to ? new Date(to) : new Date();
     toDate.setHours(23, 59, 59, 999);
     return { fromDate, toDate };
@@ -43,7 +40,11 @@ export class ReportsController {
     @Query('to') to?: string,
   ) {
     const { fromDate, toDate } = this.parseDates(from, to);
-    return this.reportsService.getProfitLossReport(businessId, fromDate, toDate);
+    return this.reportsService.getProfitLossReport(
+      businessId,
+      fromDate,
+      toDate,
+    );
   }
 
   @Get('stock-valuation')

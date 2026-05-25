@@ -1,6 +1,7 @@
 import { Injectable, Logger } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository, In, IsNull } from 'typeorm';
+import { Repository, In, IsNull, DataSource, EntityManager } from 'typeorm';
+import { InjectDataSource } from '@nestjs/typeorm';
 import { Business } from '../entities/business.entity.js';
 import { Role } from '../entities/role.entity.js';
 import { User } from '../entities/user.entity.js';
@@ -19,11 +20,16 @@ export class TenantRoleMigrationService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Permission)
     private readonly permissionRepository: Repository<Permission>,
+    @InjectDataSource()
+    private readonly dataSource: DataSource,
   ) {}
 
-  async migrateAllTenants() {
-    const businesses = await this.businessRepository.find();
-    this.logger.log(`🚀 Starting role migration for ${businesses.length} businesses...`);
+  async migrateAllTenants(existingManager?: EntityManager) {
+    const manager = existingManager || this.dataSource.manager;
+    const businesses = await manager.find(Business);
+    this.logger.log(
+      `🚀 Starting role migration for ${businesses.length} businesses...`,
+    );
 
     const universalRoleNames = [
       'TENANT_ADMIN',
@@ -34,24 +40,32 @@ export class TenantRoleMigrationService {
       'VIEWER',
     ];
 
-    const allPermissions = await this.permissionRepository.find();
+    const allPermissions = await manager.find(Permission);
 
     for (const business of businesses) {
-      await this.migrateSingleTenant(business, universalRoleNames, allPermissions);
+      await this.migrateSingleTenant(
+        manager,
+        business,
+        universalRoleNames,
+        allPermissions,
+      );
     }
 
     this.logger.log('✅ Universal role migration complete.');
   }
 
   private async migrateSingleTenant(
+    manager: EntityManager,
     business: Business,
     roleNames: string[],
     allPermissions: Permission[],
   ) {
-    this.logger.log(`📦 Migrating roles for: ${business.name} (${business.id})`);
+    this.logger.log(
+      `📦 Migrating roles for: ${business.name} (${business.id})`,
+    );
 
     // 1. Seed/Sync Universal Roles
-    const existingRoles = await this.roleRepository.find({
+    const existingRoles = await manager.find(Role, {
       where: { businessId: business.id },
       relations: ['permissions'],
     });
@@ -61,23 +75,23 @@ export class TenantRoleMigrationService {
       const defaultPerms = this.getDefaultPermissions(name, allPermissions);
 
       if (!role) {
-        role = this.roleRepository.create({
+        role = manager.create(Role, {
           name,
           businessId: business.id,
           permissions: defaultPerms,
         });
-        await this.roleRepository.save(role);
+        await manager.save(role);
         this.logger.log(`   + Created universal role: ${name}`);
       } else if (!role.permissions || role.permissions.length === 0) {
         // Repair empty permissions
         role.permissions = defaultPerms;
-        await this.roleRepository.save(role);
+        await manager.save(role);
         this.logger.log(`   + Repaired permissions for role: ${name}`);
       }
     }
 
     // 2. Re-assign Legacy Admins to TENANT_ADMIN
-    const tenantAdminRole = await this.roleRepository.findOne({
+    const tenantAdminRole = await manager.findOne(Role, {
       where: { name: 'TENANT_ADMIN', businessId: business.id },
     });
 
@@ -88,8 +102,8 @@ export class TenantRoleMigrationService {
 
       if (legacyAdminRoles.length > 0) {
         const legacyRoleIds = legacyAdminRoles.map((r) => r.id);
-        
-        const legacyUsers = await this.userRepository.find({
+
+        const legacyUsers = await manager.find(User, {
           where: {
             businessId: business.id,
             roleId: In(legacyRoleIds),
@@ -101,15 +115,21 @@ export class TenantRoleMigrationService {
           for (const user of legacyUsers) {
             user.roleId = tenantAdminRole.id;
           }
-          await this.userRepository.save(legacyUsers);
-          this.logger.log(`   + Re-assigned ${legacyUsers.length} users to TENANT_ADMIN.`);
+          await manager.save(User, legacyUsers);
+          this.logger.log(
+            `   + Re-assigned ${legacyUsers.length} users to TENANT_ADMIN.`,
+          );
         }
       }
     }
   }
 
-  private getDefaultPermissions(roleName: string, allPerms: Permission[]): Permission[] {
-    const getPerms = (keys: string[]) => allPerms.filter((p) => keys.includes(p.key));
+  private getDefaultPermissions(
+    roleName: string,
+    allPerms: Permission[],
+  ): Permission[] {
+    const getPerms = (keys: string[]) =>
+      allPerms.filter((p) => keys.includes(p.key));
 
     switch (roleName) {
       case 'TENANT_ADMIN':
@@ -142,7 +162,12 @@ export class TenantRoleMigrationService {
       case 'FINANCE_MANAGER':
         return getPerms(['view_reports', 'create_invoice']);
       case 'VIEWER':
-        return getPerms(['view_business', 'view_user', 'view_product', 'view_reports']);
+        return getPerms([
+          'view_business',
+          'view_user',
+          'view_product',
+          'view_reports',
+        ]);
       default:
         return [];
     }
